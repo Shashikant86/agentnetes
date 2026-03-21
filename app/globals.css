@@ -32,11 +32,49 @@ body {
   0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
   50%       { box-shadow: 0 0 20px 2px rgba(59,130,246,0.15); }
 }
-.animate-slide-in   { animation: slide-in 0.25s ease-out forwards; }
-.animate-pulse-once { animation: pulse-once 1.2s ease-in-out; }
-.animate-fade-up    { animation: fade-up 0.5s ease-out forwards; }
-.animate-shimmer    { animation: shimmer 3s linear infinite; }
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes aurora {
+  0%   { opacity: 0.5; transform: scale(1) rotate(0deg); }
+  50%  { opacity: 0.8; transform: scale(1.1) rotate(180deg); }
+  100% { opacity: 0.5; transform: scale(1) rotate(360deg); }
+}
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(168,85,247,0.2), 0 0 60px rgba(168,85,247,0.1); }
+  50%       { box-shadow: 0 0 50px rgba(168,85,247,0.35), 0 0 90px rgba(236,72,153,0.15); }
+}
+.animate-slide-in    { animation: slide-in 0.25s ease-out forwards; }
+.animate-pulse-once  { animation: pulse-once 1.2s ease-in-out; }
+.animate-fade-up     { animation: fade-up 0.5s ease-out forwards; }
+.animate-shimmer     { animation: shimmer 3s linear infinite; }
 .animate-border-glow { animation: border-glow 3s ease-in-out infinite; }
+.animate-float       { animation: float 6s ease-in-out infinite; }
+.animate-aurora      { animation: aurora 12s linear infinite; }
+.animate-glow-pulse  { animation: glow-pulse 3s ease-in-out infinite; }
+
+/* gradient divider */
+.gradient-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(168,85,247,0.25) 30%, rgba(236,72,153,0.2) 60%, transparent 100%);
+  border: none;
+}
+
+/* gradient border card */
+.card-gradient-border {
+  position: relative;
+  border-radius: 1rem;
+}
+.card-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: calc(1rem + 1px);
+  background: linear-gradient(135deg, rgba(168,85,247,0.45), rgba(236,72,153,0.25), rgba(249,115,22,0.15));
+  z-index: 0;
+}
+.card-gradient-border > * { position: relative; z-index: 1; }
 
 /* scrollbar */
 ::-webkit-scrollbar { width: 4px; height: 4px; }

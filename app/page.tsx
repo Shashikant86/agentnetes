@@ -326,28 +326,39 @@ export default function Landing() {
       </nav>
 
       {/* ── Hero ────────────────────────────────────────────── */}
-      <section className="pt-28 pb-20 px-6 relative" style={{
+      <section className="pt-28 pb-20 px-6 relative overflow-hidden" style={{
         backgroundImage: `
-          radial-gradient(ellipse 70% 50% at 50% -10%, rgba(168,85,247,0.18) 0%, transparent 65%),
-          radial-gradient(ellipse 40% 30% at 80% 20%, rgba(251,146,60,0.08) 0%, transparent 60%),
-          linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)
+          radial-gradient(ellipse 80% 60% at 50% -5%, rgba(168,85,247,0.28) 0%, transparent 65%),
+          radial-gradient(ellipse 50% 40% at 85% 15%, rgba(236,72,153,0.12) 0%, transparent 55%),
+          radial-gradient(ellipse 40% 30% at 10% 80%, rgba(249,115,22,0.08) 0%, transparent 55%),
+          linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
         `,
-        backgroundSize: 'auto, auto, 52px 52px, 52px 52px',
+        backgroundSize: 'auto, auto, auto, 52px 52px, 52px 52px',
       }}>
-        <div className="max-w-4xl mx-auto text-center">
+        {/* Aurora blob */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none animate-aurora"
+          style={{ background: 'radial-gradient(circle, rgba(168,85,247,0.07) 0%, rgba(236,72,153,0.04) 40%, transparent 70%)' }} />
 
-          {/* Logo mark */}
-          <div className="flex justify-center mb-6">
-            <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.png`} alt="Agentnetes" width={90} height={90} priority className="rounded-2xl" />
+        <div className="max-w-4xl mx-auto text-center relative">
+
+          {/* Logo mark with glow */}
+          <div className="flex justify-center mb-8 relative">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-52 h-52 rounded-full blur-3xl opacity-40"
+                style={{ background: 'radial-gradient(circle, rgba(168,85,247,0.6) 0%, rgba(236,72,153,0.3) 50%, transparent 70%)' }} />
+            </div>
+            <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.png`} alt="Agentnetes" width={100} height={100} priority
+              className="rounded-2xl relative animate-float shadow-2xl"
+              style={{ boxShadow: '0 20px 60px rgba(168,85,247,0.3), 0 4px 20px rgba(0,0,0,0.5)' }} />
           </div>
 
-          {/* Hackathon badge */}
-          <div className="inline-flex items-center gap-2 border border-white/10 rounded-full px-4 py-1.5 text-[11px] font-mono mb-8 bg-white/[0.03]">
-            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-            <span className="text-white/70">Zero to Agent London</span>
-            <span className="text-white/50 mx-1">|</span>
-            <span className="text-white/65">Google DeepMind x Vercel</span>
+          {/* Kicker */}
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-mono mb-6 border border-white/10"
+            style={{ background: 'var(--bg-subtle)' }}>
+            <span className="text-white/40">Kubernetes for AI agents</span>
+            <span className="text-white/20">—</span>
+            <span className="text-white/65">dynamic teams, not static YAML</span>
           </div>
 
           {/* Headline */}
@@ -364,17 +375,32 @@ export default function Landing() {
             <span className="text-white/65"> On Demand.</span>
           </h1>
 
-          <p className="text-white/70 text-lg mb-3 max-w-2xl mx-auto leading-relaxed font-medium">
-            Zero to Agent? We are taking it further.
+          <p className="text-white/75 text-lg mb-4 max-w-2xl mx-auto leading-relaxed font-medium">
+            Agentnetes is a self-organizing, recursively expanding system of sandboxed AI agents that explore, execute, and coordinate to solve complex problems.
           </p>
-          <p className="text-white/65 text-base mb-12 max-w-xl mx-auto leading-relaxed">
-            Type a goal. Agentnetes assembles a team of specialist AI agents,
-            each running in its own Firecracker microVM, that explore,
-            implement, test, and deliver together.
+          <p className="text-white/55 text-base mb-10 max-w-xl mx-auto leading-relaxed">
+            Type a goal. A swarm of specialist agents assembles, each in its own isolated sandbox, exploring your codebase, writing code, running tests, and delivering together.
           </p>
 
+          {/* Motivation pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+            {[
+              { label: 'RLM Pattern', sub: 'MIT CSAIL', color: '#60a5fa' },
+              { label: 'AutoResearch Loop', sub: 'Karpathy', color: '#a78bfa' },
+              { label: 'Two-Tool MCP', sub: 'search() + execute()', color: '#f472b6' },
+            ].map(({ label, sub, color }) => (
+              <div key={label} className="flex items-center gap-2 rounded-full border border-white/10 px-4 py-1.5 text-xs font-mono"
+                style={{ background: 'var(--bg-subtle)' }}>
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
+                <span className="text-white/80 font-semibold">{label}</span>
+                <span className="text-white/35">{sub}</span>
+              </div>
+            ))}
+          </div>
+
           {/* Typing prompt */}
-          <div className="inline-flex items-center gap-3 border border-white/10 rounded-2xl px-5 py-3.5 mb-10 text-sm font-mono max-w-full shadow-xl shadow-black/50" style={{ background: 'var(--bg-subtle)' }}>
+          <div className="inline-flex items-center gap-3 rounded-2xl px-5 py-3.5 mb-10 text-sm font-mono max-w-full"
+            style={{ background: 'var(--bg-subtle)', boxShadow: '0 0 0 1px rgba(168,85,247,0.2), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)' }}>
             <span className="text-white/50 shrink-0">$</span>
             <span className="text-white/75 shrink-0">agentnetes run</span>
             <TypingPrompt />
@@ -383,8 +409,8 @@ export default function Landing() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16">
             <Link href="/demo"
-              className="flex items-center gap-2 font-semibold px-7 py-3 rounded-xl text-base shadow-lg transition-all hover:opacity-90 hover:scale-[1.02]"
-              style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899, #f97316)', color: '#fff' }}>
+              className="flex items-center gap-2 font-semibold px-7 py-3 rounded-xl text-base transition-all hover:opacity-90 hover:scale-[1.02] animate-glow-pulse"
+              style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899, #f97316)', color: '#fff', boxShadow: '0 0 40px rgba(168,85,247,0.35), 0 8px 32px rgba(0,0,0,0.4)' }}>
               <Zap size={14} />
               Try Simulation
             </Link>
@@ -427,15 +453,16 @@ export default function Landing() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-white/[0.08]">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden"
+            style={{ boxShadow: '0 0 0 1px rgba(168,85,247,0.15)' }}>
             {[
-              { n: 6,   s: '+',      label: 'parallel agents' },
-              { n: 2,   s: ' tools', label: 'per agent (MCP)' },
-              { n: 100, s: 'K+',     label: 'lines explored' },
-              { n: 1,   s: ' goal',  label: 'to a full team' },
-            ].map(({ n, s, label }) => (
+              { n: 6,   s: '+',      label: 'parallel agents',  color: '#c084fc' },
+              { n: 2,   s: ' tools', label: 'per agent (MCP)',  color: '#f472b6' },
+              { n: 100, s: 'K+',     label: 'lines explored',   color: '#fb923c' },
+              { n: 1,   s: ' goal',  label: 'to a full team',   color: '#a78bfa' },
+            ].map(({ n, s, label, color }) => (
               <div key={label} className="py-5 px-4 text-center" style={{ background: 'var(--bg-subtle)' }}>
-                <div className="text-2xl font-bold text-white mb-0.5 font-mono">
+                <div className="text-2xl font-bold mb-0.5 font-mono" style={{ color }}>
                   <Counter to={n} suffix={s} />
                 </div>
                 <div className="text-[11px] text-white/65 font-mono">{label}</div>
@@ -446,7 +473,8 @@ export default function Landing() {
       </section>
 
       {/* ── Problem ──────────────────────────────────────────── */}
-      <section className="py-24 px-6 border-t border-white/[0.05]">
+      <section className="py-24 px-6">
+        <div className="max-w-5xl mx-auto mb-0"><hr className="gradient-divider" /></div>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">The Problem</div>
@@ -481,7 +509,8 @@ export default function Landing() {
       </section>
 
       {/* ── Who is this for ───────────────────────────────────── */}
-      <section className="py-20 px-6 border-t border-white/[0.05]">
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto mb-0"><hr className="gradient-divider" /></div>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Who Is This For</div>
@@ -505,7 +534,8 @@ export default function Landing() {
       </section>
 
       {/* ── What makes it different ───────────────────────────── */}
-      <section className="py-20 px-6 border-t border-white/[0.05]">
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto mb-0"><hr className="gradient-divider" /></div>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Differentiation</div>
@@ -521,7 +551,10 @@ export default function Landing() {
               { n: '05', title: 'Context stays external', body: 'Files never enter the prompt. Agents write code to explore the codebase — grep, find, cat. Proven by the MIT CSAIL RLM paper to outperform context-stuffing 2×.' },
               { n: '06', title: 'Agents fix each other', body: 'When the Tester finds a bug, it routes back to the Engineer automatically. The swarm has a built-in try → test → fix loop that runs until tests pass.' },
             ].map(({ n, title, body }) => (
-              <div key={n} className="rounded-2xl border border-white/[0.08] p-6 hover:border-white/15 transition-colors" style={{ background: 'var(--bg-card)' }}>
+              <div key={n} className="rounded-2xl border border-white/[0.08] p-6 transition-all duration-300 hover:border-purple-500/30 group"
+                style={{ background: 'var(--bg-card)' }}
+                onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 0 30px rgba(168,85,247,0.1), inset 0 1px 0 rgba(168,85,247,0.05)')}
+                onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                 <div className="text-xs font-mono mb-3" style={{ color: '#a855f7' }}>{n}</div>
                 <div className="text-white font-semibold text-base mb-2">{title}</div>
                 <div className="text-white/60 text-sm leading-relaxed">{body}</div>
@@ -532,7 +565,8 @@ export default function Landing() {
       </section>
 
       {/* ── Architecture ─────────────────────────────────────── */}
-      <section className="py-24 px-6 border-t border-white/[0.05]">
+      <section className="py-24 px-6">
+        <div className="max-w-5xl mx-auto mb-0"><hr className="gradient-divider" /></div>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Architecture</div>
@@ -598,7 +632,8 @@ export default function Landing() {
       </section>
 
       {/* ── Four foundations ──────────────────────────────────── */}
-      <section className="py-24 px-6 border-t border-white/[0.05]">
+      <section className="py-24 px-6">
+        <div className="max-w-6xl mx-auto mb-0"><hr className="gradient-divider" /></div>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
             <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Research Foundations</div>
