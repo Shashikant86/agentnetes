@@ -1,8 +1,15 @@
 {
   "name": "agentnetes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Zero to a self-organizing AI agency. On demand.",
-  "keywords": ["ai", "agents", "cli", "gemini", "vercel", "autonomous"],
+  "keywords": [
+    "ai",
+    "agents",
+    "cli",
+    "gemini",
+    "vercel",
+    "autonomous"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -12,7 +19,9 @@
   "bin": {
     "agentnetes": "./dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsx src/index.ts",
