@@ -1,6 +1,22 @@
+<div align="center">
+
+<img src="public/logo.png" alt="Agentnetes" width="100" height="100" style="border-radius:20px" />
+
 # Agentnetes
 
 **Zero to a Self-Organizing AI Agency. On Demand.**
+
+*Kubernetes for AI agents — built at Zero to Agent London 2026, Google DeepMind x Vercel*
+
+<br/>
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20it%20now-a855f7?style=for-the-badge&logo=vercel&logoColor=white)](https://shashikant86.github.io/agentnetes/)
+[![Demo](https://img.shields.io/badge/Agent%20Demo-Launch-ec4899?style=for-the-badge)](https://shashikant86.github.io/agentnetes/demo)
+[![GitHub](https://img.shields.io/badge/GitHub-Repo-fb923c?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Shashikant86/agentnetes)
+
+</div>
+
+---
 
 Type a goal. Agentnetes assembles a team of specialist AI agents, each running in an isolated sandbox, that explore your codebase, write code, run tests, fix failures, and deliver together. No hardcoded roles. No sequential bottlenecks. No files stuffed into prompts.
 
