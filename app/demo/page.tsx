@@ -6,6 +6,9 @@ import { AgentPanel } from '@/components/AgentPanel';
 import { ModelSelector } from '@/components/ModelSelector';
 import { AgentTask, VrlmEvent } from '@/lib/vrlm/types';
 import { PanelRightOpen, PanelRightClose } from 'lucide-react';
+import { SimulatedVrlmRuntime } from '@/lib/vrlm/simulated-runtime';
+
+const IS_STATIC = process.env.NEXT_PUBLIC_STATIC_MODE === 'true';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -21,6 +24,41 @@ export default function Home() {
   const [plannerModel, setPlannerModel] = useState('google/gemini-2.5-pro');
   const [showAgents, setShowAgents] = useState(true);
 
+  const processEvent = useCallback((event: VrlmEvent, finalRef: { content: string }) => {
+    setEvents(prev => [...prev, event]);
+    if (event.type === 'task-created') {
+      const task = event.data.task as AgentTask;
+      setTasks(prev => ({ ...prev, [task.id]: task }));
+      if (task.depth === 0) setRootId(task.id);
+    }
+    if (event.type === 'task-updated' && event.taskId) {
+      setTasks(prev => {
+        const existing = prev[event.taskId!];
+        if (!existing) return prev;
+        return { ...prev, [event.taskId!]: { ...existing, status: (event.data.status as AgentTask['status']) ?? existing.status, statusText: (event.data.statusText as string) ?? existing.statusText } };
+      });
+    }
+    if (event.type === 'task-completed' && event.taskId) {
+      setTasks(prev => {
+        const existing = prev[event.taskId!];
+        if (!existing) return prev;
+        return { ...prev, [event.taskId!]: { ...existing, status: 'completed', statusText: 'Done', completedAt: Date.now(), artifacts: (event.data.artifacts as AgentTask['artifacts']) ?? existing.artifacts, findings: (event.data.findings as string[]) ?? existing.findings } };
+      });
+    }
+    if (event.type === 'artifact' && event.taskId) {
+      setTasks(prev => {
+        const existing = prev[event.taskId!];
+        if (!existing) return prev;
+        const artifact = event.data.artifact as AgentTask['artifacts'][0];
+        if (existing.artifacts.some(a => a.filename === artifact.filename)) return prev;
+        return { ...prev, [event.taskId!]: { ...existing, artifacts: [...existing.artifacts, artifact] } };
+      });
+    }
+    if (event.type === 'done') {
+      finalRef.content = String(event.data.content ?? '');
+    }
+  }, []);
+
   const handleSubmit = useCallback(async (message: string) => {
     setMessages(prev => [...prev, { role: 'user', content: message }]);
     setTasks({});
@@ -29,6 +67,18 @@ export default function Home() {
     setIsRunning(true);
 
     try {
+      if (IS_STATIC) {
+        // ── Client-side simulation (GitHub Pages / static export) ────────────
+        const finalRef = { content: '' };
+        const runtime = new SimulatedVrlmRuntime({ plannerModel, workerModel: plannerModel });
+        runtime.onEvent((event: VrlmEvent) => processEvent(event, finalRef));
+        await runtime.run(message);
+        if (finalRef.content) setMessages(prev => [...prev, { role: 'assistant', content: finalRef.content }]);
+        setIsRunning(false);
+        return;
+      }
+
+      // ── Server-side execution via API route ──────────────────────────────
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -39,90 +89,27 @@ export default function Home() {
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
-      let finalContent = '';
+      const finalRef = { content: '' };
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
         const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
+        for (const line of chunk.split('\n')) {
           if (!line.startsWith('data: ')) continue;
-          try {
-            const event: VrlmEvent = JSON.parse(line.slice(6));
-            setEvents(prev => [...prev, event]);
-
-            if (event.type === 'task-created') {
-              const task = event.data.task as AgentTask;
-              setTasks(prev => ({ ...prev, [task.id]: task }));
-              if (task.depth === 0) setRootId(task.id);
-            }
-
-            if (event.type === 'task-updated' && event.taskId) {
-              setTasks(prev => {
-                const existing = prev[event.taskId!];
-                if (!existing) return prev;
-                return {
-                  ...prev,
-                  [event.taskId!]: {
-                    ...existing,
-                    status: (event.data.status as AgentTask['status']) ?? (existing.status === 'pending' ? 'running' : existing.status),
-                    statusText: (event.data.statusText as string) ?? existing.statusText,
-                  },
-                };
-              });
-            }
-
-            if (event.type === 'task-completed' && event.taskId) {
-              setTasks(prev => {
-                const existing = prev[event.taskId!];
-                if (!existing) return prev;
-                return {
-                  ...prev,
-                  [event.taskId!]: {
-                    ...existing,
-                    status: 'completed',
-                    statusText: 'Done',
-                    completedAt: Date.now(),
-                    artifacts: (event.data.artifacts as AgentTask['artifacts']) ?? existing.artifacts,
-                    findings: (event.data.findings as string[]) ?? existing.findings,
-                  },
-                };
-              });
-            }
-
-            // accumulate artifacts as they arrive
-            if (event.type === 'artifact' && event.taskId) {
-              setTasks(prev => {
-                const existing = prev[event.taskId!];
-                if (!existing) return prev;
-                const artifact = event.data.artifact as AgentTask['artifacts'][0];
-                const already = existing.artifacts.some(a => a.filename === artifact.filename);
-                if (already) return prev;
-                return { ...prev, [event.taskId!]: { ...existing, artifacts: [...existing.artifacts, artifact] } };
-              });
-            }
-
-            if (event.type === 'done') {
-              finalContent = String(event.data.content ?? '');
-            }
-          } catch {
-            // malformed line, skip
-          }
+          try { processEvent(JSON.parse(line.slice(6)), finalRef); } catch { /* skip */ }
         }
       }
 
-      if (finalContent) {
-        setMessages(prev => [...prev, { role: 'assistant', content: finalContent }]);
+      if (finalRef.content) {
+        setMessages(prev => [...prev, { role: 'assistant', content: finalRef.content }]);
       }
     } catch (err) {
       setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${String(err)}` }]);
     } finally {
       setIsRunning(false);
     }
-  }, [plannerModel]);
+  }, [plannerModel, processEvent]);
 
   return (
     <div className="h-screen overflow-hidden flex flex-col bg-[#0a0a0a] text-white">
