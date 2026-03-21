@@ -334,7 +334,7 @@ export default function Landing() {
 
           {/* Logo mark */}
           <div className="flex justify-center mb-6">
-            <Image src="/logo.png" alt="Agentnetes" width={90} height={90} priority className="rounded-2xl" />
+            <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.png`} alt="Agentnetes" width={90} height={90} priority className="rounded-2xl" />
           </div>
 
           {/* Hackathon badge */}
