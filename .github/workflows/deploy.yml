@@ -36,6 +36,9 @@ jobs:
         env:
           NEXT_PUBLIC_STATIC_MODE: 'true'
 
+      - name: Add .nojekyll
+        run: touch out/.nojekyll
+
       - uses: actions/configure-pages@v4
 
       - uses: actions/upload-pages-artifact@v3
