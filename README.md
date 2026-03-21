@@ -12,7 +12,6 @@
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20it%20now-a855f7?style=for-the-badge&logo=vercel&logoColor=white)](https://shashikant86.github.io/agentnetes/)
 [![Demo](https://img.shields.io/badge/Agent%20Demo-Launch-ec4899?style=for-the-badge)](https://shashikant86.github.io/agentnetes/demo)
-[![GitHub](https://img.shields.io/badge/GitHub-Repo-fb923c?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Shashikant86/agentnetes)
 
 </div>
 
