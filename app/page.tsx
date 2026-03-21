@@ -277,10 +277,12 @@ function ThemeToggle() {
 }
 
 // ── Logo ─────────────────────────────────────────────────────────
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 function Logo({ size = 28 }: { size?: number }) {
   return (
     <Image
-      src="/favicon.png"
+      src={`${BASE}/favicon.png`}
       alt="Agentnetes"
       width={size}
       height={size}
@@ -714,7 +716,7 @@ export default function Landing() {
             background: 'linear-gradient(135deg, rgba(168,85,247,0.06) 0%, rgba(236,72,153,0.04) 50%, rgba(249,115,22,0.06) 100%)',
           }}>
             <div className="flex justify-center mb-5">
-              <Image src="/favicon.png" alt="Agentnetes" width={48} height={48} className="rounded-xl" />
+              <Image src={`${BASE}/favicon.png`} alt="Agentnetes" width={48} height={48} className="rounded-xl" />
             </div>
             <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-4">Try it now</div>
             <h2 className="text-2xl font-bold mb-3 text-white">See the swarm execute</h2>
