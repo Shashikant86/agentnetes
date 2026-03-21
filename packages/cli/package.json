@@ -1,0 +1,24 @@
+{
+  "name": "agentnetes",
+  "version": "0.1.0",
+  "description": "Zero to a self-organizing AI agency. On demand.",
+  "bin": {
+    "agentnetes": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@vercel/sandbox": "latest",
+    "@ai-sdk/gateway": "beta",
+    "ai": "beta",
+    "zod": "latest",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "tsx": "latest",
+    "@types/node": "latest"
+  }
+}

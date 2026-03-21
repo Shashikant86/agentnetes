@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
+}
+
+/* animations */
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-once {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes border-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+  50%       { box-shadow: 0 0 20px 2px rgba(59,130,246,0.15); }
+}
+.animate-slide-in   { animation: slide-in 0.25s ease-out forwards; }
+.animate-pulse-once { animation: pulse-once 1.2s ease-in-out; }
+.animate-fade-up    { animation: fade-up 0.5s ease-out forwards; }
+.animate-shimmer    { animation: shimmer 3s linear infinite; }
+.animate-border-glow { animation: border-glow 3s ease-in-out infinite; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+/* markdown prose in chat */
+.prose { color: #ededed; }
+.prose h1, .prose h2, .prose h3 { color: #fff; font-weight: 600; }
+.prose code { background: #1a1a1a; padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: #7dd3fc; }
+.prose pre { background: #111; border: 1px solid #222; border-radius: 8px; padding: 12px 16px; overflow-x: auto; }
+.prose pre code { background: transparent; padding: 0; color: #e2e8f0; }
+.prose ul { list-style: disc; padding-left: 1.5rem; }
+.prose li { margin: 4px 0; }
+.prose strong { color: #fff; }
+.prose p { margin: 8px 0; line-height: 1.6; }
