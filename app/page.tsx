@@ -412,15 +412,15 @@ export default function Landing() {
               <div className="px-5 py-4 space-y-2 text-sm font-mono text-left">
                 <div>
                   <span className="text-white/30">$ </span>
-                  <span className="text-green-400">npx</span>
-                  <span className="text-white/80"> agentnetes run </span>
-                  <span className="text-purple-400">&quot;add dark mode to this app&quot;</span>
-                </div>
-                <div className="text-white/30 text-xs pt-1 border-t border-white/[0.05]">or install globally</div>
-                <div>
-                  <span className="text-white/30">$ </span>
                   <span className="text-green-400">npm</span>
                   <span className="text-white/80"> install -g agentnetes</span>
+                </div>
+                <div className="text-white/30 text-xs pt-1 border-t border-white/[0.05]">then run on any git repo</div>
+                <div>
+                  <span className="text-white/30">$ </span>
+                  <span className="text-green-400">agentnetes</span>
+                  <span className="text-white/80"> run </span>
+                  <span className="text-purple-400">&quot;add dark mode to this app&quot;</span>
                 </div>
               </div>
             </div>

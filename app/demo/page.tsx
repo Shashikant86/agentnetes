@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import Link from 'next/link';
 import { ChatPanel } from '@/components/ChatPanel';
 import { AgentPanel } from '@/components/AgentPanel';
 import { ModelSelector } from '@/components/ModelSelector';
 import { AgentTask, VrlmEvent } from '@/lib/vrlm/types';
-import { PanelRightOpen, PanelRightClose } from 'lucide-react';
+import { PanelRightOpen, PanelRightClose, ArrowLeft } from 'lucide-react';
 import { SimulatedVrlmRuntime } from '@/lib/vrlm/simulated-runtime';
 
 const IS_STATIC = process.env.NEXT_PUBLIC_STATIC_MODE === 'true';
@@ -116,9 +117,13 @@ export default function Home() {
       {/* Header */}
       <header className="flex items-center justify-between px-5 py-3 border-b border-[#1a1a1a] shrink-0">
         <div className="flex items-center gap-3">
-          <span className="text-xl font-bold tracking-tight">Agentnetes</span>
+          <Link href="/" className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm">
+            <ArrowLeft size={13} /> Home
+          </Link>
+          <span className="text-white/20">|</span>
+          <span className="text-base font-bold tracking-tight">Agentnetes</span>
           <span className="text-[10px] text-white/55 border border-white/10 rounded px-1.5 py-0.5 font-mono uppercase tracking-wider hidden sm:inline">
-            Kubernetes for AI agents
+            Simulation
           </span>
         </div>
         <div className="flex items-center gap-3">
