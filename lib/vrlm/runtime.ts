@@ -6,6 +6,7 @@ import {
   createWorkerSandbox,
   collectNewFiles,
   stopSandbox,
+  type AnySandbox,
 } from './sandbox-manager';
 import {
   PLANNER_SYSTEM_PROMPT,
@@ -158,8 +159,8 @@ export class VrlmRuntime {
   // ── Worker ──────────────────────────────────────────────────────────────────
 
   private async runWorker(task: AgentTask, repoUrl: string, snapshotId?: string): Promise<string> {
-    let sandbox = await createWorkerSandbox(repoUrl, snapshotId);
-    task.sandboxId = (sandbox as any).id ?? 'sandbox';
+    let sandbox: AnySandbox = await createWorkerSandbox(repoUrl, snapshotId);
+    task.sandboxId = (sandbox as any).id ?? 'local';
 
     this.emitTaskUpdate(task.id, 'running', 'Sandbox ready');
 

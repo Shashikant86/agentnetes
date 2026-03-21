@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@ai-sdk/gateway": "beta",
+    "@ai-sdk/google": "^3.0.52",
     "@vercel/sandbox": "latest",
     "ai": "beta",
     "lucide-react": "latest",

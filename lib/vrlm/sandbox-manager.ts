@@ -1,49 +1,123 @@
-import { Sandbox } from '@vercel/sandbox';
+import { LocalSandbox, createLocalSandbox } from './local-sandbox';
+import { DockerSandbox, createDockerSandbox } from './docker-sandbox';
 
-const SANDBOX_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
+// Unified sandbox type used across the runtime
+export type AnySandbox = LocalSandbox | DockerSandbox | import('@vercel/sandbox').Sandbox;
 
 export interface RunResult {
   output: string;
   exitCode: number;
 }
 
-// Creates a sandbox from snapshot (fast) or by cloning repoUrl from git (slower but always works)
-export async function createWorkerSandbox(repoUrl: string, snapshotId?: string): Promise<Sandbox> {
-  if (snapshotId) {
-    return Sandbox.create({
-      source: { type: 'snapshot', snapshotId },
-      timeout: SANDBOX_TIMEOUT_MS,
-    });
-  }
-
-  if (!repoUrl) {
-    throw new Error('repoUrl is required when no snapshotId is provided');
-  }
-
-  return Sandbox.create({
-    source: { type: 'git', url: repoUrl, depth: 1 },
-    timeout: SANDBOX_TIMEOUT_MS,
-  });
+/**
+ * Detect which sandbox provider to use based on environment variables.
+ *
+ * Priority:
+ *   1. SANDBOX_PROVIDER=vercel  → Vercel Firecracker (requires VERCEL_TOKEN or OIDC)
+ *   2. SANDBOX_PROVIDER=e2b     → E2B (requires E2B_API_KEY)
+ *   3. SANDBOX_PROVIDER=daytona → Daytona (requires DAYTONA_API_KEY)
+ *   4. SANDBOX_PROVIDER=local   → Local shell in a temp dir (no auth needed)
+ *   5. Auto-detect: Vercel env present → vercel, else local
+ */
+function detectProvider(): 'vercel' | 'e2b' | 'daytona' | 'docker' | 'local' {
+  const explicit = process.env.SANDBOX_PROVIDER?.toLowerCase();
+  if (explicit === 'vercel')  return 'vercel';
+  if (explicit === 'e2b')     return 'e2b';
+  if (explicit === 'daytona') return 'daytona';
+  if (explicit === 'docker')  return 'docker';
+  if (explicit === 'local')   return 'local';
+  // Auto-detect
+  if (process.env.VERCEL_TOKEN || process.env.VERCEL) return 'vercel';
+  if (process.env.E2B_API_KEY)                        return 'e2b';
+  if (process.env.DAYTONA_API_KEY)                    return 'daytona';
+  return 'docker'; // default to docker for local demo
 }
 
-// Run a bash command, cap output at maxLines to avoid token bloat
-export async function runInSandbox(
-  sandbox: Sandbox,
-  command: string,
-  maxLines = 200,
-): Promise<RunResult> {
-  const cmd = `(${command}) 2>&1 | head -${maxLines}`;
-  const result = await sandbox.runCommand('bash', ['-c', cmd]);
+export async function createWorkerSandbox(repoUrl: string, snapshotId?: string): Promise<AnySandbox> {
+  const provider = detectProvider();
+
+  if (provider === 'vercel') {
+    const { Sandbox } = await import('@vercel/sandbox');
+    if (snapshotId) {
+      return Sandbox.create({ source: { type: 'snapshot', snapshotId }, timeout: 10 * 60 * 1000 });
+    }
+    return Sandbox.create({ source: { type: 'git', url: repoUrl, depth: 1 }, timeout: 10 * 60 * 1000 });
+  }
+
+  if (provider === 'e2b') {
+    try {
+      const { Sandbox } = await import('e2b' as any);
+      const sbx = await Sandbox.create({ apiKey: process.env.E2B_API_KEY });
+      await sbx.commands.run(`git clone --depth 1 ${repoUrl} /home/user/repo`);
+      return wrapE2B(sbx);
+    } catch {
+      console.warn('[sandbox] e2b not available, falling back to local');
+    }
+  }
+
+  if (provider === 'daytona') {
+    try {
+      const { Daytona } = await import('@daytonaio/sdk' as any);
+      const daytona = new Daytona({ apiKey: process.env.DAYTONA_API_KEY });
+      const workspace = await daytona.create({ repository: { url: repoUrl } });
+      return wrapDaytona(workspace);
+    } catch {
+      console.warn('[sandbox] daytona not available, falling back to local');
+    }
+  }
+
+  if (provider === 'docker') {
+    return createDockerSandbox(repoUrl);
+  }
+
+  // Local fallback — runs real shell commands in a cloned temp dir
+  return createLocalSandbox(repoUrl);
+}
+
+// ── E2B adapter ──────────────────────────────────────────────────────────────
+
+function wrapE2B(sbx: any): AnySandbox {
   return {
-    output: (await result.stdout()).trim(),
-    exitCode: result.exitCode,
-  };
+    id: sbx.sandboxId ?? 'e2b',
+    async runCommand(_shell: string, args: string[]) {
+      const result = await sbx.commands.run(args.join(' '), { cwd: '/home/user/repo' });
+      return { stdout: async () => result.stdout ?? '', exitCode: result.exitCode ?? 0 };
+    },
+    async readFile({ path }: { path: string }) {
+      try {
+        const content = await sbx.files.read(path);
+        async function* gen() { yield Buffer.from(content); }
+        return gen();
+      } catch { return null; }
+    },
+    async stop() { try { await sbx.kill(); } catch { /* ignore */ } },
+  } as unknown as AnySandbox;
 }
 
-// Collect files written under dir with given extensions, read their content from sandbox
-// Uses sandbox.readFile() which returns an async iterable of chunks
+// ── Daytona adapter ──────────────────────────────────────────────────────────
+
+function wrapDaytona(workspace: any): AnySandbox {
+  return {
+    id: workspace.id ?? 'daytona',
+    async runCommand(_shell: string, args: string[]) {
+      const result = await workspace.process.executeCommand(args.join(' '));
+      return { stdout: async () => result.output ?? '', exitCode: result.exitCode ?? 0 };
+    },
+    async readFile({ path }: { path: string }) {
+      try {
+        const content = await workspace.filesystem.downloadFile(path);
+        async function* gen() { yield Buffer.from(content); }
+        return gen();
+      } catch { return null; }
+    },
+    async stop() { try { await workspace.delete(); } catch { /* ignore */ } },
+  } as unknown as AnySandbox;
+}
+
+// ── Shared utilities ─────────────────────────────────────────────────────────
+
 export async function collectNewFiles(
-  sandbox: Sandbox,
+  sandbox: AnySandbox,
   dir: string,
   extensions: string[] = ['ts', 'js', 'json', 'md'],
 ): Promise<Array<{ path: string; content: string }>> {
@@ -65,11 +139,6 @@ export async function collectNewFiles(
   return out;
 }
 
-// Best-effort stop
-export async function stopSandbox(sandbox: Sandbox): Promise<void> {
-  try {
-    await sandbox.stop();
-  } catch {
-    // best-effort cleanup
-  }
+export async function stopSandbox(sandbox: AnySandbox): Promise<void> {
+  try { await sandbox.stop(); } catch { /* best-effort */ }
 }

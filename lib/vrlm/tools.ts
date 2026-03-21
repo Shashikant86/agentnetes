@@ -1,13 +1,13 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import type { Sandbox } from '@vercel/sandbox';
+import type { AnySandbox } from './sandbox-manager';
 
 /**
  * Creates the two-tool MCP surface for a worker agent.
- * search() and execute() are backed by a real Firecracker sandbox.
+ * search() and execute() are backed by a real or local sandbox.
  * Combined footprint is ~1,000 tokens regardless of codebase size.
  */
-export function createAgentTools(sandbox: Sandbox) {
+export function createAgentTools(sandbox: AnySandbox) {
   const search = tool({
     description:
       'Search for patterns across the codebase. Returns matching file paths. ' +
