@@ -11,13 +11,30 @@
 <br/>
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20it%20now-a855f7?style=for-the-badge&logo=vercel&logoColor=white)](https://shashikant86.github.io/agentnetes/)
-[![Demo](https://img.shields.io/badge/Agent%20Demo-Launch-ec4899?style=for-the-badge)](https://shashikant86.github.io/agentnetes/demo)
+[![Agent Demo](https://img.shields.io/badge/Agent%20Demo-Launch-ec4899?style=for-the-badge)](https://shashikant86.github.io/agentnetes/demo)
+[![npm version](https://img.shields.io/npm/v/agentnetes?style=for-the-badge&logo=npm&color=fb923c)](https://www.npmjs.com/package/agentnetes)
+[![npm downloads](https://img.shields.io/npm/dm/agentnetes?style=for-the-badge&color=22c55e)](https://www.npmjs.com/package/agentnetes)
+[![License: MIT](https://img.shields.io/badge/License-MIT-white?style=for-the-badge)](LICENSE)
 
 </div>
 
 ---
 
 Type a goal. Agentnetes assembles a team of specialist AI agents, each running in an isolated sandbox, that explore your codebase, write code, run tests, fix failures, and deliver together. No hardcoded roles. No sequential bottlenecks. No files stuffed into prompts.
+
+---
+
+## CLI
+
+```bash
+# Run on your current git repo
+GOOGLE_API_KEY=your_key npx agentnetes run "add comprehensive test coverage"
+
+# Pre-warm a sandbox snapshot for faster runs (Vercel sandbox)
+npx agentnetes snapshot create
+```
+
+No install needed — `npx` pulls it automatically. Works on any git repo.
 
 ---
 

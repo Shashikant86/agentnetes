@@ -391,6 +391,21 @@ export default function Landing() {
             </Link>
           </div>
 
+          {/* npm install */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
+            <div className="flex items-center gap-3 border border-white/10 rounded-xl px-5 py-3 text-sm font-mono" style={{ background: 'var(--bg-subtle)' }}>
+              <span className="text-white/40 text-xs">NPM</span>
+              <span className="text-white/80">npx agentnetes run</span>
+              <span className="text-purple-400">&quot;your goal here&quot;</span>
+            </div>
+            <a href="https://www.npmjs.com/package/agentnetes" target="_blank" rel="noreferrer"
+              className="flex items-center gap-2 border border-white/10 rounded-xl px-4 py-3 text-sm font-mono text-white/60 hover:text-white/80 hover:border-white/20 transition-all"
+              style={{ background: 'var(--bg-subtle)' }}>
+              <svg width="14" height="14" viewBox="0 0 18 7" fill="currentColor"><path d="M0 0h18v6H9V1H7v5H0V0zm1 5h2V1H1v4zm3-4v4h2V1H4zm5 4h1V1H8v4h1z"/></svg>
+              npm package
+            </a>
+          </div>
+
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-white/[0.08]">
             {[

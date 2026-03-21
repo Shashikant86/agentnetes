@@ -53,8 +53,9 @@ async function main() {
     console.log('  agentnetes snapshot list    List available snapshots');
     console.log('');
     console.log('Environment variables:');
-    console.log('  AI_GATEWAY_BASE_URL  Vercel AI Gateway endpoint');
-    console.log('  VERCEL_TOKEN         Vercel API token (for sandbox)');
+    console.log('  GOOGLE_API_KEY       Google Gemini API key (aistudio.google.com)');
+    console.log('  SANDBOX_PROVIDER     docker | local | vercel | e2b (default: docker)');
+    console.log('  AI_GATEWAY_BASE_URL  Vercel AI Gateway endpoint (optional)');
   }
 }
 
