@@ -319,7 +319,7 @@ export default function Landing() {
             <Link href="/demo"
               className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition-all"
               style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6, #fb923c)', color: '#000' }}>
-              Try demo <ArrowRight size={11} />
+              Try Simulation <ArrowRight size={11} />
             </Link>
           </div>
         </div>
@@ -386,11 +386,11 @@ export default function Landing() {
               className="flex items-center gap-2 font-semibold px-7 py-3 rounded-xl text-base shadow-lg transition-all hover:opacity-90 hover:scale-[1.02]"
               style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899, #f97316)', color: '#fff' }}>
               <Zap size={14} />
-              Launch demo
+              Try Simulation
             </Link>
-            <Link href="/demo?mode=simulation"
+            <Link href="/docs"
               className="flex items-center gap-2 border border-white/15 text-white/70 px-7 py-3 rounded-xl hover:border-white/30 hover:text-white transition-all text-base">
-              View simulation <ChevronRight size={13} />
+              Read the docs <ChevronRight size={13} />
             </Link>
           </div>
 
@@ -439,6 +439,92 @@ export default function Landing() {
                   <Counter to={n} suffix={s} />
                 </div>
                 <div className="text-[11px] text-white/65 font-mono">{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Problem ──────────────────────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/[0.05]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">The Problem</div>
+            <h2 className="text-3xl font-bold mb-4 text-white">Single agents break on real codebases.</h2>
+            <p className="text-white/70 text-base max-w-xl mx-auto leading-relaxed">
+              Modern codebases have hundreds of thousands of lines. No single AI model can read them all — and even models with large context windows suffer from context rot: the longer the prompt, the worse the reasoning.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-4 mb-12">
+            {[
+              { label: 'Single agent', problem: true,  points: ['Stuffs entire codebase into prompt', 'Performance degrades beyond ~50K tokens', 'Cannot parallelize work', 'One failure = total failure'] },
+              { label: 'Agentnetes', problem: false, points: ['Context lives in sandboxes, not prompts', 'Agents explore via code — grep, find, cat', 'Specialists run in parallel', 'Agents catch and fix each other\'s errors'] },
+              { label: 'Human team', problem: null,  points: ['Days to weeks per feature', 'Requires coordination overhead', 'Inconsistent quality', 'Expensive and hard to scale'] },
+            ].map(({ label, problem, points }) => (
+              <div key={label} className={`rounded-2xl border p-6 ${problem === false ? 'border-purple-500/40' : 'border-white/10'}`}
+                style={{ background: problem === false ? 'rgba(168,85,247,0.06)' : 'var(--bg-subtle)' }}>
+                <div className={`text-sm font-semibold mb-4 ${problem === false ? 'text-purple-400' : 'text-white/50'}`}>{label}</div>
+                <ul className="space-y-2">
+                  {points.map(p => (
+                    <li key={p} className="flex items-start gap-2 text-sm">
+                      <span className={`mt-1 shrink-0 text-xs ${problem === false ? 'text-purple-400' : 'text-white/25'}`}>
+                        {problem === false ? '✓' : '✗'}
+                      </span>
+                      <span className={problem === false ? 'text-white/75' : 'text-white/45'}>{p}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Who is this for ───────────────────────────────────── */}
+      <section className="py-20 px-6 border-t border-white/[0.05]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Who Is This For</div>
+            <h2 className="text-3xl font-bold mb-4 text-white">Built for developers who move fast.</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { icon: '🧑‍💻', title: 'Solo developers', body: 'Get the leverage of a full engineering team on your personal projects. Ship faster without hiring.' },
+              { icon: '🏗️', title: 'Monorepo teams', body: 'Point the swarm at your large codebase. Agents explore only what they need — no context limits.' },
+              { icon: '🔐', title: 'Security engineers', body: 'Spin up a dedicated audit swarm to scan, analyse, and fix vulnerabilities across the entire codebase.' },
+              { icon: '⚙️', title: 'Platform engineers', body: 'Automate cross-cutting concerns — test coverage, observability, migrations — across all services.' },
+            ].map(({ icon, title, body }) => (
+              <div key={title} className="rounded-2xl border border-white/10 p-6" style={{ background: 'var(--bg-card)' }}>
+                <div className="text-2xl mb-3">{icon}</div>
+                <div className="text-white font-semibold text-base mb-2">{title}</div>
+                <div className="text-white/60 text-sm leading-relaxed">{body}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── What makes it different ───────────────────────────── */}
+      <section className="py-20 px-6 border-t border-white/[0.05]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Differentiation</div>
+            <h2 className="text-3xl font-bold mb-4 text-white">Not another AI coding assistant.</h2>
+            <p className="text-white/65 text-base max-w-lg mx-auto">Agentnetes is not autocomplete. It is not a chatbot. It is a swarm that investigates, builds, tests, and delivers.</p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { n: '01', title: 'Self-organizing teams', body: 'The model invents the roles it needs. A provider task spawns a Scout, Engineer, Tester. A security audit spawns an entirely different team. Nothing is hardcoded.' },
+              { n: '02', title: 'Real code execution', body: 'Agents run real shell commands in real sandboxes. Tests actually execute. Build failures get fixed. This is not a simulation of engineering — it is engineering.' },
+              { n: '03', title: 'Any model, same swarm', body: 'Swap Gemini for Claude or GPT by changing one env var. The swarm architecture is model-agnostic. Route through Vercel AI Gateway or call Google directly.' },
+              { n: '04', title: 'Two-tool MCP strategy', body: 'Each agent has exactly two tools: search() and execute(). ~1,000 token footprint regardless of codebase size. No tool bloat, no context waste.' },
+              { n: '05', title: 'Context stays external', body: 'Files never enter the prompt. Agents write code to explore the codebase — grep, find, cat. Proven by the MIT CSAIL RLM paper to outperform context-stuffing 2×.' },
+              { n: '06', title: 'Agents fix each other', body: 'When the Tester finds a bug, it routes back to the Engineer automatically. The swarm has a built-in try → test → fix loop that runs until tests pass.' },
+            ].map(({ n, title, body }) => (
+              <div key={n} className="rounded-2xl border border-white/[0.08] p-6 hover:border-white/15 transition-colors" style={{ background: 'var(--bg-card)' }}>
+                <div className="text-xs font-mono mb-3" style={{ color: '#a855f7' }}>{n}</div>
+                <div className="text-white font-semibold text-base mb-2">{title}</div>
+                <div className="text-white/60 text-sm leading-relaxed">{body}</div>
               </div>
             ))}
           </div>
@@ -763,11 +849,11 @@ export default function Landing() {
               <Link href="/demo"
                 className="flex items-center gap-2 font-semibold px-8 py-3 rounded-xl text-base transition-all hover:opacity-90 hover:scale-[1.02]"
                 style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899, #f97316)', color: '#fff' }}>
-                Launch demo <ArrowRight size={14} />
+                Try Simulation <ArrowRight size={14} />
               </Link>
-              <Link href="/demo?mode=simulation"
+              <Link href="/docs"
                 className="flex items-center gap-2 border border-white/15 text-white/70 px-8 py-3 rounded-xl hover:border-white/30 hover:text-white transition-all text-base">
-                Simulation mode
+                Read the docs
               </Link>
             </div>
           </div>
@@ -788,7 +874,7 @@ export default function Landing() {
             Zero to Agent London · Google DeepMind x Vercel · 2026
           </div>
           <div className="flex items-center gap-5">
-            <Link href="/demo" className="text-white/65 hover:text-white/80 transition-colors text-sm">Demo</Link>
+            <Link href="/demo" className="text-white/65 hover:text-white/80 transition-colors text-sm">Simulation</Link>
             <a href="https://cerebralvalley.ai/e/zero-to-agent-london" target="_blank" rel="noreferrer"
               className="flex items-center gap-1 text-white/65 hover:text-white/80 transition-colors text-sm">
               Hackathon <ExternalLink size={10} />

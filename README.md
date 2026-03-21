@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/logo.png" alt="Agentnetes" width="100" height="100" style="border-radius:20px" />
+<img src="public/logo.png" alt="Agentnetes" width="180" height="180" style="border-radius:24px" />
 
 # Agentnetes
 
