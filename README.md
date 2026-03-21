@@ -23,7 +23,7 @@ Roles are fully emergent. Nothing is hardcoded. A provider implementation task g
 
 ## The Four Foundations
 
-### 1. RLM Pattern (MIT CSAIL)
+### 1. RLM Pattern ([MIT CSAIL](https://arxiv.org/abs/2512.24601))
 
 Context lives in sandboxes, not prompts. Agents do not receive hundreds of files in their context window. Instead they write small shell commands to explore the codebase:
 
@@ -35,7 +35,7 @@ cat packages/provider-utils/src/types.ts
 
 This keeps token footprints tiny regardless of codebase size.
 
-### 2. AutoResearch Loop (Karpathy)
+### 2. AutoResearch Loop ([Karpathy](https://github.com/karpathy/autoresearch))
 
 Agents do not write code and hope. They write code, run tests, measure results, and loop:
 
