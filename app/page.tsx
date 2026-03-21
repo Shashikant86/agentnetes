@@ -6,8 +6,9 @@ import { useEffect, useState, useRef } from 'react';
 import {
   ArrowRight, Github, Zap, Shield, GitBranch, Layers,
   Terminal, ExternalLink, CheckCircle2, ChevronRight,
-  Box, Network, Code2, RefreshCw,
+  Box, Network, Code2, RefreshCw, Sun, Moon,
 } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 // ── Brand colors (from logo: purple -> pink -> orange) ───────────
 // Primary gradient: #c084fc -> #f472b6 -> #fb923c
@@ -77,7 +78,7 @@ function AnimatedTerminal() {
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#0c0c0f] overflow-hidden shadow-2xl shadow-purple-500/10">
+    <div className="rounded-2xl border border-white/10 overflow-hidden shadow-2xl shadow-purple-500/10" style={{ background: 'var(--bg-panel)' }}>
       <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
         <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
         <span className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
@@ -89,7 +90,7 @@ function AnimatedTerminal() {
           </button>
         )}
       </div>
-      <div ref={containerRef} className="p-5 font-mono text-[12px] leading-6 space-y-0.5 overflow-y-auto" style={{ height: '290px' }}>
+      <div ref={containerRef} className="p-5 font-mono text-[12px] leading-6 space-y-0.5 overflow-y-auto" style={{ height: '290px', background: 'var(--bg-panel)' }}>
         {TERMINAL_LINES.slice(0, visibleCount).map((line, i) => (
           <div key={i} className={`whitespace-pre ${lineClass(line.type)}`}>{line.text || '\u00a0'}</div>
         ))}
@@ -149,7 +150,7 @@ function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
 // ── Architecture diagram ─────────────────────────────────────────
 function ArchDiagram() {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#0c0c0f] p-7">
+    <div className="rounded-2xl border border-white/10 p-7" style={{ background: 'var(--bg-panel)' }}>
       <div className="flex justify-center mb-5">
         <div className="flex items-center gap-2 border border-white/10 rounded-xl px-5 py-2.5 bg-white/5">
           <span className="text-white/70 text-xs font-mono">goal:</span>
@@ -213,15 +214,15 @@ interface FeatureCardProps {
 
 function FeatureCard({ badge, badgeColor, icon, title, description, detail, cite, code }: FeatureCardProps) {
   return (
-    <div className="group rounded-2xl border border-white/10 bg-[#0e0e12] p-6 hover:border-white/20 hover:bg-[#111116] transition-all duration-300 flex flex-col gap-4">
+    <div className="group rounded-2xl border border-white/10 p-6 hover:border-white/20 transition-all duration-300 flex flex-col gap-4" style={{ background: 'var(--bg-card)' }}>
       <div className="flex items-start justify-between">
         <div className={`text-[10px] font-mono px-2 py-0.5 rounded border ${badgeColor}`}>{badge}</div>
         <div className="text-white/65 group-hover:text-white/70 transition-colors">{icon}</div>
       </div>
       <div>
-        <h3 className="text-white font-semibold text-sm mb-2">{title}</h3>
-        <p className="text-white/70 text-sm leading-relaxed mb-3">{description}</p>
-        <p className="text-white/65 text-xs leading-relaxed">{detail}</p>
+        <h3 className="text-white font-semibold text-base mb-2">{title}</h3>
+        <p className="text-white/70 text-base leading-relaxed mb-3">{description}</p>
+        <p className="text-white/65 text-sm leading-relaxed">{detail}</p>
       </div>
       {code && (
         <div className="rounded-lg bg-black/40 border border-white/[0.06] px-3 py-2.5 font-mono text-[11px] text-violet-300">
@@ -238,8 +239,8 @@ function FeatureCard({ badge, badgeColor, icon, title, description, detail, cite
 // ── Stack badge ──────────────────────────────────────────────────
 function StackBadge({ name, version, highlight }: { name: string; version: string; highlight?: boolean }) {
   return (
-    <div className={`flex items-center justify-between gap-2 border rounded-xl px-4 py-2.5 ${highlight ? 'border-violet-500/30 bg-violet-500/5' : 'border-white/[0.08] bg-white/[0.02]'}`}>
-      <div className="text-white/90 text-xs font-medium">{name}</div>
+    <div className={`flex items-center justify-between gap-2 border rounded-xl px-4 py-2.5 ${highlight ? 'border-violet-500/30 bg-violet-500/5' : 'border-white/[0.08]'}`} style={highlight ? {} : { background: 'var(--bg-subtle)' }}>
+      <div className="text-white/90 text-sm font-medium">{name}</div>
       <div className="text-white/75 text-[10px] font-mono shrink-0">{version}</div>
     </div>
   );
@@ -251,10 +252,24 @@ function Step({ n, title, body, accent }: { n: string; title: string; body: stri
     <div className="flex gap-4">
       <div className={`shrink-0 w-8 h-8 rounded-full border flex items-center justify-center text-[11px] font-mono mt-0.5 ${accent}`}>{n}</div>
       <div className="pt-0.5">
-        <h4 className="text-white font-semibold text-sm mb-1.5">{title}</h4>
-        <p className="text-white/75 text-sm leading-relaxed">{body}</p>
+        <h4 className="text-white font-semibold text-base mb-1.5">{title}</h4>
+        <p className="text-white/75 text-base leading-relaxed">{body}</p>
       </div>
     </div>
+  );
+}
+
+// ── Theme toggle ─────────────────────────────────────────────────
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  return (
+    <button
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      className="p-2 rounded-lg border border-white/15 text-white/65 hover:text-white/80 hover:border-white/30 transition-all"
+      aria-label="Toggle theme"
+    >
+      {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+    </button>
   );
 }
 
@@ -275,20 +290,21 @@ function Logo({ size = 28 }: { size?: number }) {
 // ── Main page ────────────────────────────────────────────────────
 export default function Landing() {
   return (
-    <div className="bg-[#08080c] text-white overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif", background: 'var(--bg-base)', color: 'rgb(var(--fg))' }}>
 
       {/* ── Nav ─────────────────────────────────────────────── */}
-      <nav className="fixed top-0 inset-x-0 z-50 border-b border-white/[0.06] bg-[#08080c]/90 backdrop-blur-xl">
+      <nav className="fixed top-0 inset-x-0 z-50 border-b border-white/[0.06] backdrop-blur-xl" style={{ background: 'color-mix(in srgb, var(--bg-base) 90%, transparent)' }}>
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Logo size={26} />
             <span className="font-bold tracking-tight text-white">Agentnetes</span>
-            <span className="text-[9px] font-mono text-white/50 border border-white/[0.07] rounded px-1.5 py-0.5 uppercase tracking-widest hidden sm:inline">
+            <span className="text-xs font-mono text-white/80 border border-white/20 rounded px-2 py-0.5 uppercase tracking-wider hidden sm:inline">
               Kubernetes for AI agents
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <a href="https://github.com/superagentic-ai/agentnetes" target="_blank" rel="noreferrer"
+            <ThemeToggle />
+            <a href="https://github.com/Shashikant86/agentnetes" target="_blank" rel="noreferrer"
               className="text-white/65 hover:text-white/80 transition-colors p-1">
               <Github size={16} />
             </a>
@@ -350,7 +366,7 @@ export default function Landing() {
           </p>
 
           {/* Typing prompt */}
-          <div className="inline-flex items-center gap-3 bg-[#0e0e14] border border-white/10 rounded-2xl px-5 py-3.5 mb-10 text-sm font-mono max-w-full shadow-xl shadow-black/50">
+          <div className="inline-flex items-center gap-3 border border-white/10 rounded-2xl px-5 py-3.5 mb-10 text-sm font-mono max-w-full shadow-xl shadow-black/50" style={{ background: 'var(--bg-subtle)' }}>
             <span className="text-white/50 shrink-0">$</span>
             <span className="text-white/75 shrink-0">agentnetes run</span>
             <TypingPrompt />
@@ -359,13 +375,13 @@ export default function Landing() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16">
             <Link href="/demo"
-              className="flex items-center gap-2 font-semibold px-7 py-3 rounded-xl text-sm shadow-lg transition-all hover:opacity-90 hover:scale-[1.02]"
+              className="flex items-center gap-2 font-semibold px-7 py-3 rounded-xl text-base shadow-lg transition-all hover:opacity-90 hover:scale-[1.02]"
               style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899, #f97316)', color: '#fff' }}>
               <Zap size={14} />
               Launch demo
             </Link>
             <Link href="/demo?mode=simulation"
-              className="flex items-center gap-2 border border-white/15 text-white/70 px-7 py-3 rounded-xl hover:border-white/30 hover:text-white transition-all text-sm">
+              className="flex items-center gap-2 border border-white/15 text-white/70 px-7 py-3 rounded-xl hover:border-white/30 hover:text-white transition-all text-base">
               View simulation <ChevronRight size={13} />
             </Link>
           </div>
@@ -378,7 +394,7 @@ export default function Landing() {
               { n: 100, s: 'K+',     label: 'lines explored' },
               { n: 1,   s: ' goal',  label: 'to a full team' },
             ].map(({ n, s, label }) => (
-              <div key={label} className="bg-[#0e0e14] py-5 px-4 text-center">
+              <div key={label} className="py-5 px-4 text-center" style={{ background: 'var(--bg-subtle)' }}>
                 <div className="text-2xl font-bold text-white mb-0.5 font-mono">
                   <Counter to={n} suffix={s} />
                 </div>
@@ -393,7 +409,7 @@ export default function Landing() {
       <section className="py-24 px-6 border-t border-white/[0.05]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <div className="text-[10px] font-mono text-white/65 uppercase tracking-widest mb-3">Architecture</div>
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Architecture</div>
             <h2 className="text-3xl font-bold mb-4 text-white">One goal. A recursive agent swarm.</h2>
             <p className="text-white/75 text-base max-w-xl mx-auto leading-relaxed">
               The root agent decomposes your goal, invents the right team of specialists,
@@ -414,11 +430,11 @@ export default function Landing() {
                 { icon: <RefreshCw size={14} />, title: 'Agents collaborate at runtime',
                   body: 'When the Test Engineer finds a type error, that finding routes back to the Provider Engineer automatically. The vRLM runtime handles inter-agent communication.' },
               ].map(item => (
-                <div key={item.title} className="flex gap-3 p-4 rounded-xl border border-white/[0.07] bg-[#0e0e12] hover:border-white/15 transition-colors">
+                <div key={item.title} className="flex gap-3 p-4 rounded-xl border border-white/[0.07] hover:border-white/15 transition-colors" style={{ background: 'var(--bg-card)' }}>
                   <div className="text-white/65 mt-0.5 shrink-0">{item.icon}</div>
                   <div>
-                    <div className="text-white text-sm font-semibold mb-1">{item.title}</div>
-                    <div className="text-white/75 text-xs leading-relaxed">{item.body}</div>
+                    <div className="text-white text-base font-semibold mb-1">{item.title}</div>
+                    <div className="text-white/75 text-sm leading-relaxed">{item.body}</div>
                   </div>
                 </div>
               ))}
@@ -428,10 +444,10 @@ export default function Landing() {
       </section>
 
       {/* ── Live terminal ─────────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: 'linear-gradient(180deg, #08080c 0%, #0d0b14 50%, #08080c 100%)' }}>
+      <section className="py-24 px-6" style={{ background: 'var(--bg-base)' }}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10">
-            <div className="text-[10px] font-mono text-white/65 uppercase tracking-widest mb-3">Live Preview</div>
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Live Preview</div>
             <h2 className="text-3xl font-bold mb-3 text-white">Watch the swarm execute</h2>
             <p className="text-white/75 text-base max-w-md mx-auto">
               Real output from a simulated run. The actual runtime produces identical event streams.
@@ -459,7 +475,7 @@ export default function Landing() {
       <section className="py-24 px-6 border-t border-white/[0.05]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <div className="text-[10px] font-mono text-white/65 uppercase tracking-widest mb-3">Research Foundations</div>
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Research Foundations</div>
             <h2 className="text-3xl font-bold mb-4 text-white">Four ideas. One system.</h2>
             <p className="text-white/75 text-base max-w-lg mx-auto">
               Agentnetes combines four research-backed patterns that individually improve agent performance
@@ -513,10 +529,10 @@ export default function Landing() {
       </section>
 
       {/* ── Tech stack ────────────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: 'linear-gradient(180deg, #08080c 0%, #0d0b14 100%)' }}>
+      <section className="py-24 px-6" style={{ background: 'var(--bg-base)' }}>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <div className="text-[10px] font-mono text-white/65 uppercase tracking-widest mb-3">Stack</div>
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Stack</div>
             <h2 className="text-3xl font-bold mb-4 text-white">Built on the bleeding edge</h2>
             <p className="text-white/75 text-base max-w-lg mx-auto">
               Every layer is the latest available. No legacy versions. No compatibility shims.
@@ -553,7 +569,7 @@ export default function Landing() {
                 note: 'Model speciation: planner uses a more capable model, workers use a faster model.',
               },
             ].map(group => (
-              <div key={group.label} className="rounded-2xl border border-white/10 bg-[#0e0e12] p-5">
+              <div key={group.label} className="rounded-2xl border border-white/10 p-5" style={{ background: 'var(--bg-card)' }}>
                 <div className="text-[10px] font-mono text-white/65 uppercase tracking-wider mb-4">{group.label}</div>
                 <div className="space-y-2">
                   {group.items.map(item => <StackBadge key={item.name} {...item} />)}
@@ -564,7 +580,7 @@ export default function Landing() {
           </div>
 
           {/* Code snippet */}
-          <div className="rounded-2xl border border-white/10 bg-[#0a0a0e] overflow-hidden">
+          <div className="rounded-2xl border border-white/10 overflow-hidden" style={{ background: 'var(--bg-panel)' }}>
             <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
               <span className="text-[10px] font-mono text-white/65">lib/vrlm/agent-factory.ts</span>
             </div>
@@ -603,7 +619,7 @@ export default function Landing() {
       <section className="py-24 px-6 border-t border-white/[0.05]">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
-            <div className="text-[10px] font-mono text-white/65 uppercase tracking-widest mb-3">How It Works</div>
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">How It Works</div>
             <h2 className="text-3xl font-bold mb-4 text-white">From one sentence to working code</h2>
             <p className="text-white/75 text-base max-w-md mx-auto">
               The full pipeline from goal input to delivered artifacts
@@ -634,13 +650,13 @@ export default function Landing() {
       </section>
 
       {/* ── Model section ─────────────────────────────────────── */}
-      <section className="py-24 px-6 border-t border-white/[0.05]" style={{ background: 'linear-gradient(180deg, #08080c 0%, #0d0b14 100%)' }}>
+      <section className="py-24 px-6 border-t border-white/[0.05]" style={{ background: 'var(--bg-base)' }}>
         <div className="max-w-4xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="text-[10px] font-mono text-white/65 uppercase tracking-widest mb-3">AI Gateway</div>
+              <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">AI Gateway</div>
               <h2 className="text-3xl font-bold mb-4 text-white">Any model. Same swarm.</h2>
-              <p className="text-white/70 text-base leading-relaxed mb-6">
+              <p className="text-white/70 text-lg leading-relaxed mb-6">
                 Agentnetes routes all model calls through Vercel AI Gateway.
                 Switch the planner or worker model from the UI without changing a line of code.
               </p>
@@ -654,9 +670,9 @@ export default function Landing() {
                   <div key={x.label} className="flex items-center gap-2.5">
                     {x.done
                       ? <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
-                      : <div className="w-3.5 h-3.5 rounded-full border border-gray-700 shrink-0" />}
-                    <span className={`text-sm ${x.done ? 'text-white/80' : 'text-white/65'}`}>{x.label}</span>
-                    {!x.done && <span className="text-[9px] font-mono text-white/50 border border-gray-800 rounded px-1">soon</span>}
+                      : <div className="w-3.5 h-3.5 rounded-full border border-white/20 shrink-0" />}
+                    <span className={`text-base ${x.done ? 'text-white/80' : 'text-white/65'}`}>{x.label}</span>
+                    {!x.done && <span className="text-[9px] font-mono text-white/50 border border-white/20 rounded px-1">soon</span>}
                   </div>
                 ))}
               </div>
@@ -670,15 +686,15 @@ export default function Landing() {
               ].map(m => (
                 <div key={m.label} className={`flex items-center gap-3 border rounded-xl px-4 py-3 ${m.color}`}>
                   <div className="flex-1">
-                    <div className="text-white text-sm font-medium">{m.label}</div>
-                    <div className="text-white/65 text-[10px] font-mono mt-0.5">{m.role}</div>
+                    <div className="text-white text-base font-medium">{m.label}</div>
+                    <div className="text-white/65 text-xs font-mono mt-0.5">{m.role}</div>
                   </div>
                   {m.badge && (
                     <span className="text-[9px] font-mono text-white/65 border border-white/10 rounded px-1.5 py-0.5">{m.badge}</span>
                   )}
                 </div>
               ))}
-              <div className="rounded-xl bg-black/30 border border-white/[0.06] px-4 py-3 font-mono text-[11px]">
+              <div className="rounded-xl border border-white/10 px-4 py-3 font-mono text-[11px]" style={{ background: 'var(--bg-panel)' }}>
                 <span className="text-white/65">createGatewayProvider{'({'}</span><br />
                 <span className="text-white/65">{'  '}apiKey: </span><span className="text-violet-400">process.env.GATEWAY_API_KEY</span><br />
                 <span className="text-white/65">{'}'});</span>
@@ -697,20 +713,20 @@ export default function Landing() {
             <div className="flex justify-center mb-5">
               <Image src="/favicon.png" alt="Agentnetes" width={48} height={48} className="rounded-xl" />
             </div>
-            <div className="text-[10px] font-mono text-white/65 uppercase tracking-widest mb-4">Try it now</div>
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-4">Try it now</div>
             <h2 className="text-2xl font-bold mb-3 text-white">See the swarm execute</h2>
-            <p className="text-white/75 text-sm mb-8 max-w-sm mx-auto leading-relaxed">
+            <p className="text-white/75 text-base mb-8 max-w-sm mx-auto leading-relaxed">
               Give it a goal. Watch specialist agents spawn, explore, implement, test,
               and deliver inside isolated sandboxes. Under 90 seconds.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link href="/demo"
-                className="flex items-center gap-2 font-semibold px-8 py-3 rounded-xl text-sm transition-all hover:opacity-90 hover:scale-[1.02]"
+                className="flex items-center gap-2 font-semibold px-8 py-3 rounded-xl text-base transition-all hover:opacity-90 hover:scale-[1.02]"
                 style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899, #f97316)', color: '#fff' }}>
                 Launch demo <ArrowRight size={14} />
               </Link>
               <Link href="/demo?mode=simulation"
-                className="flex items-center gap-2 border border-white/15 text-white/70 px-8 py-3 rounded-xl hover:border-white/30 hover:text-white transition-all text-sm">
+                className="flex items-center gap-2 border border-white/15 text-white/70 px-8 py-3 rounded-xl hover:border-white/30 hover:text-white transition-all text-base">
                 Simulation mode
               </Link>
             </div>
@@ -724,20 +740,20 @@ export default function Landing() {
           <div className="flex items-center gap-2.5">
             <Logo size={22} />
             <div>
-              <div className="font-bold text-sm text-white">Agentnetes</div>
-              <div className="text-white/65 text-[10px] font-mono">by Superagentic AI</div>
+              <div className="font-bold text-base text-white">Agentnetes</div>
+              <div className="text-white/65 text-xs font-mono">Zero to Agent London 2026</div>
             </div>
           </div>
-          <div className="text-white/50 text-xs font-mono text-center">
+          <div className="text-white/50 text-sm font-mono text-center">
             Zero to Agent London · Google DeepMind x Vercel · 2026
           </div>
           <div className="flex items-center gap-5">
-            <Link href="/demo" className="text-white/65 hover:text-white/80 transition-colors text-xs">Demo</Link>
+            <Link href="/demo" className="text-white/65 hover:text-white/80 transition-colors text-sm">Demo</Link>
             <a href="https://cerebralvalley.ai/e/zero-to-agent-london" target="_blank" rel="noreferrer"
-              className="flex items-center gap-1 text-white/65 hover:text-white/80 transition-colors text-xs">
+              className="flex items-center gap-1 text-white/65 hover:text-white/80 transition-colors text-sm">
               Hackathon <ExternalLink size={10} />
             </a>
-            <a href="https://github.com/superagentic-ai/agentnetes" target="_blank" rel="noreferrer"
+            <a href="https://github.com/Shashikant86/agentnetes" target="_blank" rel="noreferrer"
               className="text-white/65 hover:text-white/80 transition-colors">
               <Github size={14} />
             </a>

@@ -43,6 +43,67 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
+/* ── Theme CSS variables ─────────────────────────────────────────── */
+:root {
+  --bg-base:   #08080c;
+  --bg-card:   #0e0e12;
+  --bg-panel:  #0c0c0f;
+  --bg-subtle: #0e0e14;
+  --bg-hover:  #111116;
+  --fg:        255, 255, 255;
+  --border:    255, 255, 255;
+}
+html.light {
+  --bg-base:   #f2f2f7;
+  --bg-card:   #fafafa;
+  --bg-panel:  #ffffff;
+  --bg-subtle: #f5f5fa;
+  --bg-hover:  #f0f0f5;
+  --fg:        10, 10, 20;
+  --border:    0, 0, 0;
+}
+
+/* ── Light mode text overrides ───────────────────────────────────── */
+html.light { background: #f2f2f7; color: #0a0a14; }
+
+/* Nav */
+html.light nav { background-color: rgba(242,242,247,0.92) !important; border-bottom-color: rgba(0,0,0,0.08) !important; }
+
+/* Text — use plain class names (no bracket escaping needed) */
+html.light .text-white             { color: rgb(10,10,20) !important; }
+html.light .text-white\/90         { color: rgba(10,10,20,0.90) !important; }
+html.light .text-white\/80         { color: rgba(10,10,20,0.80) !important; }
+html.light .text-white\/75         { color: rgba(10,10,20,0.75) !important; }
+html.light .text-white\/70         { color: rgba(10,10,20,0.70) !important; }
+html.light .text-white\/65         { color: rgba(10,10,20,0.65) !important; }
+html.light .text-white\/60         { color: rgba(10,10,20,0.60) !important; }
+html.light .text-white\/55         { color: rgba(10,10,20,0.55) !important; }
+html.light .text-white\/50         { color: rgba(10,10,20,0.50) !important; }
+html.light .text-white\/45         { color: rgba(10,10,20,0.45) !important; }
+html.light .text-white\/40         { color: rgba(10,10,20,0.40) !important; }
+html.light .text-white\/30         { color: rgba(10,10,20,0.30) !important; }
+html.light .text-white\/25         { color: rgba(10,10,20,0.25) !important; }
+
+/* Borders */
+html.light .border-white\/5        { border-color: rgba(0,0,0,0.05) !important; }
+html.light .border-white\/\[0\.05\] { border-color: rgba(0,0,0,0.08) !important; }
+html.light .border-white\/\[0\.06\] { border-color: rgba(0,0,0,0.08) !important; }
+html.light .border-white\/\[0\.07\] { border-color: rgba(0,0,0,0.08) !important; }
+html.light .border-white\/\[0\.08\] { border-color: rgba(0,0,0,0.09) !important; }
+html.light .border-white\/10       { border-color: rgba(0,0,0,0.10) !important; }
+html.light .border-white\/15       { border-color: rgba(0,0,0,0.15) !important; }
+html.light .border-white\/20       { border-color: rgba(0,0,0,0.20) !important; }
+
+html.light .hover\:border-white\/30:hover { border-color: rgba(0,0,0,0.28) !important; }
+html.light .hover\:text-white:hover       { color: rgb(10,10,20) !important; }
+html.light .hover\:text-white\/80:hover   { color: rgba(10,10,20,0.80) !important; }
+
+/* Code block / subtle bg overrides */
+html.light .bg-black\/40 { background-color: rgba(0,0,0,0.04) !important; }
+html.light .bg-black\/30 { background-color: rgba(0,0,0,0.04) !important; }
+html.light .bg-white\/\[0\.02\] { background-color: rgba(0,0,0,0.02) !important; }
+html.light .bg-white\/5 { background-color: rgba(0,0,0,0.03) !important; }
+
 /* markdown prose in chat */
 .prose { color: #ededed; }
 .prose h1, .prose h2, .prose h3 { color: #fff; font-weight: 600; }

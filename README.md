@@ -7,7 +7,7 @@ Zero to Agent? We are taking it further.
 Type a goal. Agentnetes assembles a team of specialist AI agents, each running in its own Firecracker microVM sandbox, that explore, implement, test, and deliver together. No hardcoded roles. No sequential bottlenecks. No files stuffed into prompts.
 
 > Built for **Zero to Agent London** :: Google DeepMind x Vercel Hackathon 2026
-> by **Superagentic AI**
+> by **Shashikant Jagtap**
 
 ---
 
@@ -235,7 +235,7 @@ This project was built for the **Zero to Agent London** hackathon, hosted by Cer
 
 The prompt is "Zero to Agent." We built a system that takes you from zero to a full self-organizing agent team in a single sentence.
 
-Built by **Superagentic AI**.
+Built by **Shashikant Jagtap** for the Zero to Agent London hackathon.
 
 ---
 

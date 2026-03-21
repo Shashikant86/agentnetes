@@ -151,7 +151,7 @@ export function buildA2ACard(task: AgentTask): A2AAgentCard {
     description: task.goal,
     url: `https://agentnetes.vercel.app/agents/${slug}`,
     version: '1.0.0',
-    provider: { organization: 'Superagentic AI / Agentnetes' },
+    provider: { organization: 'Agentnetes' },
     capabilities: {
       streaming: true,
       pushNotifications: false,

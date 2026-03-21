@@ -8,22 +8,23 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "ai": "beta",
     "@ai-sdk/gateway": "beta",
     "@vercel/sandbox": "latest",
-    "zod": "latest",
-    "lucide-react": "latest"
+    "ai": "beta",
+    "lucide-react": "latest",
+    "next": "latest",
+    "next-themes": "^0.4.6",
+    "react": "latest",
+    "react-dom": "latest",
+    "zod": "latest"
   },
   "devDependencies": {
-    "typescript": "latest",
+    "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "postcss": "latest",
     "tailwindcss": "latest",
-    "@tailwindcss/postcss": "latest",
-    "postcss": "latest"
+    "typescript": "latest"
   }
 }
