@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 
-const DOCKER_IMAGE = 'node:20-slim';
+const DOCKER_IMAGE = 'node:20-alpine';
 
 /**
  * Docker sandbox — each agent gets its own container with the repo cloned in.
@@ -22,7 +22,7 @@ export class DockerSandbox {
     const cmd = args.join(' ');
     try {
       const output = execSync(
-        `docker exec ${this.containerId} bash -c ${JSON.stringify(cmd)}`,
+        `docker exec ${this.containerId} sh -c ${JSON.stringify(cmd)}`,
         { encoding: 'utf-8', timeout: 60_000 },
       );
       return { stdout: async () => output ?? '', exitCode: 0 };
@@ -54,14 +54,14 @@ export class DockerSandbox {
 export async function createDockerSandbox(repoUrl: string): Promise<DockerSandbox> {
   // Start a detached container
   const containerId = execSync(
-    `docker run -d --rm ${DOCKER_IMAGE} sleep 3600`,
+    `docker run -d --rm ${DOCKER_IMAGE} sh -c "sleep 3600"`,
     { encoding: 'utf-8' },
   ).trim();
 
-  // Install git (slim image doesn't have it)
+  // Install git (alpine uses apk, much faster than apt-get)
   execSync(
-    `docker exec ${containerId} bash -c "apt-get update -qq && apt-get install -y -qq git 2>/dev/null"`,
-    { timeout: 60_000, stdio: 'ignore' },
+    `docker exec ${containerId} sh -c "apk add --no-cache git 2>/dev/null"`,
+    { timeout: 30_000, stdio: 'ignore' },
   );
 
   // Clone the repo

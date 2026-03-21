@@ -45,25 +45,13 @@ export async function createWorkerSandbox(repoUrl: string, snapshotId?: string):
   }
 
   if (provider === 'e2b') {
-    try {
-      const { Sandbox } = await import('e2b' as any);
-      const sbx = await Sandbox.create({ apiKey: process.env.E2B_API_KEY });
-      await sbx.commands.run(`git clone --depth 1 ${repoUrl} /home/user/repo`);
-      return wrapE2B(sbx);
-    } catch {
-      console.warn('[sandbox] e2b not available, falling back to local');
-    }
+    // npm install e2b to enable
+    console.warn('[sandbox] e2b: install the "e2b" package to use this provider. Falling back to local.');
   }
 
   if (provider === 'daytona') {
-    try {
-      const { Daytona } = await import('@daytonaio/sdk' as any);
-      const daytona = new Daytona({ apiKey: process.env.DAYTONA_API_KEY });
-      const workspace = await daytona.create({ repository: { url: repoUrl } });
-      return wrapDaytona(workspace);
-    } catch {
-      console.warn('[sandbox] daytona not available, falling back to local');
-    }
+    // npm install @daytonaio/sdk to enable
+    console.warn('[sandbox] daytona: install the "@daytonaio/sdk" package to use this provider. Falling back to local.');
   }
 
   if (provider === 'docker') {
@@ -72,46 +60,6 @@ export async function createWorkerSandbox(repoUrl: string, snapshotId?: string):
 
   // Local fallback — runs real shell commands in a cloned temp dir
   return createLocalSandbox(repoUrl);
-}
-
-// ── E2B adapter ──────────────────────────────────────────────────────────────
-
-function wrapE2B(sbx: any): AnySandbox {
-  return {
-    id: sbx.sandboxId ?? 'e2b',
-    async runCommand(_shell: string, args: string[]) {
-      const result = await sbx.commands.run(args.join(' '), { cwd: '/home/user/repo' });
-      return { stdout: async () => result.stdout ?? '', exitCode: result.exitCode ?? 0 };
-    },
-    async readFile({ path }: { path: string }) {
-      try {
-        const content = await sbx.files.read(path);
-        async function* gen() { yield Buffer.from(content); }
-        return gen();
-      } catch { return null; }
-    },
-    async stop() { try { await sbx.kill(); } catch { /* ignore */ } },
-  } as unknown as AnySandbox;
-}
-
-// ── Daytona adapter ──────────────────────────────────────────────────────────
-
-function wrapDaytona(workspace: any): AnySandbox {
-  return {
-    id: workspace.id ?? 'daytona',
-    async runCommand(_shell: string, args: string[]) {
-      const result = await workspace.process.executeCommand(args.join(' '));
-      return { stdout: async () => result.output ?? '', exitCode: result.exitCode ?? 0 };
-    },
-    async readFile({ path }: { path: string }) {
-      try {
-        const content = await workspace.filesystem.downloadFile(path);
-        async function* gen() { yield Buffer.from(content); }
-        return gen();
-      } catch { return null; }
-    },
-    async stop() { try { await workspace.delete(); } catch { /* ignore */ } },
-  } as unknown as AnySandbox;
 }
 
 // ── Shared utilities ─────────────────────────────────────────────────────────

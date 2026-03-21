@@ -12,7 +12,12 @@ export const maxDuration = 300;
  */
 function useRealRuntime(): boolean {
   if (process.env.SIMULATION_MODE === 'true') return false;
-  return !!(process.env.AI_GATEWAY_BASE_URL ?? process.env.GATEWAY_API_KEY);
+  return !!(
+    process.env.AI_GATEWAY_BASE_URL ??
+    process.env.GATEWAY_API_KEY ??
+    process.env.GOOGLE_API_KEY ??
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY
+  );
 }
 
 export async function POST(req: Request) {
