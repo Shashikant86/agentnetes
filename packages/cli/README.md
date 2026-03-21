@@ -6,7 +6,7 @@
 
 **Zero to a Self-Organizing AI Agency. On Demand.**
 
-*Kubernetes for AI agents — type a goal, watch a swarm of specialist agents deliver.*
+*Kubernetes for AI On Demand Agents · type a goal, watch a swarm of specialist agents deliver.*
 
 [![npm version](https://img.shields.io/npm/v/agentnetes?style=for-the-badge&logo=npm&color=fb923c)](https://www.npmjs.com/package/agentnetes)
 [![npm downloads](https://img.shields.io/npm/dm/agentnetes?style=for-the-badge&color=22c55e)](https://www.npmjs.com/package/agentnetes)
@@ -37,7 +37,7 @@ No install needed. Works on any git repository.
 4. They explore, write code, run tests, fix failures, and deliver together
 5. A final synthesis summarises everything they found and built
 
-Roles are fully emergent — nothing is hardcoded. A provider task spawns a Scout, Engineer, Tester, and Packager. A security audit spawns a completely different team.
+Roles are fully emergent · nothing is hardcoded. A provider task spawns a Scout, Engineer, Tester, and Packager. A security audit spawns a completely different team.
 
 ---
 
@@ -59,17 +59,17 @@ npx agentnetes snapshot list
 ## Environment variables
 
 ```bash
-# Required — get a free key at aistudio.google.com
+# Required · get a free key at aistudio.google.com
 GOOGLE_API_KEY=
 
 # Sandbox provider (default: docker)
 SANDBOX_PROVIDER=docker        # docker | local | vercel | e2b | daytona
 
-# Optional — Vercel AI Gateway instead of direct Gemini
+# Optional · Vercel AI Gateway instead of direct Gemini
 AI_GATEWAY_BASE_URL=
 AI_GATEWAY_API_KEY=
 
-# Optional — override default models
+# Optional · override default models
 PLANNER_MODEL=google/gemini-2.5-pro
 WORKER_MODEL=google/gemini-2.5-flash
 ```
@@ -95,4 +95,4 @@ docker pull node:20-alpine
 
 ## License
 
-MIT — [github.com/Shashikant86/agentnetes](https://github.com/Shashikant86/agentnetes)
+MIT · [github.com/Shashikant86/agentnetes](https://github.com/Shashikant86/agentnetes)

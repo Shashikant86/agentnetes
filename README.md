@@ -6,7 +6,7 @@
 
 **Zero to a Self-Organizing AI Agency. On Demand.**
 
-*Kubernetes for AI agents — built at Zero to Agent London 2026, Google DeepMind x Vercel*
+*Kubernetes for AI On Demand Agents · built at Zero to Agent London 2026, Google DeepMind x Vercel*
 
 <br/>
 
@@ -23,14 +23,14 @@
 
 ## Quickstart
 
-**Step 1** — Get a free API key at [aistudio.google.com](https://aistudio.google.com)
+**Step 1** · Get a free API key at [aistudio.google.com](https://aistudio.google.com)
 
-**Step 2** — Pull the Docker base image (one-time)
+**Step 2** · Pull the Docker base image (one-time)
 ```bash
 docker pull node:20-alpine
 ```
 
-**Step 3** — Run on any git repo
+**Step 3** · Run on any git repo
 ```bash
 cd your-project
 GOOGLE_API_KEY=your_key npx agentnetes run "add comprehensive test coverage"
@@ -75,7 +75,7 @@ npx agentnetes snapshot create
 
 ## What is it
 
-Agentnetes is a self-organizing, recursive agent system. Think Kubernetes for AI agents.
+Agentnetes is a self-organizing, recursive agent system. Think Kubernetes for AI On Demand Agents.
 
 You give it a single natural-language goal and a codebase. The system:
 
@@ -114,8 +114,8 @@ write code -> run vitest -> check failures -> patch -> repeat
 
 Each agent has exactly two tools:
 
-- `search(pattern)` — grep the codebase for patterns
-- `execute(command)` — run any shell command in the sandbox
+- `search(pattern)` · grep the codebase for patterns
+- `execute(command)` · run any shell command in the sandbox
 
 ~1,000 token footprint regardless of task complexity.
 
@@ -162,7 +162,7 @@ search()     execute()     execute()          execute()
 | Agent primitive | `ToolLoopAgent` | AI SDK v7 beta |
 | AI Gateway | `@ai-sdk/gateway` | `4.0.0-beta.18` |
 | Sandbox (cloud) | `@vercel/sandbox` | `1.9.0` |
-| Sandbox (local) | Docker (`node:20-alpine`) | — |
+| Sandbox (local) | Docker (`node:20-alpine`) | - |
 | Framework | Next.js App Router | latest |
 | Planner model | Gemini 2.5 Pro | direct or via gateway |
 | Worker model | Gemini 2.5 Flash | direct or via gateway |
@@ -176,11 +176,11 @@ Agentnetes supports multiple sandbox providers. Set `SANDBOX_PROVIDER` in your e
 
 | Provider | Env var | Notes |
 |----------|---------|-------|
-| `docker` | — | Local Docker containers. Default for local dev. |
+| `docker` | - | Local Docker containers. Default for local dev. |
 | `vercel` | `VERCEL_TOKEN` | Vercel Firecracker microVMs. Auto-detected on Vercel. |
 | `e2b` | `E2B_API_KEY` | E2B sandboxes. Install `e2b` package. |
 | `daytona` | `DAYTONA_API_KEY` | Daytona workspaces. Install `@daytonaio/sdk`. |
-| `local` | — | Runs directly on host machine in a temp dir. |
+| `local` | - | Runs directly on host machine in a temp dir. |
 
 Auto-detection order: Vercel -> E2B -> Daytona -> Docker -> Local.
 

@@ -3,8 +3,8 @@ import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
 export const metadata: Metadata = {
-  title: 'Agentnetes — Zero to a Self-Organizing AI Agency. On Demand.',
-  description: "Zero to Agent? We are taking it further. A self-organizing, recursive agent system — basically Kubernetes for AI agents.",
+  title: 'Agentnetes: Zero to a Self-Organizing AI Agency. On Demand.',
+  description: "Zero to Agent? We are taking it further. A self-organizing, recursive agent system. Kubernetes for AI On Demand Agents.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

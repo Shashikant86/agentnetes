@@ -304,7 +304,7 @@ export default function Landing() {
             <Logo size={26} />
             <span className="font-bold tracking-tight text-white">Agentnetes</span>
             <span className="text-xs font-mono text-white/80 border border-white/20 rounded px-2 py-0.5 uppercase tracking-wider hidden sm:inline">
-              Kubernetes for AI agents
+              Kubernetes for AI On Demand Agents
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -356,8 +356,8 @@ export default function Landing() {
           {/* Kicker */}
           <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-mono mb-6 border border-white/10"
             style={{ background: 'var(--bg-subtle)' }}>
-            <span className="text-white/40">Kubernetes for AI agents</span>
-            <span className="text-white/20">—</span>
+            <span className="text-white/40">Kubernetes for AI On Demand Agents</span>
+            <span className="text-white/20">·</span>
             <span className="text-white/65">dynamic teams, not static YAML</span>
           </div>
 
@@ -480,13 +480,13 @@ export default function Landing() {
             <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">The Problem</div>
             <h2 className="text-3xl font-bold mb-4 text-white">Single agents break on real codebases.</h2>
             <p className="text-white/70 text-base max-w-xl mx-auto leading-relaxed">
-              Modern codebases have hundreds of thousands of lines. No single AI model can read them all — and even models with large context windows suffer from context rot: the longer the prompt, the worse the reasoning.
+              Modern codebases have hundreds of thousands of lines. No single AI model can read them all · and even models with large context windows suffer from context rot: the longer the prompt, the worse the reasoning.
             </p>
           </div>
           <div className="grid sm:grid-cols-3 gap-4 mb-12">
             {[
               { label: 'Single agent', problem: true,  points: ['Stuffs entire codebase into prompt', 'Performance degrades beyond ~50K tokens', 'Cannot parallelize work', 'One failure = total failure'] },
-              { label: 'Agentnetes', problem: false, points: ['Context lives in sandboxes, not prompts', 'Agents explore via code — grep, find, cat', 'Specialists run in parallel', 'Agents catch and fix each other\'s errors'] },
+              { label: 'Agentnetes', problem: false, points: ['Context lives in sandboxes, not prompts', 'Agents explore via code · grep, find, cat', 'Specialists run in parallel', 'Agents catch and fix each other\'s errors'] },
               { label: 'Human team', problem: null,  points: ['Days to weeks per feature', 'Requires coordination overhead', 'Inconsistent quality', 'Expensive and hard to scale'] },
             ].map(({ label, problem, points }) => (
               <div key={label} className={`rounded-2xl border p-6 ${problem === false ? 'border-purple-500/40' : 'border-white/10'}`}
@@ -519,9 +519,9 @@ export default function Landing() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { icon: '🧑‍💻', title: 'Solo developers', body: 'Get the leverage of a full engineering team on your personal projects. Ship faster without hiring.' },
-              { icon: '🏗️', title: 'Monorepo teams', body: 'Point the swarm at your large codebase. Agents explore only what they need — no context limits.' },
+              { icon: '🏗️', title: 'Monorepo teams', body: 'Point the swarm at your large codebase. Agents explore only what they need · no context limits.' },
               { icon: '🔐', title: 'Security engineers', body: 'Spin up a dedicated audit swarm to scan, analyse, and fix vulnerabilities across the entire codebase.' },
-              { icon: '⚙️', title: 'Platform engineers', body: 'Automate cross-cutting concerns — test coverage, observability, migrations — across all services.' },
+              { icon: '⚙️', title: 'Platform engineers', body: 'Automate cross-cutting concerns · test coverage, observability, migrations · across all services.' },
             ].map(({ icon, title, body }) => (
               <div key={title} className="rounded-2xl border border-white/10 p-6" style={{ background: 'var(--bg-card)' }}>
                 <div className="text-2xl mb-3">{icon}</div>
@@ -545,10 +545,10 @@ export default function Landing() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { n: '01', title: 'Self-organizing teams', body: 'The model invents the roles it needs. A provider task spawns a Scout, Engineer, Tester. A security audit spawns an entirely different team. Nothing is hardcoded.' },
-              { n: '02', title: 'Real code execution', body: 'Agents run real shell commands in real sandboxes. Tests actually execute. Build failures get fixed. This is not a simulation of engineering — it is engineering.' },
+              { n: '02', title: 'Real code execution', body: 'Agents run real shell commands in real sandboxes. Tests actually execute. Build failures get fixed. This is not a simulation of engineering · it is engineering.' },
               { n: '03', title: 'Any model, same swarm', body: 'Swap Gemini for Claude or GPT by changing one env var. The swarm architecture is model-agnostic. Route through Vercel AI Gateway or call Google directly.' },
               { n: '04', title: 'Two-tool MCP strategy', body: 'Each agent has exactly two tools: search() and execute(). ~1,000 token footprint regardless of codebase size. No tool bloat, no context waste.' },
-              { n: '05', title: 'Context stays external', body: 'Files never enter the prompt. Agents write code to explore the codebase — grep, find, cat. Proven by the MIT CSAIL RLM paper to outperform context-stuffing 2×.' },
+              { n: '05', title: 'Context stays external', body: 'Files never enter the prompt. Agents write code to explore the codebase · grep, find, cat. Proven by the MIT CSAIL RLM paper to outperform context-stuffing 2×.' },
               { n: '06', title: 'Agents fix each other', body: 'When the Tester finds a bug, it routes back to the Engineer automatically. The swarm has a built-in try → test → fix loop that runs until tests pass.' },
             ].map(({ n, title, body }) => (
               <div key={n} className="rounded-2xl border border-white/[0.08] p-6 transition-all duration-300 hover:border-purple-500/30 group"

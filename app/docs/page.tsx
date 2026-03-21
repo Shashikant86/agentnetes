@@ -180,7 +180,7 @@ export default function Docs() {
             <div className="text-xs font-mono text-white/40 uppercase tracking-widest mb-3">Developer Docs</div>
             <h1 className="text-4xl font-extrabold text-white mb-4 tracking-tight">Getting Started</h1>
             <p className="text-white/65 text-lg leading-relaxed">
-              Everything you need to run Agentnetes on your codebase — from a first{' '}
+              Everything you need to run Agentnetes on your codebase · from a first{' '}
               <code className="text-purple-400 bg-purple-400/10 px-1.5 py-0.5 rounded text-sm">npx</code> command
               to production agent swarms.
             </p>
@@ -219,7 +219,7 @@ export default function Docs() {
 
           <H3>2. Pull the Docker base image</H3>
           <Code>{`docker pull node:20-alpine`}</Code>
-          <P>This is a one-time step. Each agent gets its own container — pulling it now means the first run starts immediately.</P>
+          <P>This is a one-time step. Each agent gets its own container · pulling it now means the first run starts immediately.</P>
 
           <H3>3. Run on your repo</H3>
           <Code>{`# From inside any git repository
@@ -278,7 +278,7 @@ GOOGLE_API_KEY=your_key agentnetes run "refactor auth module to use JWT"`}</Code
             {[
               ['Node.js', '18+', 'Required'],
               ['Docker', 'any recent version', 'Required for docker sandbox (default)'],
-              ['Google API key', 'free tier works', 'Required — or use AI Gateway'],
+              ['Google API key', 'free tier works', 'Required · or use AI Gateway'],
               ['Git', 'repo must have origin remote', 'Required'],
             ].map(([name, detail, note]) => (
               <div key={name} className="flex items-center gap-4 px-5 py-3 border-b border-white/[0.05] last:border-0">
@@ -297,14 +297,14 @@ GOOGLE_API_KEY=your_key agentnetes run "refactor auth module to use JWT"`}</Code
           {/* ── How it Works ────────────────────────────────────── */}
           <H2 id="how-it-works">How it Works</H2>
           <P>
-            Agentnetes implements the <a href="https://arxiv.org/abs/2512.24601" target="_blank" rel="noreferrer" className="text-purple-400 hover:text-purple-300 underline underline-offset-2">RLM pattern (MIT CSAIL)</a> — context lives in sandboxes, not prompts.
+            Agentnetes implements the <a href="https://arxiv.org/abs/2512.24601" target="_blank" rel="noreferrer" className="text-purple-400 hover:text-purple-300 underline underline-offset-2">RLM pattern (MIT CSAIL)</a> · context lives in sandboxes, not prompts.
           </P>
 
           {[
             ['1. You type a goal', 'A natural-language description of what you want done. No special syntax required.'],
-            ['2. Root agent plans', 'A Tech Lead agent explores your repo structure and invents a specialist team tailored to the goal. Roles are fully emergent — nothing is hardcoded.'],
+            ['2. Root agent plans', 'A Tech Lead agent explores your repo structure and invents a specialist team tailored to the goal. Roles are fully emergent · nothing is hardcoded.'],
             ['3. Specialists run in parallel', 'Each specialist gets its own isolated sandbox with the repo cloned inside. They use two tools: search() and execute(). No file contents stuffed into prompts.'],
-            ['4. AutoResearch loop', 'Agents write code, run tests, observe failures, patch, and repeat — following the write → test → fix loop until the task is done or the step budget is reached.'],
+            ['4. AutoResearch loop', 'Agents write code, run tests, observe failures, patch, and repeat · following the write → test → fix loop until the task is done or the step budget is reached.'],
             ['5. Synthesis', 'The root agent collects all findings and delivers a final markdown summary of everything built.'],
           ].map(([title, desc]) => (
             <div key={title} className="flex gap-4 mb-5" style={{}}>
@@ -317,7 +317,7 @@ GOOGLE_API_KEY=your_key agentnetes run "refactor auth module to use JWT"`}</Code
           ))}
 
           <H3>The two-tool strategy</H3>
-          <P>Every agent has exactly two tools — keeping the token footprint under ~1,000 tokens regardless of codebase size:</P>
+          <P>Every agent has exactly two tools · keeping the token footprint under ~1,000 tokens regardless of codebase size:</P>
           <Code lang="typescript">{`search(pattern, path?, fileGlob?)  // grep -r across the repo
 execute(command)                   // run any shell command in the sandbox`}</Code>
 
@@ -356,8 +356,8 @@ agentnetes run "add OpenTelemetry tracing throughout the app"`}</Code>
               <span>Provider</span><span>Env var</span><span>Speed</span><span>Notes</span>
             </div>
             {[
-              ['docker',  '—',                    'Fast',     'Default. node:20-alpine per agent.'],
-              ['local',   '—',                    'Fastest',  'Runs on host machine. No isolation.'],
+              ['docker',  '-',                    'Fast',     'Default. node:20-alpine per agent.'],
+              ['local',   '-',                    'Fastest',  'Runs on host machine. No isolation.'],
               ['vercel',  'VERCEL_TOKEN',          'Fastest*', 'Firecracker microVMs. Snapshot support.'],
               ['e2b',     'E2B_API_KEY',           'Fast',     'Install e2b package separately.'],
               ['daytona', 'DAYTONA_API_KEY',       'Fast',     'Install @daytonaio/sdk separately.'],
@@ -382,7 +382,7 @@ SANDBOX_PROVIDER=local GOOGLE_API_KEY=xxx agentnetes run "goal"
 SANDBOX_PROVIDER=vercel VERCEL_TOKEN=xxx GOOGLE_API_KEY=xxx agentnetes run "goal"`}</Code>
 
           <Callout type="tip">
-            For local development, <code className="text-white/80 bg-white/5 px-1 py-0.5 rounded text-sm">docker</code> is recommended over <code className="text-white/80 bg-white/5 px-1 py-0.5 rounded text-sm">local</code> — it prevents agents from writing to your actual working directory.
+            For local development, <code className="text-white/80 bg-white/5 px-1 py-0.5 rounded text-sm">docker</code> is recommended over <code className="text-white/80 bg-white/5 px-1 py-0.5 rounded text-sm">local</code> · it prevents agents from writing to your actual working directory.
           </Callout>
 
           {/* ── Configuration ───────────────────────────────────── */}
@@ -391,7 +391,7 @@ SANDBOX_PROVIDER=vercel VERCEL_TOKEN=xxx GOOGLE_API_KEY=xxx agentnetes run "goal
 
           <H3>Full reference</H3>
           <Code>{`# ── LLM Provider (one of these) ──────────────────────────────────
-GOOGLE_API_KEY=                  # Direct Gemini — get free at aistudio.google.com
+GOOGLE_API_KEY=                  # Direct Gemini · get free at aistudio.google.com
 AI_GATEWAY_BASE_URL=             # Vercel AI Gateway endpoint
 AI_GATEWAY_API_KEY=              # Vercel AI Gateway API key
 
@@ -445,7 +445,7 @@ GOOGLE_API_KEY=xxx npx agentnetes run "add vitest unit tests for all utility fun
           {/* ── Architecture ────────────────────────────────────── */}
           <H2 id="architecture">Architecture</H2>
 
-          <P>The core runtime is in <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">lib/vrlm/</code> and is completely independent of Next.js — you can embed it in any Node.js application.</P>
+          <P>The core runtime is in <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">lib/vrlm/</code> and is completely independent of Next.js · you can embed it in any Node.js application.</P>
 
           <H3>Embedding the runtime</H3>
           <Code lang="typescript">{`import { VrlmRuntime } from 'agentnetes/runtime';
@@ -480,7 +480,7 @@ await runtime.run('add comprehensive test coverage');`}</Code>
               ['artifact',       'Agent created or modified a file'],
               ['collaboration',  'Agent requested input from another agent'],
               ['synthesis',      'Root agent produced the final summary'],
-              ['done',           'All agents finished — run is complete'],
+              ['done',           'All agents finished · run is complete'],
               ['error',          'Fatal runtime error'],
             ].map(([type, desc]) => (
               <div key={type} className="flex items-center gap-4 px-5 py-2.5 border-b border-white/[0.05] last:border-0">
@@ -511,12 +511,12 @@ await runtime.run('add comprehensive test coverage');`}</Code>
             },
             {
               error: 'docker: Cannot connect to the Docker daemon',
-              cause: 'Same as above — Docker is not running or the socket is not accessible.',
+              cause: 'Same as above · Docker is not running or the socket is not accessible.',
               fix: 'Run: open -a Docker (macOS) or sudo systemctl start docker (Linux)',
             },
             {
               error: 'Fatal: model returned empty response',
-              cause: 'The Gemini API returned nothing — usually a quota or region issue.',
+              cause: 'The Gemini API returned nothing · usually a quota or region issue.',
               fix: 'Check your quota at aistudio.google.com. Try WORKER_MODEL=google/gemini-2.0-flash as a fallback.',
             },
             {
