@@ -15,10 +15,30 @@
 [![npm version](https://img.shields.io/npm/v/agentnetes?style=for-the-badge&logo=npm&color=fb923c)](https://www.npmjs.com/package/agentnetes)
 [![npm downloads](https://img.shields.io/npm/dm/agentnetes?style=for-the-badge&color=22c55e)](https://www.npmjs.com/package/agentnetes)
 [![License: MIT](https://img.shields.io/badge/License-MIT-white?style=for-the-badge)](LICENSE)
+[![Docs](https://img.shields.io/badge/Docs-Read%20now-0ea5e9?style=for-the-badge)](https://shashikant86.github.io/agentnetes/docs)
 
 </div>
 
 ---
+
+## Quickstart
+
+**Step 1** — Get a free API key at [aistudio.google.com](https://aistudio.google.com)
+
+**Step 2** — Pull the Docker base image (one-time)
+```bash
+docker pull node:20-alpine
+```
+
+**Step 3** — Run on any git repo
+```bash
+cd your-project
+GOOGLE_API_KEY=your_key npx agentnetes run "add comprehensive test coverage"
+```
+
+No install needed. Works on any git repository with a remote `origin`.
+
+> Full docs at [shashikant86.github.io/agentnetes/docs](https://shashikant86.github.io/agentnetes/docs)
 
 ## Install
 
@@ -30,8 +50,6 @@ npx agentnetes run "your goal here"
 npm install -g agentnetes
 agentnetes run "your goal here"
 ```
-
-> Get a free Google API key at [aistudio.google.com](https://aistudio.google.com) and set `GOOGLE_API_KEY=your_key` before running.
 
 ---
 

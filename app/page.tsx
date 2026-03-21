@@ -309,6 +309,9 @@ export default function Landing() {
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
+            <Link href="/docs" className="text-white/60 hover:text-white/80 transition-colors text-sm hidden sm:block">
+              Docs
+            </Link>
             <a href="https://github.com/Shashikant86/agentnetes" target="_blank" rel="noreferrer"
               className="text-white/65 hover:text-white/80 transition-colors p-1">
               <Github size={16} />
