@@ -392,18 +392,35 @@ export default function Landing() {
           </div>
 
           {/* npm install */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
-            <div className="flex items-center gap-3 border border-white/10 rounded-xl px-5 py-3 text-sm font-mono" style={{ background: 'var(--bg-subtle)' }}>
-              <span className="text-white/40 text-xs">NPM</span>
-              <span className="text-white/80">npx agentnetes run</span>
-              <span className="text-purple-400">&quot;your goal here&quot;</span>
+          <div className="max-w-xl mx-auto w-full mb-10">
+            <div className="rounded-2xl border border-white/10 overflow-hidden" style={{ background: 'var(--bg-subtle)' }}>
+              <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.06]">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+                </div>
+                <span className="text-white/30 text-xs font-mono">terminal</span>
+                <a href="https://www.npmjs.com/package/agentnetes" target="_blank" rel="noreferrer"
+                  className="text-[11px] font-mono text-purple-400 hover:text-purple-300 transition-colors">
+                  npmjs.com/package/agentnetes →
+                </a>
+              </div>
+              <div className="px-5 py-4 space-y-2 text-sm font-mono text-left">
+                <div>
+                  <span className="text-white/30">$ </span>
+                  <span className="text-green-400">npx</span>
+                  <span className="text-white/80"> agentnetes run </span>
+                  <span className="text-purple-400">&quot;add dark mode to this app&quot;</span>
+                </div>
+                <div className="text-white/30 text-xs pt-1 border-t border-white/[0.05]">or install globally</div>
+                <div>
+                  <span className="text-white/30">$ </span>
+                  <span className="text-green-400">npm</span>
+                  <span className="text-white/80"> install -g agentnetes</span>
+                </div>
+              </div>
             </div>
-            <a href="https://www.npmjs.com/package/agentnetes" target="_blank" rel="noreferrer"
-              className="flex items-center gap-2 border border-white/10 rounded-xl px-4 py-3 text-sm font-mono text-white/60 hover:text-white/80 hover:border-white/20 transition-all"
-              style={{ background: 'var(--bg-subtle)' }}>
-              <svg width="14" height="14" viewBox="0 0 18 7" fill="currentColor"><path d="M0 0h18v6H9V1H7v5H0V0zm1 5h2V1H1v4zm3-4v4h2V1H4zm5 4h1V1H8v4h1z"/></svg>
-              npm package
-            </a>
           </div>
 
           {/* Stats */}

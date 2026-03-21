@@ -20,6 +20,21 @@
 
 ---
 
+## Install
+
+```bash
+# Run instantly with npx (no install needed)
+npx agentnetes run "your goal here"
+
+# Or install globally
+npm install -g agentnetes
+agentnetes run "your goal here"
+```
+
+> Get a free Google API key at [aistudio.google.com](https://aistudio.google.com) and set `GOOGLE_API_KEY=your_key` before running.
+
+---
+
 Type a goal. Agentnetes assembles a team of specialist AI agents, each running in an isolated sandbox, that explore your codebase, write code, run tests, fix failures, and deliver together. No hardcoded roles. No sequential bottlenecks. No files stuffed into prompts.
 
 ---
@@ -27,14 +42,16 @@ Type a goal. Agentnetes assembles a team of specialist AI agents, each running i
 ## CLI
 
 ```bash
-# Run on your current git repo
+# Run on the current git repo (no install needed)
 GOOGLE_API_KEY=your_key npx agentnetes run "add comprehensive test coverage"
+
+# Or install globally once
+npm install -g agentnetes
+GOOGLE_API_KEY=your_key agentnetes run "add dark mode"
 
 # Pre-warm a sandbox snapshot for faster runs (Vercel sandbox)
 npx agentnetes snapshot create
 ```
-
-No install needed — `npx` pulls it automatically. Works on any git repo.
 
 ---
 
