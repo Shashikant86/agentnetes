@@ -352,7 +352,7 @@ DEMO_REPO_URL=https://github.com/expressjs/express`}</Code>
           <H3>4. Open the demo page</H3>
           <P>
             Navigate to <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">http://localhost:3000/demo</code>. The page defaults to Real mode. Use the Real/Simulation toggle in the header to switch modes.
-            Select a model and submit a goal. Use <strong>Gemini 2.5 Flash</strong> for faster planning — 2.5 Pro has extended thinking which can take 30-60s.
+            Select a model and submit a goal. Use <strong>Gemini 2.5 Flash</strong> for faster planning. 2.5 Pro has extended thinking which can take 30-60s.
             GOOGLE_API_KEY is read from the environment (set in <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">.env.local</code> or exported in your shell).
           </P>
 
@@ -649,7 +649,7 @@ await runtime.run('add comprehensive test coverage');`}</Code>
               fix: 'Use npx agentnetes@latest serve to get the latest version with the web UI bundled.',
             },
             {
-              error: 'GOOGLE_API_KEY not set — real agents will not run',
+              error: 'GOOGLE_API_KEY not set: real agents will not run',
               cause: 'The API key is read from environment variables only. It cannot be entered in the web UI.',
               fix: 'Run: export GOOGLE_API_KEY=your_key then restart agentnetes serve. Or add it to .env.local.',
             },

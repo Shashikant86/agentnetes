@@ -88,13 +88,13 @@ function SettingsModal({
               {!apiKeySet && (
                 <div className="mt-1.5 space-y-1.5">
                   <p className="text-[11px] text-white/40">
-                    Option 1 — export in your shell, then restart:
+                    Option 1: export in your shell, then restart:
                   </p>
                   <div className="rounded-lg px-3 py-2 font-mono text-[11px] text-green-300/80 border border-white/10" style={{ background: 'var(--bg-subtle)' }}>
                     export GOOGLE_API_KEY=your_key_here
                   </div>
                   <p className="text-[11px] text-white/40">
-                    Option 2 — add to <span className="font-mono text-white/60">.env.local</span> and restart:
+                    Option 2: add to <span className="font-mono text-white/60">.env.local</span> and restart:
                   </p>
                   <div className="rounded-lg px-3 py-2 font-mono text-[11px] text-green-300/80 border border-white/10" style={{ background: 'var(--bg-subtle)' }}>
                     GOOGLE_API_KEY=your_key_here

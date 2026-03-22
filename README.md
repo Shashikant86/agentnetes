@@ -6,7 +6,7 @@
 
 **Zero to a Self-Organizing AI Agency. On Demand.**
 
-*Self-Organizing AI Agent Swarms. On Demand. · built at Zero to Agent London 2026, Google DeepMind x Vercel*
+*k8s orchestrates containers. a8s orchestrates AI agents. · built at Zero to Agent London 2026, Google DeepMind x Vercel*
 
 <br/>
 
@@ -79,7 +79,9 @@ npx agentnetes serve --port 8080
 
 ## What is it
 
-Agentnetes is a self-organizing swarm of AI agents. The name is a nod to Kubernetes: just as Kubernetes orchestrates containers across a cluster, Agentnetes orchestrates AI agents across isolated sandboxes. Same ideas — declarative goals, parallel execution, lifecycle management, isolation — applied to AI agent teams instead of workloads.
+**k8s orchestrates containers. a8s orchestrates AI agents.**
+
+Agentnetes (a8s) is a self-organizing swarm of AI agents. Just as Kubernetes (k8s) orchestrates containers across a cluster, Agentnetes orchestrates AI agents across isolated sandboxes. Same ideas: declarative goals, parallel execution, lifecycle management, isolation. Applied to AI agent teams instead of workloads.
 
 You give it a single natural-language goal and a codebase. The system:
 
@@ -146,7 +148,7 @@ interface VrlmConfig {
 
 ---
 
-## The Four Foundations
+## The Five Foundations
 
 ### 1. RLM Pattern ([MIT CSAIL](https://arxiv.org/abs/2512.24601))
 
@@ -189,6 +191,19 @@ Every agent Agentnetes spawns generates a standard A2A Agent Card:
   "skills": [{ "id": "implement-provider", "tags": ["typescript", "ai-sdk"] }]
 }
 ```
+
+### 5. Kubernetes-inspired Load Balancing
+
+All specialist agents run concurrently. Work is load-balanced across the agent pool automatically. One agent failing never blocks the others.
+
+```typescript
+// Fault-tolerant parallel dispatch: same idea as Kubernetes workload scheduling
+await Promise.allSettled(
+  workerTasks.map(task => runWorker(task))
+);
+```
+
+`maxWorkers` caps concurrency like Kubernetes resource limits on a node. `Promise.allSettled` ensures a failing Engineer never kills the Scout or Tester. The swarm delivers what it can regardless of individual failures.
 
 ---
 
@@ -314,7 +329,7 @@ agentnetes/
 SANDBOX_PROVIDER=docker        # docker | vercel | e2b | daytona | local
 
 # Google Gemini API key (get one free at aistudio.google.com)
-GOOGLE_API_KEY=                # Set as env var or in .env.local — not configurable in the web UI
+GOOGLE_API_KEY=                # Set as env var or in .env.local. Not configurable in the web UI.
 
 # Vercel sandbox (auto-detected on Vercel via OIDC)
 VERCEL_TOKEN=

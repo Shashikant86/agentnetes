@@ -373,7 +373,10 @@ export default function Landing() {
             style={{ background: 'var(--bg-subtle)' }}>
             <span className="text-white/65">Self-Organizing AI Agent Swarms. On Demand.</span>
             <span className="text-white/20">·</span>
-            <span className="text-white/35">Kubernetes-inspired orchestration for AI agents</span>
+            <span className="text-white/35">
+              <span className="text-white/55">k8s</span> orchestrates containers.{' '}
+              <span className="text-white/55">a8s</span> orchestrates AI agents.
+            </span>
           </div>
 
           {/* Headline */}
@@ -681,14 +684,14 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
             <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Research Foundations</div>
-            <h2 className="text-3xl font-bold mb-4 text-white">Four ideas. One system.</h2>
+            <h2 className="text-3xl font-bold mb-4 text-white">Five ideas. One system.</h2>
             <p className="text-white/75 text-base max-w-lg mx-auto">
-              Agentnetes combines four research-backed patterns that individually improve agent performance
+              Agentnetes combines five research-backed patterns that individually improve agent performance
               and together create something qualitatively different.
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <FeatureCard
               badge="MIT CSAIL"
               badgeColor="border-blue-500/40 text-blue-400"
@@ -728,6 +731,16 @@ export default function Landing() {
               detail="Today these cards are internal. Tomorrow any specialist agent can be published as an independent, discoverable service. A Provider Engineer becomes a reusable service any other system can call."
               code='GET /agents/provider-engineer/.well-known/agent.json'
               cite="A2A Protocol v1.0 -- Google Agent-to-Agent standard"
+            />
+            <FeatureCard
+              badge="Kubernetes-inspired"
+              badgeColor="border-cyan-500/40 text-cyan-400"
+              icon={<Network size={15} />}
+              title="Load Balancing: Work distributed across the swarm"
+              description="All specialist agents run concurrently via Promise.allSettled. Work is load-balanced across the agent pool automatically. One agent failing never blocks the others."
+              detail="maxWorkers caps concurrency like Kubernetes resource limits on a node. Promise.allSettled provides fault-tolerant dispatch: a failing Engineer never kills the Scout or Tester. The swarm delivers what it can regardless of individual failures."
+              code="Promise.allSettled(workers.map(task => runWorker(task)))"
+              cite="Kubernetes-inspired: parallel execution + fault-tolerant dispatch"
             />
           </div>
         </div>
