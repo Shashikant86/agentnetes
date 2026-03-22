@@ -1,6 +1,6 @@
 {
   "name": "agentnetes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "author": "Shashi <shashi@super-agentic.ai>",
   "license": "AGPL-3.0-or-later",
@@ -11,7 +11,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@ai-sdk/gateway": "beta",
@@ -37,6 +39,7 @@
     "postcss": "latest",
     "prettier": "^3.8.1",
     "tailwindcss": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "vitest": "^4.1.0"
   }
 }

@@ -3,13 +3,12 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 describe('api/config route', () => {
-  it('uses force-dynamic so env vars are read at request time', () => {
+  it('uses force-static for static export compatibility', () => {
     const source = readFileSync(
       join(__dirname, '../../app/api/config/route.ts'),
       'utf-8',
     );
-    expect(source).toContain("export const dynamic = 'force-dynamic'");
-    expect(source).not.toContain('force-static');
+    expect(source).toContain("export const dynamic = 'force-static'");
   });
 });
 
