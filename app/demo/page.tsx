@@ -264,6 +264,7 @@ export default function DemoPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message,
+            mode,
             sandboxProvider: settings.sandboxProvider,
             repoUrl: settings.repoUrl,
             plannerModel: settings.plannerModel,

@@ -1,4 +1,4 @@
-import { generateText, stepCountIs, ToolLoopAgent } from 'ai';
+import { generateObject, generateText, stepCountIs, ToolLoopAgent } from 'ai';
 import { z } from 'zod';
 import { gateway } from '../gateway';
 import { createAgentTools } from './tools';
@@ -143,17 +143,15 @@ export class VrlmRuntime {
   // ── Planner ─────────────────────────────────────────────────────────────────
 
   private async runPlanner(goal: string): Promise<WorkerPlan> {
-    const { text } = await generateText({
+    const { object } = await generateObject({
       model: gateway(this.config.plannerModel, this.config.googleApiKey),
       system: PLANNER_SYSTEM_PROMPT,
       prompt: buildPlannerPrompt(goal),
+      schema: WorkerPlanSchema,
+      schemaName: 'WorkerPlan',
       maxOutputTokens: 2000,
     });
-
-    // Strip markdown code fences if model wrapped in ```json ... ```
-    const clean = text.replace(/^```(?:json)?\n?/m, '').replace(/\n?```$/m, '').trim();
-    const raw = JSON.parse(clean);
-    return WorkerPlanSchema.parse(raw);
+    return WorkerPlanSchema.parse(object);
   }
 
   // ── Worker ──────────────────────────────────────────────────────────────────

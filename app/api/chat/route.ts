@@ -8,6 +8,7 @@ export const maxDuration = 300;
 export async function POST(req: Request) {
   const {
     message,
+    mode,
     plannerModel,
     workerModel,
     sandboxProvider,
@@ -15,7 +16,16 @@ export async function POST(req: Request) {
   } = await req.json();
 
   const resolvedApiKey = process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-  const useReal = !!resolvedApiKey && process.env.SIMULATION_MODE !== 'true';
+  const realBlockedBySimulation = process.env.SIMULATION_MODE === 'true';
+  const canUseReal = !!resolvedApiKey && !realBlockedBySimulation;
+  const requestedMode = mode === 'real'
+    ? 'real'
+    : mode === 'simulation'
+      ? 'simulation'
+      : canUseReal
+        ? 'real'
+        : 'simulation';
+  const useReal = requestedMode === 'real' && canUseReal;
 
   const config: VrlmConfig = {
     ...DEFAULT_CONFIG,
@@ -33,6 +43,21 @@ export async function POST(req: Request) {
     start(controller) {
       function send(event: unknown) {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+      }
+
+      if (requestedMode === 'real' && !canUseReal) {
+        const reason = !resolvedApiKey
+          ? 'GOOGLE_API_KEY is not set'
+          : 'SIMULATION_MODE is true';
+
+        send({
+          type: 'error',
+          data: {
+            message: `Real mode was requested, but ${reason}. The runtime never started, so no Docker sandboxes were created.`,
+          },
+        });
+        controller.close();
+        return;
       }
 
       if (useReal) {
