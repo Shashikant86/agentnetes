@@ -17,12 +17,17 @@ cp -r "$REPO_ROOT/.next/standalone" "$CLI_WEB"
 cp -r "$REPO_ROOT/.next/static" "$CLI_WEB/.next/static"
 cp -r "$REPO_ROOT/public" "$CLI_WEB/public"
 
-# Safety check: make sure no .env files ended up in the output
-ENV_FILES=$(find "$CLI_WEB" -name ".env*" 2>/dev/null)
-if [ -n "$ENV_FILES" ]; then
+# Strip any .env files Next.js copied into the standalone output — users
+# supply their own env vars at runtime via export or their shell profile.
+echo "Removing .env files from standalone output..."
+find "$CLI_WEB" -name ".env*" -delete
+
+# Safety check: confirm none remain
+REMAINING=$(find "$CLI_WEB" -name ".env*" 2>/dev/null)
+if [ -n "$REMAINING" ]; then
   echo ""
-  echo "ERROR: .env files found in the standalone output — aborting!"
-  echo "$ENV_FILES"
+  echo "ERROR: could not remove all .env files from the output — aborting!"
+  echo "$REMAINING"
   rm -rf "$CLI_WEB"
   exit 1
 fi

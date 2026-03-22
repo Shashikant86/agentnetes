@@ -1,10 +1,7 @@
 import { spawn } from 'child_process';
 import { existsSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { join } from 'path';
 import pc from 'picocolors';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export async function serve(port: number): Promise<void> {
   // When installed via npm, the CLI binary is at dist/index.js and web/ is a sibling of dist/
