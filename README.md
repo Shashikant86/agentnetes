@@ -6,7 +6,7 @@
 
 **Zero to a Self-Organizing AI Agency. On Demand.**
 
-*Kubernetes for AI On Demand Agents · built at Zero to Agent London 2026, Google DeepMind x Vercel*
+*Self-Organizing AI Agent Swarms. On Demand. · built at Zero to Agent London 2026, Google DeepMind x Vercel*
 
 <br/>
 
@@ -75,7 +75,7 @@ npx agentnetes snapshot create
 
 ## What is it
 
-Agentnetes is a self-organizing, recursive agent system. Think Kubernetes for AI On Demand Agents.
+Agentnetes is a self-organizing swarm of AI agents. The name is a nod to Kubernetes: just as Kubernetes orchestrates containers across a cluster, Agentnetes orchestrates AI agents across isolated sandboxes. Same ideas — declarative goals, parallel execution, lifecycle management, isolation — applied to AI agent teams instead of workloads.
 
 You give it a single natural-language goal and a codebase. The system:
 
@@ -85,6 +85,61 @@ You give it a single natural-language goal and a codebase. The system:
 4. All artifacts are collected, verified, and streamed back to you
 
 Roles are fully emergent. Nothing is hardcoded. A provider implementation task gets a Scout, Engineer, Tester, and Packager. A security audit gets a completely different team.
+
+---
+
+## vRLM: The Orchestration Runtime
+
+vRLM (Virtual Recursive Language Model Runtime) is the core engine inside Agentnetes. It is the layer between your goal and the actual agent execution.
+
+Inspired by the [RLM pattern from MIT CSAIL](https://arxiv.org/abs/2512.24601): instead of loading the codebase into an LLM prompt, each agent gets a **virtual environment** (an isolated sandbox with the repo already cloned) and explores it using real shell commands.
+
+### Three phases
+
+**1. Plan**
+A root agent (the Tech Lead) calls the Gemini planner to decompose the goal into a set of specialist worker roles. Roles are fully emergent: the planner decides what skills are needed based on the goal and repo structure. Nothing is hardcoded.
+
+**2. Execute (parallel)**
+Workers run concurrently. Each worker gets:
+- An isolated Docker container (or Vercel Firecracker VM) with the repo pre-cloned at `/workspace`
+- Two MCP tools: `search(pattern)` to grep the codebase and `execute(command)` to run any shell command
+- A role-specific system prompt built from the task description and accumulated findings from other agents
+
+**3. Synthesize**
+When all workers complete, the root agent reads their summaries and produces a structured report with findings and generated artifacts.
+
+### Event streaming
+
+Every phase emits typed events over SSE. The web UI subscribes to these to render agent activity in real time:
+
+```typescript
+type VrlmEventType =
+  | 'task-created'    // new agent spawned
+  | 'task-updated'    // status change or progress
+  | 'task-completed'  // agent finished with findings + artifacts
+  | 'task-failed'     // agent error
+  | 'finding'         // agent discovered something
+  | 'terminal'        // shell command + output
+  | 'artifact'        // file produced by an agent
+  | 'collaboration'   // inter-agent finding shared
+  | 'synthesis'       // root agent final summary
+  | 'done'            // run complete
+  | 'error'           // runtime error
+```
+
+### Config
+
+```typescript
+interface VrlmConfig {
+  maxWorkers: number;        // max parallel agents (default: 6)
+  maxStepsPerAgent: number;  // max tool calls per agent (default: 20)
+  plannerModel: string;      // model for root orchestrator
+  workerModel: string;       // model for specialist agents
+  repoUrl: string;           // git repo to clone into each sandbox
+  sandboxProvider: 'docker' | 'vercel' | 'local';
+  googleApiKey?: string;     // overrides env var (set from UI)
+}
+```
 
 ---
 
@@ -160,12 +215,13 @@ search()     execute()     execute()          execute()
 |-------|---------|---------|
 | AI Runtime | `ai` (Vercel AI SDK) | `7.0.0-beta.33` |
 | Agent primitive | `ToolLoopAgent` | AI SDK v7 beta |
-| AI Gateway | `@ai-sdk/gateway` | `4.0.0-beta.18` |
-| Sandbox (cloud) | `@vercel/sandbox` | `1.9.0` |
-| Sandbox (local) | Docker (`node:20-alpine`) | - |
+| Google AI | `@ai-sdk/google` | `3.0.52` |
+| Sandbox (local default) | Docker `node:20-alpine` | - |
+| Sandbox (cloud) | `@vercel/sandbox` Firecracker | `1.9.0` |
 | Framework | Next.js App Router | latest |
-| Planner model | Gemini 2.5 Pro | direct or via gateway |
-| Worker model | Gemini 2.5 Flash | direct or via gateway |
+| Planner model | Gemini 2.5 Pro (default) | configurable in UI |
+| Worker model | Gemini 2.5 Flash (default) | configurable in UI |
+| Models supported | Gemini 2.0 · 2.5 · 3.x | full lineup |
 | Streaming | Server-Sent Events | native ReadableStream |
 
 ---
@@ -254,18 +310,18 @@ agentnetes/
 # Sandbox
 SANDBOX_PROVIDER=docker        # docker | vercel | e2b | daytona | local
 
-# LLM (one of these)
-GOOGLE_API_KEY=                # Direct Gemini (aistudio.google.com)
-AI_GATEWAY_BASE_URL=           # Vercel AI Gateway endpoint
-AI_GATEWAY_API_KEY=            # Gateway API key
+# Google Gemini API key (get one free at aistudio.google.com)
+GOOGLE_API_KEY=                # Can also be set in the web UI (no .env needed)
 
-# Vercel sandbox (auto on Vercel via OIDC)
+# Vercel sandbox (auto-detected on Vercel via OIDC)
 VERCEL_TOKEN=
 
 # Demo
-SIMULATION_MODE=false          # true = always use simulation
-DEMO_REPO_URL=https://github.com/vercel/ai
+SIMULATION_MODE=false          # true = always use simulation, skip real execution
+DEMO_REPO_URL=https://github.com/expressjs/express  # default target repo
 ```
+
+> **Tip:** When running the web UI locally, you can configure `GOOGLE_API_KEY`, sandbox provider, repo URL, and models directly in the Settings modal. No `.env.local` file required.
 
 ---
 

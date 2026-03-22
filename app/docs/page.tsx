@@ -26,6 +26,7 @@ function ThemeToggle() {
 const SECTIONS = [
   { id: 'quickstart',   label: 'Quick Start',         icon: Zap },
   { id: 'how-it-works', label: 'How it Works',        icon: Layers },
+  { id: 'local-docker', label: 'Local Dev + Docker',  icon: Box },
   { id: 'cli',          label: 'CLI Reference',        icon: Terminal },
   { id: 'sandboxes',    label: 'Sandbox Providers',    icon: Box },
   { id: 'config',       label: 'Configuration',        icon: Settings },
@@ -321,6 +322,70 @@ GOOGLE_API_KEY=your_key agentnetes run "refactor auth module to use JWT"`}</Code
           <Code lang="typescript">{`search(pattern, path?, fileGlob?)  // grep -r across the repo
 execute(command)                   // run any shell command in the sandbox`}</Code>
 
+          {/* ── Local Dev + Docker ──────────────────────────────── */}
+          <H2 id="local-docker">Local Dev with Docker</H2>
+          <P>
+            Run the full Agentnetes web app locally with real Docker sandboxes · no cloud accounts needed.
+            Each agent gets its own <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">node:20-alpine</code> container with the target repo cloned inside.
+          </P>
+
+          <H3>1. Pre-pull the Docker image</H3>
+          <P>Do this once to avoid the image download on your first run:</P>
+          <Code>{`docker pull node:20-alpine`}</Code>
+
+          <H3>2. Create .env.local</H3>
+          <P>In the root of the agentnetes repo, create a <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">.env.local</code> file:</P>
+          <Code>{`# ── Sandbox ───────────────────────────────────────────────────────
+SIMULATION_MODE=false
+SANDBOX_PROVIDER=docker
+
+# ── Google Gemini · get free key at aistudio.google.com ───────────
+GOOGLE_API_KEY=your_key_here
+
+# ── Target repo for agents to work on ─────────────────────────────
+DEMO_REPO_URL=https://github.com/expressjs/express`}</Code>
+
+          <Callout type="warn">
+            Do <strong>not</strong> set <code className="bg-white/5 px-1 py-0.5 rounded">AI_GATEWAY_BASE_URL</code> when using Google directly · it will try to route through Vercel AI Gateway and fail with an authentication error.
+          </Callout>
+
+          <H3>3. Start the dev server</H3>
+          <Code>{`npm run dev`}</Code>
+
+          <H3>4. Open the simulation page</H3>
+          <P>
+            Navigate to <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">http://localhost:3000/demo</code>, select a model, and submit a goal.
+            Use <strong>Gemini 2.5 Flash</strong> for faster planning · 2.5 Pro has extended thinking which can take 30-60s.
+          </P>
+
+          <H3>5. Watch containers spin up</H3>
+          <P>In a separate terminal, poll Docker every second to see agents appearing and disappearing:</P>
+          <Code>{`watch -n 1 docker ps`}</Code>
+          <P>You will see one container per worker agent. They are automatically removed when the agent finishes.</P>
+
+          <Callout type="tip">
+            For faster iteration, point <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">DEMO_REPO_URL</code> at a small repo like <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">expressjs/express</code>.
+            Large monorepos (e.g. <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">vercel/ai</code>) take 60-90s to clone per container.
+          </Callout>
+
+          <H3>What happens end-to-end</H3>
+          {[
+            ['POST /api/chat', 'Browser sends the goal and selected model to the Next.js API route.'],
+            ['Planner calls Gemini', 'The Tech Lead agent calls your GOOGLE_API_KEY directly · no gateway.'],
+            ['Worker containers start', 'One docker run per specialist · node:20-alpine with git + bash installed, repo cloned to /workspace.'],
+            ['Agents execute tools', 'search() and execute() run bash commands inside /workspace via docker exec.'],
+            ['SSE stream to browser', 'Events (task-created, terminal, finding, done) stream in real time to the UI.'],
+            ['Containers stop', 'Each container is removed automatically after its agent completes (--rm flag).'],
+          ].map(([title, desc]) => (
+            <div key={title} className="flex gap-4 mb-4">
+              <div className="w-1.5 shrink-0 rounded-full mt-1" style={{ background: 'linear-gradient(180deg, #a855f7 0%, #f97316 100%)', minHeight: '1.5rem' }} />
+              <div>
+                <div className="text-white font-semibold text-sm mb-0.5">{title}</div>
+                <div className="text-white/60 text-sm leading-relaxed">{desc}</div>
+              </div>
+            </div>
+          ))}
+
           {/* ── CLI Reference ───────────────────────────────────── */}
           <H2 id="cli">CLI Reference</H2>
 
@@ -523,6 +588,21 @@ await runtime.run('add comprehensive test coverage');`}</Code>
               error: 'Agent exceeded step budget with no result',
               cause: 'The agent hit the maxStepsPerAgent limit (default: 20) without completing.',
               fix: 'Break the goal into smaller tasks, or increase the budget with WORKER_MAX_STEPS=40.',
+            },
+            {
+              error: 'GatewayAuthenticationError: Unauthenticated request to AI Gateway',
+              cause: 'AI_GATEWAY_BASE_URL is set in your environment, causing all model calls to route through Vercel AI Gateway instead of Google directly.',
+              fix: 'Remove AI_GATEWAY_BASE_URL from your environment or .env.local. Use only GOOGLE_API_KEY for direct Gemini access.',
+            },
+            {
+              error: 'UI shows nothing after submitting a prompt (empty EventStream)',
+              cause: 'The runtime errored silently. Common causes: invalid API key, model not available, or a missing env var.',
+              fix: 'Check the terminal running npm run dev for [chat] error: lines. The UI now shows error messages in the chat panel.',
+            },
+            {
+              error: 'Gemini 2.5 Pro hangs for 60+ seconds before planning',
+              cause: 'Gemini 2.5 Pro uses extended thinking mode which can take over a minute for complex goals.',
+              fix: 'Switch to Gemini 2.5 Flash in the model selector dropdown · it plans in 3-5 seconds.',
             },
           ].map(({ error, cause, fix }) => (
             <div key={error} className="rounded-xl border border-white/10 px-5 py-4 mb-4" style={{ background: 'var(--bg-subtle)' }}>

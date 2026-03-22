@@ -44,6 +44,38 @@ const TERMINAL_LINES: TerminalLine[] = [
   { delay: 6500, type: 'success', text: '  8/8 tests passing   0 TypeScript errors   4 files generated' },
 ];
 
+const CYCLING_WORDS = [
+  'Self-Organizing',
+  'On Demand',
+  'Self-Replicating',
+  'Self-Learning',
+  'Self-Resilient',
+];
+
+function CyclingWord() {
+  const [index, setIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setIndex(i => (i + 1) % CYCLING_WORDS.length);
+        setVisible(true);
+      }, 400);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <span
+      className="inline-block transition-all duration-300"
+      style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(-8px)' }}>
+      {CYCLING_WORDS[index]}
+    </span>
+  );
+}
+
 function AnimatedTerminal() {
   const [visibleCount, setVisibleCount] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -303,8 +335,8 @@ export default function Landing() {
           <div className="flex items-center gap-2.5">
             <Logo size={26} />
             <span className="font-bold tracking-tight text-white">Agentnetes</span>
-            <span className="text-xs font-mono text-white/80 border border-white/20 rounded px-2 py-0.5 uppercase tracking-wider hidden sm:inline">
-              Kubernetes for AI On Demand Agents
+            <span className="text-xs font-mono text-white/50 border border-white/15 rounded px-2 py-0.5 uppercase tracking-wider hidden sm:inline">
+              Kubernetes-inspired
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -319,67 +351,45 @@ export default function Landing() {
             <Link href="/demo"
               className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition-all"
               style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6, #fb923c)', color: '#000' }}>
-              Try Simulation <ArrowRight size={11} />
+              Try Demo <ArrowRight size={11} />
             </Link>
           </div>
         </div>
       </nav>
 
       {/* ── Hero ────────────────────────────────────────────── */}
-      <section className="pt-28 pb-20 px-6 relative overflow-hidden" style={{
-        backgroundImage: `
-          radial-gradient(ellipse 80% 60% at 50% -5%, rgba(168,85,247,0.28) 0%, transparent 65%),
-          radial-gradient(ellipse 50% 40% at 85% 15%, rgba(236,72,153,0.12) 0%, transparent 55%),
-          radial-gradient(ellipse 40% 30% at 10% 80%, rgba(249,115,22,0.08) 0%, transparent 55%),
-          linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
-        `,
-        backgroundSize: 'auto, auto, auto, 52px 52px, 52px 52px',
-      }}>
-        {/* Aurora blob */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none animate-aurora"
-          style={{ background: 'radial-gradient(circle, rgba(168,85,247,0.07) 0%, rgba(236,72,153,0.04) 40%, transparent 70%)' }} />
+      <section className="pt-28 pb-20 px-6 relative overflow-hidden">
 
         <div className="max-w-4xl mx-auto text-center relative">
 
-          {/* Logo mark with glow */}
-          <div className="flex justify-center mb-8 relative">
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-52 h-52 rounded-full blur-3xl opacity-40"
-                style={{ background: 'radial-gradient(circle, rgba(168,85,247,0.6) 0%, rgba(236,72,153,0.3) 50%, transparent 70%)' }} />
-            </div>
+          {/* Logo mark */}
+          <div className="flex justify-center mb-8">
             <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.png`} alt="Agentnetes" width={100} height={100} priority
-              className="rounded-2xl relative animate-float shadow-2xl"
-              style={{ boxShadow: '0 20px 60px rgba(168,85,247,0.3), 0 4px 20px rgba(0,0,0,0.5)' }} />
+              className="rounded-2xl animate-float" />
           </div>
 
           {/* Kicker */}
           <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-mono mb-6 border border-white/10"
             style={{ background: 'var(--bg-subtle)' }}>
-            <span className="text-white/40">Kubernetes for AI On Demand Agents</span>
+            <span className="text-white/65">Self-Organizing AI Agent Swarms. On Demand.</span>
             <span className="text-white/20">·</span>
-            <span className="text-white/65">dynamic teams, not static YAML</span>
+            <span className="text-white/35">Kubernetes-inspired orchestration for AI agents</span>
           </div>
 
           {/* Headline */}
           <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight mb-5 leading-[1.05]">
             <span className="text-white">Zero to a</span>
             <br />
-            <span className="text-transparent bg-clip-text" style={{
-              backgroundImage: 'linear-gradient(135deg, #c084fc 0%, #f472b6 50%, #fb923c 100%)',
-            }}>
-              Self-Organizing
-            </span>
+            <span className="text-white"><CyclingWord /></span>
             <br />
             <span className="text-white">AI Agency.</span>
-            <span className="text-white/65"> On Demand.</span>
           </h1>
 
           <p className="text-white/75 text-lg mb-4 max-w-2xl mx-auto leading-relaxed font-medium">
-            Agentnetes is a self-organizing, recursively expanding system of sandboxed AI agents that explore, execute, and coordinate to solve complex problems.
+            Type a goal. Agentnetes forms a dynamic team of specialist agents, roles invented on the fly, each running in its own isolated sandbox with the repo pre-cloned.
           </p>
-          <p className="text-white/55 text-base mb-10 max-w-xl mx-auto leading-relaxed">
-            Type a goal. A swarm of specialist agents assembles, each in its own isolated sandbox, exploring your codebase, writing code, running tests, and delivering together.
+          <p className="text-white/50 text-base mb-4 max-w-xl mx-auto leading-relaxed">
+            No static agent configs. No stuffed context windows. The team assembles itself, works in parallel, and delivers together.
           </p>
 
           {/* Motivation pills */}
@@ -412,7 +422,7 @@ export default function Landing() {
               className="flex items-center gap-2 font-semibold px-7 py-3 rounded-xl text-base transition-all hover:opacity-90 hover:scale-[1.02] animate-glow-pulse"
               style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899, #f97316)', color: '#fff', boxShadow: '0 0 40px rgba(168,85,247,0.35), 0 8px 32px rgba(0,0,0,0.4)' }}>
               <Zap size={14} />
-              Try Simulation
+              Try Demo · no signup
             </Link>
             <Link href="/docs"
               className="flex items-center gap-2 border border-white/15 text-white/70 px-7 py-3 rounded-xl hover:border-white/30 hover:text-white transition-all text-base">
@@ -479,26 +489,60 @@ export default function Landing() {
           <div className="text-center mb-14">
             <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">The Problem</div>
             <h2 className="text-3xl font-bold mb-4 text-white">Single agents break on real codebases.</h2>
-            <p className="text-white/70 text-base max-w-xl mx-auto leading-relaxed">
-              Modern codebases have hundreds of thousands of lines. No single AI model can read them all · and even models with large context windows suffer from context rot: the longer the prompt, the worse the reasoning.
+            <p className="text-white/70 text-base max-w-2xl mx-auto leading-relaxed">
+              Teams have tried everything: single coding agents, prompt-stuffed RAG pipelines, hand-wired MCP tools, elaborate harnesses. They all hit the same wall. Real codebases are too large for one context window, too complex for one agent, and too dynamic for static tool configs. Nobody stopped to ask: what if the agents invented their own team?
             </p>
           </div>
           <div className="grid sm:grid-cols-3 gap-4 mb-12">
             {[
-              { label: 'Single agent', problem: true,  points: ['Stuffs entire codebase into prompt', 'Performance degrades beyond ~50K tokens', 'Cannot parallelize work', 'One failure = total failure'] },
-              { label: 'Agentnetes', problem: false, points: ['Context lives in sandboxes, not prompts', 'Agents explore via code · grep, find, cat', 'Specialists run in parallel', 'Agents catch and fix each other\'s errors'] },
-              { label: 'Human team', problem: null,  points: ['Days to weeks per feature', 'Requires coordination overhead', 'Inconsistent quality', 'Expensive and hard to scale'] },
-            ].map(({ label, problem, points }) => (
+              {
+                label: 'Single agent + tools',
+                problem: true,
+                sub: 'Cursor, Copilot, custom harnesses',
+                points: [
+                  'Entire codebase stuffed into context',
+                  'Context rot beyond ~50K tokens',
+                  'Sequential: one task at a time',
+                  'One failure halts everything',
+                  'Static tool lists, no emergent roles',
+                ],
+              },
+              {
+                label: 'Agentnetes',
+                problem: false,
+                sub: 'vRLM runtime · RLM pattern',
+                points: [
+                  'Context lives in sandboxes, not prompts',
+                  'Agents explore via grep, find, cat',
+                  'Specialists run in parallel',
+                  'Agents catch and fix each other\'s errors',
+                  'Roles invented per goal, never hardcoded',
+                ],
+              },
+              {
+                label: 'Teams using AI tools',
+                problem: null,
+                sub: 'Copilot, Cursor, RAG, MCP harnesses',
+                points: [
+                  'Try different coding agent harnesses',
+                  'Hand-wire MCP tools and hope they compose',
+                  'Build RAG pipelines to stuff context',
+                  'Tune prompts and pray context holds',
+                  'Never break the problem down RLM-style',
+                ],
+              },
+            ].map(({ label, problem, sub, points }) => (
               <div key={label} className={`rounded-2xl border p-6 ${problem === false ? 'border-purple-500/40' : 'border-white/10'}`}
                 style={{ background: problem === false ? 'rgba(168,85,247,0.06)' : 'var(--bg-subtle)' }}>
-                <div className={`text-sm font-semibold mb-4 ${problem === false ? 'text-purple-400' : 'text-white/50'}`}>{label}</div>
+                <div className={`text-sm font-semibold mb-0.5 ${problem === false ? 'text-purple-400' : 'text-white/60'}`}>{label}</div>
+                <div className={`text-[11px] font-mono mb-4 ${problem === false ? 'text-purple-400/50' : 'text-white/25'}`}>{sub}</div>
                 <ul className="space-y-2">
                   {points.map(p => (
                     <li key={p} className="flex items-start gap-2 text-sm">
-                      <span className={`mt-1 shrink-0 text-xs ${problem === false ? 'text-purple-400' : 'text-white/25'}`}>
+                      <span className={`mt-1 shrink-0 text-xs ${problem === false ? 'text-purple-400' : 'text-white/20'}`}>
                         {problem === false ? '✓' : '✗'}
                       </span>
-                      <span className={problem === false ? 'text-white/75' : 'text-white/45'}>{p}</span>
+                      <span className={problem === false ? 'text-white/75' : 'text-white/40'}>{p}</span>
                     </li>
                   ))}
                 </ul>
@@ -707,27 +751,27 @@ export default function Landing() {
                 items: [
                   { name: 'ai (Vercel AI SDK)', version: 'v7.0.0-beta.33', highlight: true },
                   { name: 'ToolLoopAgent', version: 'beta agent primitive', highlight: true },
-                  { name: '@ai-sdk/gateway', version: 'v4.0.0-beta.18', highlight: false },
+                  { name: '@ai-sdk/google', version: 'v3.0.52', highlight: false },
                 ],
-                note: 'ToolLoopAgent is the core primitive in AI SDK v7 beta. Each worker runs with search() + execute() MCP tools.',
+                note: 'ToolLoopAgent is the core primitive in AI SDK v7 beta. Each worker runs two MCP tools: search() and execute().',
               },
               {
                 label: 'Sandbox',
                 items: [
-                  { name: '@vercel/sandbox', version: 'v1.9.0', highlight: false },
-                  { name: 'Firecracker microVMs', version: 'hardware isolation', highlight: false },
-                  { name: 'Snapshot pre-warming', version: 'sub-second startup', highlight: false },
+                  { name: 'Docker', version: 'node:20-alpine · local default', highlight: true },
+                  { name: '@vercel/sandbox', version: 'Firecracker microVMs', highlight: false },
+                  { name: 'Local shell', version: 'no-install fallback', highlight: false },
                 ],
-                note: 'Each agent gets its own Firecracker VM from a pre-warmed snapshot of the target repo.',
+                note: 'Docker is the default sandbox for local runs. Vercel Firecracker available for cloud self-hosting.',
               },
               {
                 label: 'Models',
                 items: [
-                  { name: 'Gemini 2.5 Pro', version: 'planner -- deep reasoning', highlight: true },
-                  { name: 'Gemini 2.5 Flash', version: 'workers -- fast + cheap', highlight: true },
-                  { name: 'Claude Opus / GPT-4o', version: 'switchable via Gateway', highlight: false },
+                  { name: 'Gemini 3.1 Pro', version: 'planner · latest', highlight: true },
+                  { name: 'Gemini 2.5 Flash', version: 'planner + worker · default', highlight: true },
+                  { name: 'Gemini 3.1 Flash-Lite', version: 'worker · fastest', highlight: false },
                 ],
-                note: 'Model speciation: planner uses a more capable model, workers use a faster model.',
+                note: 'Full Gemini 2.0 · 2.5 · 3.x lineup supported. Separate planner and worker models configurable in the UI.',
               },
             ].map(group => (
               <div key={group.label} className="rounded-2xl border border-white/10 p-5" style={{ background: 'var(--bg-card)' }}>
@@ -743,7 +787,7 @@ export default function Landing() {
           {/* Code snippet */}
           <div className="rounded-2xl border border-white/10 overflow-hidden" style={{ background: 'var(--bg-panel)' }}>
             <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
-              <span className="text-[10px] font-mono text-white/65">lib/vrlm/agent-factory.ts</span>
+              <span className="text-[10px] font-mono text-white/65">lib/vrlm/runtime.ts</span>
             </div>
             <div className="p-5 font-mono text-[12px] leading-7 overflow-x-auto">
               <div><span className="text-white/65">// Each worker: two tools, one sandbox, emergent role</span></div>
@@ -755,21 +799,21 @@ export default function Landing() {
                 <span className="text-pink-400">ToolLoopAgent</span>
                 <span className="text-white">{'({'}</span>
               </div>
-              <div className="pl-6"><span className="text-white/70">model: </span><span className="text-orange-400">gateway</span><span className="text-white">('google/gemini-2.5-flash'),</span></div>
+              <div className="pl-6"><span className="text-white/70">model: </span><span className="text-orange-400">google</span><span className="text-white">('gemini-2.5-flash'),</span></div>
               <div className="pl-6"><span className="text-white/70">tools: </span><span className="text-white">{'{ '}</span><span className="text-emerald-400">search</span><span className="text-white">, </span><span className="text-emerald-400">execute</span><span className="text-white"> {'}'},</span></div>
-              <div className="pl-6"><span className="text-white/70">stopCondition: </span><span className="text-orange-400">stepCountIs</span><span className="text-white">(40),</span></div>
-              <div className="pl-6"><span className="text-white/70">system: </span><span className="text-white">buildWorkerPrompt(task),</span></div>
+              <div className="pl-6"><span className="text-white/70">stopWhen: </span><span className="text-orange-400">stepCountIs</span><span className="text-white">(40),</span></div>
+              <div className="pl-6"><span className="text-white/70">instructions: </span><span className="text-white">buildWorkerPrompt(task),</span></div>
               <div><span className="text-white">{'});'}</span></div>
-              <div className="mt-2"><span className="text-white/65">// Stream events back to the vRLM orchestrator</span></div>
+              <div className="mt-2"><span className="text-white/65">// Drive the tool loop; events stream to the UI via SSE</span></div>
               <div>
                 <span className="text-violet-400">for await </span>
                 <span className="text-white">(</span>
                 <span className="text-violet-400">const </span>
-                <span className="text-white">event </span>
+                <span className="text-white">_ </span>
                 <span className="text-violet-400">of </span>
-                <span className="text-white">agent.</span>
-                <span className="text-pink-400">stream</span>
-                <span className="text-white">()) {'{ ... }'}</span>
+                <span className="text-white">result.</span>
+                <span className="text-pink-400">fullStream</span>
+                <span className="text-white">) {'{ ... }'}</span>
               </div>
             </div>
           </div>
@@ -781,9 +825,9 @@ export default function Landing() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-14">
             <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">How It Works</div>
-            <h2 className="text-3xl font-bold mb-4 text-white">From one sentence to working code</h2>
+            <h2 className="text-3xl font-bold mb-4 text-white">One sentence. Dynamic team. Real results.</h2>
             <p className="text-white/75 text-base max-w-md mx-auto">
-              The full pipeline from goal input to delivered artifacts
+              From goal to dynamic team formation to delivered artifacts, in isolated sandboxes
             </p>
           </div>
 
@@ -810,23 +854,194 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── vRLM ──────────────────────────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/[0.05]" style={{ background: 'var(--bg-base)' }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-14">
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Runtime</div>
+            <h2 className="text-3xl font-bold mb-4 text-white">vRLM: The Orchestration Runtime</h2>
+            <p className="text-white/70 text-base max-w-xl mx-auto">
+              Virtual Recursive Language Model Runtime. The engine between your goal and the agents.
+              Inspired by the <a href="https://arxiv.org/abs/2512.24601" target="_blank" rel="noreferrer" className="text-purple-400/80 hover:text-purple-400 transition-colors">RLM pattern from MIT CSAIL</a>.
+            </p>
+          </div>
+
+          {/* Three phases */}
+          <div className="grid md:grid-cols-3 gap-4 mb-10">
+            {[
+              {
+                n: '01',
+                phase: 'Plan',
+                color: 'border-yellow-500/20 bg-yellow-500/[0.03]',
+                badge: 'text-yellow-400/80',
+                body: 'Root agent explores the repo with grep and find, then calls the Gemini planner to invent a specialist team. Roles are fully emergent. Nothing is hardcoded.',
+              },
+              {
+                n: '02',
+                phase: 'Execute',
+                color: 'border-purple-500/20 bg-purple-500/[0.03]',
+                badge: 'text-purple-400/80',
+                body: 'Workers run in parallel. Each gets an isolated Docker container with the repo pre-cloned, and two tools: search() to grep the codebase and execute() to run any shell command.',
+              },
+              {
+                n: '03',
+                phase: 'Synthesize',
+                color: 'border-emerald-500/20 bg-emerald-500/[0.03]',
+                badge: 'text-emerald-400/80',
+                body: 'When all workers complete, the root agent reads their findings and artifacts, then produces a structured summary. Every generated file is collected and streamed to the UI.',
+              },
+            ].map(p => (
+              <div key={p.n} className={`rounded-2xl border p-5 ${p.color}`}>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-[10px] font-mono text-white/25">{p.n}</span>
+                  <span className={`text-sm font-bold ${p.badge}`}>{p.phase}</span>
+                </div>
+                <p className="text-white/55 text-sm leading-relaxed">{p.body}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Event types */}
+          <div className="grid md:grid-cols-2 gap-5 items-start">
+            <div>
+              <div className="text-[10px] font-mono text-white/30 uppercase tracking-widest mb-3">Event Stream · SSE</div>
+              <p className="text-white/55 text-sm leading-relaxed mb-4">
+                Every phase emits typed events over Server-Sent Events. The UI subscribes and renders agent activity in real time with no polling.
+              </p>
+              <div className="space-y-1.5">
+                {[
+                  { type: 'task-created',   desc: 'new agent spawned',              color: 'text-yellow-400/70' },
+                  { type: 'task-updated',   desc: 'status or progress change',      color: 'text-white/40' },
+                  { type: 'task-completed', desc: 'agent finished with artifacts',  color: 'text-emerald-400/70' },
+                  { type: 'task-failed',    desc: 'agent error',                    color: 'text-red-400/70' },
+                  { type: 'finding',        desc: 'agent discovered something',     color: 'text-purple-400/70' },
+                  { type: 'terminal',       desc: 'shell command + output',         color: 'text-blue-400/70' },
+                  { type: 'artifact',       desc: 'file produced by an agent',      color: 'text-emerald-400/50' },
+                  { type: 'collaboration',  desc: 'inter-agent finding shared',     color: 'text-orange-400/70' },
+                  { type: 'synthesis',      desc: 'root agent final summary',       color: 'text-pink-400/70' },
+                  { type: 'done',           desc: 'run complete',                   color: 'text-white/40' },
+                  { type: 'error',          desc: 'runtime error',                  color: 'text-red-400/50' },
+                ].map(e => (
+                  <div key={e.type} className="flex items-center gap-3 font-mono text-xs">
+                    <span className={`w-32 shrink-0 ${e.color}`}>{e.type}</span>
+                    <span className="text-white/30">{e.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 overflow-hidden" style={{ background: 'var(--bg-panel)' }}>
+              <div className="px-4 py-2.5 border-b border-white/[0.06] text-[10px] font-mono text-white/35">lib/vrlm/types.ts</div>
+              <div className="p-4 font-mono text-[11px] leading-6 space-y-0.5">
+                <div><span className="text-violet-400">interface </span><span className="text-white">VrlmConfig {'{'}</span></div>
+                <div className="pl-4"><span className="text-white/50">maxWorkers:        </span><span className="text-blue-400">number</span><span className="text-white/30">; // default 6</span></div>
+                <div className="pl-4"><span className="text-white/50">maxStepsPerAgent:  </span><span className="text-blue-400">number</span><span className="text-white/30">; // default 20</span></div>
+                <div className="pl-4"><span className="text-white/50">plannerModel:      </span><span className="text-blue-400">string</span><span className="text-white/30">; // orchestrator</span></div>
+                <div className="pl-4"><span className="text-white/50">workerModel:       </span><span className="text-blue-400">string</span><span className="text-white/30">; // specialists</span></div>
+                <div className="pl-4"><span className="text-white/50">repoUrl:           </span><span className="text-blue-400">string</span><span className="text-white/30">; // cloned per agent</span></div>
+                <div className="pl-4"><span className="text-white/50">sandboxProvider:   </span><span className="text-emerald-400">&apos;docker&apos; | &apos;vercel&apos; | &apos;e2b&apos; | &apos;daytona&apos; | &apos;local&apos;</span><span className="text-white/30">;</span></div>
+                <div className="pl-4"><span className="text-white/50">googleApiKey?:     </span><span className="text-blue-400">string</span><span className="text-white/30">; // UI override</span></div>
+                <div><span className="text-white">{'}'}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Get Started ───────────────────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/[0.05]">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-14">
+            <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Get Started</div>
+            <h2 className="text-3xl font-bold mb-4 text-white">Three ways to run</h2>
+            <p className="text-white/75 text-base max-w-md mx-auto">
+              From instant browser demo to full local execution with Docker sandboxes
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            {/* Tier 1 — Simulation */}
+            <div className="rounded-2xl border border-white/10 p-6" style={{ background: 'var(--bg-card)' }}>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-emerald-500/30 text-emerald-400 bg-emerald-500/5">no setup</span>
+              </div>
+              <div className="text-lg font-semibold text-white mb-2">Simulation</div>
+              <p className="text-white/55 text-sm leading-relaxed mb-5">
+                Watch the full agent lifecycle in your browser. No API key, no Docker, no install.
+                Pre-scripted scenarios replay real event sequences.
+              </p>
+              <div className="rounded-xl border border-white/[0.06] px-3 py-2 font-mono text-[11px] text-white/50 mb-5" style={{ background: 'var(--bg-panel)' }}>
+                Open /demo → toggle Simulation → watch
+              </div>
+              <Link href="/demo"
+                className="flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all hover:opacity-90 w-full justify-center"
+                style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899, #f97316)', color: '#fff' }}>
+                Try Demo <ArrowRight size={12} />
+              </Link>
+            </div>
+
+            {/* Tier 2 — Self-host local */}
+            <div className="rounded-2xl border border-violet-500/20 p-6 relative" style={{ background: 'var(--bg-card)' }}>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-violet-500/30 text-violet-400 bg-violet-500/5">recommended</span>
+              </div>
+              <div className="text-lg font-semibold text-white mb-2">Self-host · Local</div>
+              <p className="text-white/55 text-sm leading-relaxed mb-5">
+                Clone the repo and run locally. Both simulation and real agent execution available.
+                Configure your Google API key and target repo directly in the UI. No <code className="text-white/50 text-xs">.env</code> file needed.
+              </p>
+              <div className="rounded-xl border border-white/[0.06] px-3 py-2 font-mono text-[10px] text-white/50 mb-5 space-y-1" style={{ background: 'var(--bg-panel)' }}>
+                <div><span className="text-white/30">$ </span>git clone · npm install</div>
+                <div><span className="text-white/30">$ </span>docker pull node:20-alpine</div>
+                <div><span className="text-white/30">$ </span>npm run dev → open /demo</div>
+              </div>
+              <Link href="/docs"
+                className="flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg border border-violet-500/30 text-violet-400 hover:border-violet-500/60 hover:text-violet-300 transition-all w-full justify-center">
+                Read the docs <ChevronRight size={12} />
+              </Link>
+            </div>
+
+            {/* Tier 3 — CLI */}
+            <div className="rounded-2xl border border-white/10 p-6" style={{ background: 'var(--bg-card)' }}>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-blue-500/30 text-blue-400 bg-blue-500/5">CLI</span>
+              </div>
+              <div className="text-lg font-semibold text-white mb-2">CLI · Any Repo</div>
+              <p className="text-white/55 text-sm leading-relaxed mb-5">
+                Install the npm package globally and run against any local git repo.
+                Requires Docker running locally and a Google API key.
+              </p>
+              <div className="rounded-xl border border-white/[0.06] px-3 py-2 font-mono text-[10px] text-white/50 mb-5 space-y-1" style={{ background: 'var(--bg-panel)' }}>
+                <div><span className="text-white/30">$ </span>npm install -g agentnetes</div>
+                <div><span className="text-white/30">$ </span>export GOOGLE_API_KEY=...</div>
+                <div><span className="text-white/30">$ </span>agentnetes run &quot;your goal&quot;</div>
+              </div>
+              <a href="https://www.npmjs.com/package/agentnetes" target="_blank" rel="noreferrer"
+                className="flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg border border-white/10 text-white/55 hover:border-white/20 hover:text-white/75 transition-all w-full justify-center">
+                npm package <ExternalLink size={11} />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Model section ─────────────────────────────────────── */}
       <section className="py-24 px-6 border-t border-white/[0.05]" style={{ background: 'var(--bg-base)' }}>
         <div className="max-w-4xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">AI Gateway</div>
+              <div className="text-xs font-mono text-white/65 uppercase tracking-widest mb-3">Models</div>
               <h2 className="text-3xl font-bold mb-4 text-white">Any model. Same swarm.</h2>
               <p className="text-white/70 text-lg leading-relaxed mb-6">
-                Agentnetes routes all model calls through Vercel AI Gateway.
-                Switch the planner or worker model from the UI without changing a line of code.
+                Bring your own Google API key and swap models from the UI. No config file needed.
+                Separate planner and worker models let you balance quality vs cost.
               </p>
               <div className="space-y-3">
                 {[
-                  { label: 'Single endpoint for all providers', done: true },
-                  { label: 'Model speciation (planner vs workers)', done: true },
-                  { label: 'BYOK via gateway providerOptions', done: true },
-                  { label: 'Fallback chain on rate limit', done: false },
+                  { label: 'Gemini 3.x, 2.5, 2.0 all supported', done: true },
+                  { label: 'Separate planner and worker models', done: true },
+                  { label: 'BYOK: paste API key directly in the UI', done: true },
+                  { label: 'Claude / GPT-4o support', done: false },
                 ].map(x => (
                   <div key={x.label} className="flex items-center gap-2.5">
                     {x.done
@@ -840,10 +1055,10 @@ export default function Landing() {
             </div>
             <div className="space-y-3">
               {[
-                { label: 'Gemini 2.5 Pro',   role: 'Planner (default)',     color: 'border-violet-500/30 bg-violet-500/5', badge: 'recommended' },
-                { label: 'Gemini 2.5 Flash',  role: 'Workers (default)',     color: 'border-blue-400/20 bg-blue-400/5',     badge: 'fast' },
-                { label: 'Claude Opus 4.5',   role: 'Planner alternative',   color: 'border-orange-500/20 bg-orange-500/5', badge: '' },
-                { label: 'GPT-4o',            role: 'Planner alternative',   color: 'border-emerald-500/20 bg-emerald-500/5', badge: '' },
+                { label: 'Gemini 3.1 Pro',    role: 'Planner · latest',      color: 'border-violet-500/30 bg-violet-500/5',  badge: 'new' },
+                { label: 'Gemini 2.5 Flash',  role: 'Planner + Worker · default', color: 'border-blue-400/20 bg-blue-400/5', badge: 'recommended' },
+                { label: 'Gemini 3.1 Flash-Lite', role: 'Worker · fastest',  color: 'border-emerald-500/20 bg-emerald-500/5', badge: 'fast' },
+                { label: 'Gemini 2.0 Flash',  role: 'Worker · budget',       color: 'border-white/10 bg-white/[0.02]',       badge: '' },
               ].map(m => (
                 <div key={m.label} className={`flex items-center gap-3 border rounded-xl px-4 py-3 ${m.color}`}>
                   <div className="flex-1">
@@ -856,8 +1071,8 @@ export default function Landing() {
                 </div>
               ))}
               <div className="rounded-xl border border-white/10 px-4 py-3 font-mono text-[11px]" style={{ background: 'var(--bg-panel)' }}>
-                <span className="text-white/65">createGatewayProvider{'({'}</span><br />
-                <span className="text-white/65">{'  '}apiKey: </span><span className="text-violet-400">process.env.GATEWAY_API_KEY</span><br />
+                <span className="text-white/65">createGoogleGenerativeAI{'({'}</span><br />
+                <span className="text-white/65">{'  '}apiKey: </span><span className="text-violet-400">process.env.GOOGLE_API_KEY</span><br />
                 <span className="text-white/65">{'}'});</span>
               </div>
             </div>
@@ -884,7 +1099,7 @@ export default function Landing() {
               <Link href="/demo"
                 className="flex items-center gap-2 font-semibold px-8 py-3 rounded-xl text-base transition-all hover:opacity-90 hover:scale-[1.02]"
                 style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899, #f97316)', color: '#fff' }}>
-                Try Simulation <ArrowRight size={14} />
+                Try Demo · no signup <ArrowRight size={14} />
               </Link>
               <Link href="/docs"
                 className="flex items-center gap-2 border border-white/15 text-white/70 px-8 py-3 rounded-xl hover:border-white/30 hover:text-white transition-all text-base">

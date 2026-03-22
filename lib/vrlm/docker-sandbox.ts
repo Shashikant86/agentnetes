@@ -15,14 +15,16 @@ export class DockerSandbox {
     this.id = `docker-${containerId.slice(0, 12)}`;
   }
 
-  async runCommand(_shell: string, args: string[]): Promise<{
+  async runCommand(shell: string, args: string[]): Promise<{
     stdout: () => Promise<string>;
     exitCode: number;
   }> {
-    const cmd = args.join(' ');
+    // args is typically ['-c', 'actual command'] — extract the actual command
+    const cIdx = args.indexOf('-c');
+    const actualCmd = cIdx >= 0 && args[cIdx + 1] ? args[cIdx + 1] : args.join(' ');
     try {
       const output = execSync(
-        `docker exec ${this.containerId} sh -c ${JSON.stringify(cmd)}`,
+        `docker exec -w /workspace ${this.containerId} ${shell} -c ${JSON.stringify(actualCmd)}`,
         { encoding: 'utf-8', timeout: 60_000 },
       );
       return { stdout: async () => output ?? '', exitCode: 0 };
@@ -58,9 +60,9 @@ export async function createDockerSandbox(repoUrl: string): Promise<DockerSandbo
     { encoding: 'utf-8' },
   ).trim();
 
-  // Install git (alpine uses apk, much faster than apt-get)
+  // Install git + bash (alpine uses apk, much faster than apt-get)
   execSync(
-    `docker exec ${containerId} sh -c "apk add --no-cache git 2>/dev/null"`,
+    `docker exec ${containerId} sh -c "apk add --no-cache git bash 2>/dev/null"`,
     { timeout: 30_000, stdio: 'ignore' },
   );
 

@@ -59,6 +59,9 @@ export interface VrlmConfig {
   workerModel: string;
   repoSnapshotId?: string;
   repoUrl: string;
+  // UI-provided overrides (from settings panel)
+  googleApiKey?: string;
+  sandboxProvider?: 'docker' | 'local' | 'vercel' | 'e2b' | 'daytona';
 }
 
 export const DEFAULT_CONFIG: VrlmConfig = {

@@ -8,16 +8,25 @@ interface Message {
   content: string;
 }
 
-const EXAMPLES = [
-  'Add a new @ai-sdk/deepseek provider package with streaming and reasoning tokens',
+const EXAMPLES_REAL = [
+  'Audit all dependencies for known CVEs and outdated versions',
+  'Add rate limiting middleware with configurable limits per route',
+  'Find all TODO and FIXME comments and summarise what needs to be done',
+  'Add input validation and sanitisation to every request handler',
+];
+
+const EXAMPLES_SIMULATION = [
+  'Add a new provider package with streaming and tool-use support',
   'Find security vulnerabilities in the authentication flow',
-  'Add a /research command to the CLI that performs deep web research with citations',
+  'Refactor the router module to improve test coverage',
+  'Generate TypeScript types for all public API endpoints',
 ];
 
 interface Props {
   onSubmit: (message: string) => void;
   messages: Message[];
   isRunning: boolean;
+  mode?: 'real' | 'simulation';
 }
 
 function MarkdownContent({ content }: { content: string }) {
@@ -43,7 +52,7 @@ function MarkdownContent({ content }: { content: string }) {
   );
 }
 
-export function ChatPanel({ onSubmit, messages, isRunning }: Props) {
+export function ChatPanel({ onSubmit, messages, isRunning, mode = 'real' }: Props) {
   const [input, setInput] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -58,6 +67,11 @@ export function ChatPanel({ onSubmit, messages, isRunning }: Props) {
     setInput('');
   }
 
+  const examples = mode === 'simulation' ? EXAMPLES_SIMULATION : EXAMPLES_REAL;
+  const placeholder = mode === 'simulation'
+    ? 'Describe a task for the simulated swarm...'
+    : 'Give the agents a goal for your repo...';
+
   return (
     <div className="h-full flex flex-col">
       {/* Messages */}
@@ -66,13 +80,17 @@ export function ChatPanel({ onSubmit, messages, isRunning }: Props) {
           <div className="h-full flex flex-col items-center justify-center text-center px-4">
             <div className="text-5xl mb-4">⚡</div>
             <h2 className="text-white text-xl font-semibold mb-2">Agentnetes</h2>
-            <p className="text-white/70 text-sm mb-1 max-w-sm">Zero to a Self-Organizing AI Agency. On Demand.</p>
-            <p className="text-white/45 text-xs mb-8 max-w-sm">Zero to Agent? We are taking it further · Kubernetes for AI On Demand Agents.</p>
+            <p className="text-white/70 text-sm mb-1 max-w-sm">
+              {mode === 'simulation' ? 'Watch the swarm in action · no setup needed.' : 'Self-organizing agents · real Docker sandboxes.'}
+            </p>
+            <p className="text-white/40 text-xs mb-8 max-w-sm">
+              {mode === 'simulation' ? 'Pre-scripted scenarios showing real event sequences.' : 'Agents clone your repo, run shell commands, and deliver results.'}
+            </p>
             <div className="space-y-2 w-full max-w-sm">
-              {EXAMPLES.map((ex, i) => (
+              {examples.map((ex, i) => (
                 <button
                   key={i}
-                  onClick={() => { setInput(ex); }}
+                  onClick={() => setInput(ex)}
                   className="w-full text-left text-xs text-white/60 border border-white/10 rounded-lg px-3 py-2.5 hover:border-white/25 hover:text-white/80 transition-colors bg-white/[0.03]"
                 >
                   {ex}
@@ -117,7 +135,7 @@ export function ChatPanel({ onSubmit, messages, isRunning }: Props) {
             value={input}
             onChange={e => setInput(e.target.value)}
             disabled={isRunning}
-            placeholder="Give the swarm a goal..."
+            placeholder={placeholder}
             className="flex-1 bg-white/[0.04] border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 outline-none focus:border-white/30 disabled:opacity-50 transition-colors"
           />
           <button

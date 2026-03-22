@@ -33,8 +33,8 @@ function detectProvider(): 'vercel' | 'e2b' | 'daytona' | 'docker' | 'local' {
   return 'docker'; // default to docker for local demo
 }
 
-export async function createWorkerSandbox(repoUrl: string, snapshotId?: string): Promise<AnySandbox> {
-  const provider = detectProvider();
+export async function createWorkerSandbox(repoUrl: string, snapshotId?: string, providerOverride?: string): Promise<AnySandbox> {
+  const provider = providerOverride as ReturnType<typeof detectProvider> ?? detectProvider();
 
   if (provider === 'vercel') {
     const { Sandbox } = await import('@vercel/sandbox');

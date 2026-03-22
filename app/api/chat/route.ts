@@ -5,30 +5,28 @@ import { DEFAULT_CONFIG, VrlmConfig } from '@/lib/vrlm/types';
 
 export const maxDuration = 300;
 
-/**
- * Use real execution when GATEWAY_API_KEY (or AI_GATEWAY_BASE_URL) is set
- * AND SIMULATION_MODE is not "true".
- * Falls back to simulation so the demo always works.
- */
-function useRealRuntime(): boolean {
-  if (process.env.SIMULATION_MODE === 'true') return false;
-  return !!(
-    process.env.AI_GATEWAY_BASE_URL ??
-    process.env.GATEWAY_API_KEY ??
-    process.env.GOOGLE_API_KEY ??
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY
-  );
-}
-
 export async function POST(req: Request) {
-  const { message, plannerModel, workerModel } = await req.json();
+  const {
+    message,
+    plannerModel,
+    workerModel,
+    // UI-provided settings (override env vars)
+    googleApiKey,
+    sandboxProvider,
+    repoUrl,
+  } = await req.json();
+
+  const resolvedApiKey = googleApiKey || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+  const useReal = !!resolvedApiKey && process.env.SIMULATION_MODE !== 'true';
 
   const config: VrlmConfig = {
     ...DEFAULT_CONFIG,
     plannerModel: plannerModel ?? DEFAULT_CONFIG.plannerModel,
     workerModel: workerModel ?? DEFAULT_CONFIG.workerModel,
-    repoUrl: process.env.DEMO_REPO_URL ?? 'https://github.com/vercel/ai',
+    repoUrl: repoUrl || process.env.DEMO_REPO_URL || 'https://github.com/expressjs/express',
     repoSnapshotId: process.env.DEMO_REPO_SNAPSHOT_ID,
+    googleApiKey: resolvedApiKey,
+    sandboxProvider: sandboxProvider ?? (process.env.SANDBOX_PROVIDER as VrlmConfig['sandboxProvider']) ?? 'docker',
   };
 
   const encoder = new TextEncoder();
@@ -39,8 +37,7 @@ export async function POST(req: Request) {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
       }
 
-      if (useRealRuntime()) {
-        // ── Real execution ────────────────────────────────────────────────────
+      if (useReal) {
         const emitter = new VrlmEventEmitter();
         const runtime = new VrlmRuntime(emitter, config);
 
@@ -52,7 +49,6 @@ export async function POST(req: Request) {
           controller.close();
         });
       } else {
-        // ── Simulation (always works, demo backup) ────────────────────────────
         const runtime = new SimulatedVrlmRuntime(config);
 
         runtime.onEvent((event) => send(event));

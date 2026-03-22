@@ -144,7 +144,7 @@ export class VrlmRuntime {
 
   private async runPlanner(goal: string): Promise<WorkerPlan> {
     const { text } = await generateText({
-      model: gateway(this.config.plannerModel),
+      model: gateway(this.config.plannerModel, this.config.googleApiKey),
       system: PLANNER_SYSTEM_PROMPT,
       prompt: buildPlannerPrompt(goal),
       maxOutputTokens: 2000,
@@ -159,7 +159,7 @@ export class VrlmRuntime {
   // ── Worker ──────────────────────────────────────────────────────────────────
 
   private async runWorker(task: AgentTask, repoUrl: string, snapshotId?: string): Promise<string> {
-    let sandbox: AnySandbox = await createWorkerSandbox(repoUrl, snapshotId);
+    let sandbox: AnySandbox = await createWorkerSandbox(repoUrl, snapshotId, this.config.sandboxProvider);
     task.sandboxId = (sandbox as any).id ?? 'local';
 
     this.emitTaskUpdate(task.id, 'running', 'Sandbox ready');
@@ -180,7 +180,7 @@ export class VrlmRuntime {
     const terminalLines: string[] = [];
 
     const agent = new ToolLoopAgent({
-      model: gateway(this.config.workerModel),
+      model: gateway(this.config.workerModel, this.config.googleApiKey),
       tools,
       stopWhen: stepCountIs(this.config.maxStepsPerAgent),
       instructions: buildWorkerPrompt(task, findings),
@@ -275,7 +275,7 @@ export class VrlmRuntime {
 
   private async runSynthesis(goal: string, summaries: string[]): Promise<string> {
     const { text } = await generateText({
-      model: gateway(this.config.plannerModel),
+      model: gateway(this.config.plannerModel, this.config.googleApiKey),
       prompt: buildSynthesisPrompt(goal, summaries),
       maxOutputTokens: 1500,
     });

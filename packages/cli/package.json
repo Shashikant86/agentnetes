@@ -1,6 +1,6 @@
 {
   "name": "agentnetes",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Zero to a self-organizing AI agency. On demand.",
   "keywords": [
     "ai",
@@ -28,7 +28,6 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@ai-sdk/gateway": "beta",
     "@ai-sdk/google": "^3.0.52",
     "@vercel/sandbox": "latest",
     "ai": "beta",

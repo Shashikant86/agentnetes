@@ -1,10 +1,18 @@
 'use client';
 
 const MODELS = [
-  { id: 'google/gemini-2.5-pro', label: 'Gemini 2.5 Pro', badge: 'default' },
-  { id: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash', badge: 'fast' },
-  { id: 'anthropic/claude-opus-4-5', label: 'Claude Opus', badge: '' },
-  { id: 'openai/gpt-4o', label: 'GPT-4o', badge: '' },
+  // Gemini 3.x
+  { id: 'google/gemini-3.1-pro',        label: 'Gemini 3.1 Pro',        badge: 'latest' },
+  { id: 'google/gemini-3.1-flash-lite', label: 'Gemini 3.1 Flash-Lite', badge: 'fast' },
+  { id: 'google/gemini-3-pro',          label: 'Gemini 3 Pro',          badge: '' },
+  { id: 'google/gemini-3-flash',        label: 'Gemini 3 Flash',        badge: '' },
+  // Gemini 2.5
+  { id: 'google/gemini-2.5-pro',        label: 'Gemini 2.5 Pro',        badge: '' },
+  { id: 'google/gemini-2.5-flash',      label: 'Gemini 2.5 Flash',      badge: 'recommended' },
+  { id: 'google/gemini-2.5-flash-lite', label: 'Gemini 2.5 Flash-Lite', badge: '' },
+  // Gemini 2.0
+  { id: 'google/gemini-2.0-flash',      label: 'Gemini 2.0 Flash',      badge: '' },
+  { id: 'google/gemini-2.0-flash-lite', label: 'Gemini 2.0 Flash-Lite', badge: 'budget' },
 ];
 
 interface Props {
