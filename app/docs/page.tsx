@@ -12,7 +12,10 @@ const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
   if (!mounted) return <div className="w-9 h-9" />;
   return (
     <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}

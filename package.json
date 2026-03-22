@@ -2,10 +2,16 @@
   "name": "agentnetes",
   "version": "0.1.0",
   "private": true,
+  "author": "Shashi <shashi@super-agentic.ai>",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@ai-sdk/gateway": "beta",
@@ -20,11 +26,16 @@
     "zod": "latest"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
     "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.1",
+    "eslint-config-prettier": "^10.1.8",
     "postcss": "latest",
+    "prettier": "^3.8.1",
     "tailwindcss": "latest",
     "typescript": "latest"
   }

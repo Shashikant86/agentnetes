@@ -3,6 +3,7 @@ const isStatic = process.env.NEXT_PUBLIC_STATIC_MODE === 'true';
 const isStandalone = process.env.BUILD_STANDALONE === 'true';
 
 const nextConfig = {
+  devIndicators: false,
   serverExternalPackages: ['@vercel/sandbox', 'e2b', '@daytonaio/sdk'],
   ...(isStatic && {
     output: 'export',

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, FormEvent } from 'react';
+import Image from 'next/image';
 import { Send } from 'lucide-react';
 
 interface Message {
@@ -33,10 +34,10 @@ function MarkdownContent({ content }: { content: string }) {
   // Simple markdown: bold, code, headers, lists
   const lines = content.split('\n');
   return (
-    <div className="prose text-sm space-y-1">
+    <div className="prose text-base space-y-1.5">
       {lines.map((line, i) => {
-        if (line.startsWith('## ')) return <h2 key={i} className="text-base font-semibold text-white mt-3 mb-1">{line.slice(3)}</h2>;
-        if (line.startsWith('### ')) return <h3 key={i} className="text-sm font-semibold text-white mt-2">{line.slice(4)}</h3>;
+        if (line.startsWith('## ')) return <h2 key={i} className="text-lg font-semibold text-white mt-3 mb-1">{line.slice(3)}</h2>;
+        if (line.startsWith('### ')) return <h3 key={i} className="text-base font-semibold text-white mt-2">{line.slice(4)}</h3>;
         if (line.startsWith('- ')) {
           const text = line.slice(2).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code>$1</code>');
           return <li key={i} className="ml-4 text-white/80" dangerouslySetInnerHTML={{ __html: text }} />;
@@ -78,20 +79,21 @@ export function ChatPanel({ onSubmit, messages, isRunning, mode = 'real' }: Prop
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 && (
           <div className="h-full flex flex-col items-center justify-center text-center px-4">
-            <div className="text-5xl mb-4">⚡</div>
-            <h2 className="text-white text-xl font-semibold mb-2">Agentnetes</h2>
-            <p className="text-white/70 text-sm mb-1 max-w-sm">
+            <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.png`} alt="Agentnetes" width={72} height={72}
+              className="rounded-2xl mb-6 animate-float" />
+            <h2 className="text-white text-2xl font-extrabold tracking-tight mb-2">Agentnetes</h2>
+            <p className="text-white/70 text-base mb-1.5 max-w-md">
               {mode === 'simulation' ? 'Watch the swarm in action · no setup needed.' : 'Self-organizing agents · real Docker sandboxes.'}
             </p>
-            <p className="text-white/40 text-xs mb-8 max-w-sm">
+            <p className="text-white/40 text-sm mb-10 max-w-md">
               {mode === 'simulation' ? 'Pre-scripted scenarios showing real event sequences.' : 'Agents clone your repo, run shell commands, and deliver results.'}
             </p>
-            <div className="space-y-2 w-full max-w-sm">
+            <div className="space-y-2.5 w-full max-w-md">
               {examples.map((ex, i) => (
                 <button
                   key={i}
                   onClick={() => setInput(ex)}
-                  className="w-full text-left text-xs text-white/60 border border-white/10 rounded-lg px-3 py-2.5 hover:border-white/25 hover:text-white/80 transition-colors bg-white/[0.03]"
+                  className="w-full text-left text-sm text-white/60 border border-white/10 rounded-xl px-4 py-3 hover:border-white/20 hover:text-white/80 transition-all card-hover bg-white/[0.03]"
                 >
                   {ex}
                 </button>
@@ -103,11 +105,11 @@ export function ChatPanel({ onSubmit, messages, isRunning, mode = 'real' }: Prop
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {msg.role === 'user' ? (
-              <div className="max-w-[80%] border border-white/15 rounded-2xl rounded-br-sm px-4 py-2.5 text-sm" style={{ background: 'var(--bg-hover)' }}>
+              <div className="max-w-[80%] border border-white/15 rounded-2xl rounded-br-sm px-5 py-3 text-base" style={{ background: 'var(--bg-hover)' }}>
                 {msg.content}
               </div>
             ) : (
-              <div className="max-w-[90%] border border-white/[0.06] rounded-2xl rounded-bl-sm px-4 py-3" style={{ background: 'var(--bg-panel)' }}>
+              <div className="max-w-[90%] border border-white/[0.06] rounded-2xl rounded-bl-sm px-5 py-4" style={{ background: 'var(--bg-panel)' }}>
                 <MarkdownContent content={msg.content} />
               </div>
             )}
@@ -116,9 +118,9 @@ export function ChatPanel({ onSubmit, messages, isRunning, mode = 'real' }: Prop
 
         {isRunning && (
           <div className="flex justify-start">
-            <div className="border border-white/[0.06] rounded-2xl rounded-bl-sm px-4 py-3" style={{ background: 'var(--bg-panel)' }}>
-              <div className="flex items-center gap-2 text-white/55 text-xs font-mono">
-                <span className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse" />
+            <div className="border border-white/[0.06] rounded-2xl rounded-bl-sm px-5 py-4" style={{ background: 'var(--bg-panel)' }}>
+              <div className="flex items-center gap-2 text-white/55 text-sm font-mono">
+                <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
                 Agents working...
               </div>
             </div>
@@ -130,20 +132,20 @@ export function ChatPanel({ onSubmit, messages, isRunning, mode = 'real' }: Prop
 
       {/* Input */}
       <div className="p-4 border-t border-white/[0.07]">
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-3">
           <input
             value={input}
             onChange={e => setInput(e.target.value)}
             disabled={isRunning}
             placeholder={placeholder}
-            className="flex-1 bg-white/[0.04] border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 outline-none focus:border-white/30 disabled:opacity-50 transition-colors"
+            className="flex-1 bg-white/[0.04] border border-white/15 rounded-xl px-5 py-3 text-base text-white placeholder-white/30 outline-none focus:border-white/30 disabled:opacity-50 transition-colors"
           />
           <button
             type="submit"
             disabled={!input.trim() || isRunning}
-            className="bg-white text-black rounded-xl px-3 py-2.5 hover:bg-[#e0e0e0] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="bg-white text-black rounded-xl px-4 py-3 hover:bg-[#e0e0e0] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
-            <Send size={16} />
+            <Send size={18} />
           </button>
         </form>
       </div>

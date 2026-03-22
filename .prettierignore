@@ -1,0 +1,7 @@
+.next
+node_modules
+out
+packages
+reference
+package-lock.json
+tsconfig.tsbuildinfo

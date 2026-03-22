@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ChatPanel } from '@/components/ChatPanel';
 import { AgentPanel } from '@/components/AgentPanel';
 import { ModelSelector } from '@/components/ModelSelector';
@@ -69,7 +70,7 @@ function SettingsModal({
         <div className="px-6 pt-5 pb-4 border-b border-white/[0.07] flex items-center justify-between">
           <div>
             <h2 className="text-white font-bold text-base">Runtime Settings</h2>
-            <p className="text-[11px] text-white/35 font-mono mt-0.5">Saved in your browser</p>
+            <p className="text-sm text-white/40 font-mono mt-0.5">Saved in your browser</p>
           </div>
           <button onClick={() => onClose(current)} className="text-white/30 hover:text-white/60 transition-colors text-xl leading-none">✕</button>
         </div>
@@ -82,26 +83,26 @@ function SettingsModal({
               ? <CheckCircle size={15} className="text-green-400 mt-0.5 shrink-0" />
               : <AlertTriangle size={15} className="text-yellow-400 mt-0.5 shrink-0" />}
             <div>
-              <p className="text-[12px] font-mono font-medium" style={{ color: apiKeySet ? 'rgb(134 239 172)' : 'rgb(253 224 71)' }}>
+              <p className="text-sm font-mono font-medium" style={{ color: apiKeySet ? 'rgb(134 239 172)' : 'rgb(253 224 71)' }}>
                 GOOGLE_API_KEY {apiKeySet ? 'is set' : 'not set'}
               </p>
               {!apiKeySet && (
                 <div className="mt-1.5 space-y-1.5">
-                  <p className="text-[11px] text-white/40">
+                  <p className="text-sm text-white/45">
                     Option 1: export in your shell, then restart:
                   </p>
-                  <div className="rounded-lg px-3 py-2 font-mono text-[11px] text-green-300/80 border border-white/10" style={{ background: 'var(--bg-subtle)' }}>
+                  <div className="rounded-lg px-3 py-2 font-mono text-sm text-green-300/80 border border-white/10" style={{ background: 'var(--bg-subtle)' }}>
                     export GOOGLE_API_KEY=your_key_here
                   </div>
-                  <p className="text-[11px] text-white/40">
+                  <p className="text-sm text-white/45">
                     Option 2: add to <span className="font-mono text-white/60">.env.local</span> and restart:
                   </p>
-                  <div className="rounded-lg px-3 py-2 font-mono text-[11px] text-green-300/80 border border-white/10" style={{ background: 'var(--bg-subtle)' }}>
+                  <div className="rounded-lg px-3 py-2 font-mono text-sm text-green-300/80 border border-white/10" style={{ background: 'var(--bg-subtle)' }}>
                     GOOGLE_API_KEY=your_key_here
                   </div>
                   <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer"
-                    className="inline-flex items-center gap-0.5 text-purple-400/70 hover:text-purple-400 transition-colors text-[11px]">
-                    Get a free key at aistudio.google.com <ExternalLink size={10} />
+                    className="inline-flex items-center gap-0.5 text-purple-400/70 hover:text-purple-400 transition-colors text-sm">
+                    Get a free key at aistudio.google.com <ExternalLink size={12} />
                   </a>
                 </div>
               )}
@@ -110,7 +111,7 @@ function SettingsModal({
 
           {/* Repo URL */}
           <div>
-            <label className="text-[10px] font-mono text-white/35 uppercase tracking-widest block mb-1.5">
+            <label className="text-xs font-mono text-white/40 uppercase tracking-widest block mb-1.5">
               Target Repo URL <span className="text-red-400/80">*</span>
             </label>
             <input
@@ -122,12 +123,12 @@ function SettingsModal({
               className="w-full rounded-lg border border-white/15 px-3 py-2 text-sm font-mono outline-none focus:border-purple-500/50 transition-colors"
               style={{ background: 'var(--bg-subtle)', color: 'rgb(var(--fg))' }}
             />
-            <p className="text-[11px] text-white/30 mt-1">Agents clone this into each sandbox. Use a small repo for faster runs.</p>
+            <p className="text-sm text-white/35 mt-1">Agents clone this into each sandbox. Use a small repo for faster runs.</p>
           </div>
 
           {/* Sandbox */}
           <div>
-            <label className="text-[10px] font-mono text-white/35 uppercase tracking-widest block mb-1.5">Sandbox Provider</label>
+            <label className="text-xs font-mono text-white/40 uppercase tracking-widest block mb-1.5">Sandbox Provider</label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => set({ sandboxProvider: 'docker' })}
@@ -145,13 +146,13 @@ function SettingsModal({
               </button>
             </div>
             {s.sandboxProvider === 'docker' && (
-              <p className="text-[11px] text-white/30 mt-1.5 font-mono">Make sure Docker is running: <span className="text-white/50">docker pull node:20-alpine</span></p>
+              <p className="text-sm text-white/35 mt-1.5 font-mono">Make sure Docker is running: <span className="text-white/50">docker pull node:20-alpine</span></p>
             )}
           </div>
 
           {/* Models */}
           <div>
-            <label className="text-[10px] font-mono text-white/35 uppercase tracking-widest block mb-2">Models</label>
+            <label className="text-xs font-mono text-white/40 uppercase tracking-widest block mb-2">Models</label>
             <div className="space-y-2.5">
               <div className="flex items-center gap-3">
                 <span className="text-xs text-white/35 w-14 shrink-0">Planner</span>
@@ -173,7 +174,7 @@ function SettingsModal({
           <button
             onClick={save}
             disabled={!s.repoUrl.trim().startsWith('http')}
-            className="px-5 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: '#fff' }}>
             Save
           </button>
@@ -303,33 +304,34 @@ export default function DemoPage() {
       {/* Header */}
       <header className="flex items-center justify-between px-5 py-2.5 border-b border-white/[0.07] shrink-0" style={{ background: 'var(--bg-base)' }}>
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm">
-            <ArrowLeft size={13} /> Home
+          <Link href="/" className="flex items-center gap-1.5 text-white/50 hover:text-white/80 transition-colors text-sm font-mono">
+            <ArrowLeft size={15} /> Home
           </Link>
           <span className="text-white/20">|</span>
-          <span className="text-base font-bold tracking-tight">Agentnetes</span>
+          <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/logo.png`} alt="Agentnetes" width={28} height={28} className="rounded-lg" />
+          <span className="text-lg font-extrabold tracking-tight">Agentnetes</span>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Mode toggle */}
-          <div className="flex items-center gap-0.5 rounded-lg p-0.5 border border-white/[0.08]" style={{ background: 'var(--bg-subtle)' }}>
+          <div className="flex items-center gap-1 rounded-full p-1 border border-white/[0.10]" style={{ background: 'var(--bg-subtle)' }}>
             {IS_STATIC ? (
               <span
-                className="px-3 py-1 rounded-md text-xs font-mono text-white/20 cursor-not-allowed"
+                className="px-4 py-1.5 rounded-full text-sm font-mono text-white/20 cursor-not-allowed"
                 title="Real mode requires agentnetes serve or self-hosting">
                 Real
               </span>
             ) : (
               <button
                 onClick={() => setMode('real')}
-                className={`px-3 py-1 rounded-md text-xs font-mono transition-all ${mode === 'real' ? 'text-white font-semibold' : 'text-white/35 hover:text-white/55'}`}
+                className={`px-4 py-1.5 rounded-full text-sm font-mono font-medium transition-all ${mode === 'real' ? 'text-white' : 'text-white/35 hover:text-white/55'}`}
                 style={mode === 'real' ? { background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: '#fff' } : {}}>
                 Real
               </button>
             )}
             <button
               onClick={() => setMode('simulation')}
-              className={`px-3 py-1 rounded-md text-xs font-mono transition-all ${mode === 'simulation' ? 'bg-white/10 text-white' : 'text-white/35 hover:text-white/55'}`}>
+              className={`px-4 py-1.5 rounded-full text-sm font-mono font-medium transition-all ${mode === 'simulation' ? 'bg-white/10 text-white' : 'text-white/35 hover:text-white/55'}`}>
               Simulation
             </button>
           </div>
@@ -338,15 +340,15 @@ export default function DemoPage() {
           {!IS_STATIC && mode === 'real' && (
             <button
               onClick={() => setShowSettings(true)}
-              className="flex items-center gap-1.5 text-[11px] font-mono border rounded-lg px-2.5 py-1 transition-all"
+              className="flex items-center gap-1.5 text-sm font-mono border border-white/10 rounded-xl px-3 py-1.5 transition-all"
               style={{ background: 'var(--bg-subtle)' }}
               title="Runtime settings">
-              <Settings size={11} className="text-white/50" />
+              <Settings size={14} className="text-white/50" />
               <span className="text-white/45">
                 {settings.sandboxProvider} · {settings.repoUrl.replace('https://github.com/', '')}
               </span>
               {!apiKeySet && (
-                <span className="text-yellow-400/70 text-[10px] font-mono">· no key</span>
+                <span className="text-yellow-400/70 text-xs font-mono">· no key</span>
               )}
             </button>
           )}
@@ -356,7 +358,7 @@ export default function DemoPage() {
             onClick={() => setShowAgents(v => !v)}
             className="text-white/50 hover:text-white/75 transition-colors p-1"
             title={showAgents ? 'Hide agent panel' : 'Show agent panel'}>
-            {showAgents ? <PanelRightClose size={17} /> : <PanelRightOpen size={17} />}
+            {showAgents ? <PanelRightClose size={19} /> : <PanelRightOpen size={19} />}
           </button>
         </div>
       </header>
@@ -365,20 +367,20 @@ export default function DemoPage() {
       {IS_STATIC ? (
         <div className="px-4 py-2 border-b border-white/[0.07] flex items-center justify-between shrink-0" style={{ background: 'var(--bg-subtle)' }}>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-green-400/80 border border-green-500/20 bg-green-500/5 rounded px-2 py-0.5">simulation only</span>
-            <span className="text-xs text-white/35">This is a preview. Real agents require a server.</span>
+            <span className="text-xs font-mono text-green-400/80 border border-green-500/20 bg-green-500/5 rounded px-2.5 py-1">simulation only</span>
+            <span className="text-sm text-white/45">This is a preview. Real agents require a server.</span>
           </div>
-          <div className="flex items-center gap-3 text-[11px] font-mono">
-            <span className="text-white/30">Run real agents:</span>
+          <div className="flex items-center gap-3 text-sm font-mono">
+            <span className="text-white/40">Run real agents:</span>
             <code className="text-purple-400/80 bg-purple-500/10 border border-purple-500/20 rounded px-2 py-0.5">npx agentnetes serve</code>
             <a href="https://github.com/Shashikant86/agentnetes#running-locally" target="_blank" rel="noreferrer"
               className="text-white/30 hover:text-white/60 transition-colors">self-host</a>
           </div>
         </div>
       ) : mode === 'simulation' && (
-        <div className="px-4 py-1.5 border-b border-white/[0.07] flex items-center gap-2 shrink-0" style={{ background: 'var(--bg-subtle)' }}>
-          <span className="text-[10px] font-mono text-green-400/80 border border-green-500/20 bg-green-500/5 rounded px-2 py-0.5">simulation</span>
-          <span className="text-xs text-white/35">Pre-scripted scenarios · no API key or Docker required · switch to Real for live execution</span>
+        <div className="px-4 py-2 border-b border-white/[0.07] flex items-center gap-2 shrink-0" style={{ background: 'var(--bg-subtle)' }}>
+          <span className="text-xs font-mono text-green-400/80 border border-green-500/20 bg-green-500/5 rounded px-2.5 py-1">simulation</span>
+          <span className="text-sm text-white/45">Pre-scripted scenarios · no API key or Docker required · switch to Real for live execution</span>
         </div>
       )}
 
@@ -390,9 +392,9 @@ export default function DemoPage() {
         {showAgents && (
           <div className="w-1/2 flex flex-col overflow-hidden">
             <div className="px-4 py-2.5 border-b border-white/[0.07] flex items-center justify-between shrink-0">
-              <span className="text-xs text-white/65 font-mono uppercase tracking-wider">Agent Activity</span>
+              <span className="text-sm text-white/70 font-mono uppercase tracking-wider">Agent Activity</span>
               {Object.keys(tasks).length > 0 && (
-                <span className="text-xs text-white/55 font-mono">
+                <span className="text-sm text-white/60 font-mono">
                   {Object.values(tasks).filter(t => t.status === 'completed').length}/{Object.keys(tasks).length} done
                 </span>
               )}
