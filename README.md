@@ -69,6 +69,10 @@ GOOGLE_API_KEY=your_key agentnetes run "add dark mode"
 
 # Pre-warm a sandbox snapshot for faster runs (Vercel sandbox)
 npx agentnetes snapshot create
+
+# Start the web UI on localhost:3000
+npx agentnetes serve
+npx agentnetes serve --port 8080
 ```
 
 ---
@@ -136,8 +140,7 @@ interface VrlmConfig {
   plannerModel: string;      // model for root orchestrator
   workerModel: string;       // model for specialist agents
   repoUrl: string;           // git repo to clone into each sandbox
-  sandboxProvider: 'docker' | 'vercel' | 'local';
-  googleApiKey?: string;     // overrides env var (set from UI)
+  sandboxProvider: 'docker' | 'local' | 'vercel' | 'e2b' | 'daytona';
 }
 ```
 
@@ -311,7 +314,7 @@ agentnetes/
 SANDBOX_PROVIDER=docker        # docker | vercel | e2b | daytona | local
 
 # Google Gemini API key (get one free at aistudio.google.com)
-GOOGLE_API_KEY=                # Can also be set in the web UI (no .env needed)
+GOOGLE_API_KEY=                # Set as env var or in .env.local — not configurable in the web UI
 
 # Vercel sandbox (auto-detected on Vercel via OIDC)
 VERCEL_TOKEN=
@@ -321,7 +324,7 @@ SIMULATION_MODE=false          # true = always use simulation, skip real executi
 DEMO_REPO_URL=https://github.com/expressjs/express  # default target repo
 ```
 
-> **Tip:** When running the web UI locally, you can configure `GOOGLE_API_KEY`, sandbox provider, repo URL, and models directly in the Settings modal. No `.env.local` file required.
+> **Tip:** Set `GOOGLE_API_KEY` as an env var before starting. The Settings modal lets you configure repo URL, sandbox provider, and models.
 
 ---
 

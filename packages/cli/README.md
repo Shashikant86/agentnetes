@@ -72,6 +72,10 @@ VERCEL_TOKEN=your_token agentnetes snapshot create
 
 # List available snapshots
 VERCEL_TOKEN=your_token agentnetes snapshot list
+
+# Start the web UI on localhost:3000
+npx agentnetes serve
+npx agentnetes serve --port 8080
 ```
 
 ---
@@ -92,8 +96,6 @@ WORKER_MODEL=google/gemini-2.5-flash
 # Optional · Vercel sandbox only
 VERCEL_TOKEN=
 ```
-
-> **Note:** Do not set `AI_GATEWAY_BASE_URL` when using `GOOGLE_API_KEY` directly · it will route through Vercel AI Gateway and fail with an authentication error.
 
 ---
 

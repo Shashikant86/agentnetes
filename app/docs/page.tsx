@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Github, ChevronRight, Terminal, Box, Zap, Settings, BookOpen, Code2, Layers, ArrowRight } from 'lucide-react';
+import { Sun, Moon, Github, ChevronRight, Terminal, Box, Zap, Settings, BookOpen, Code2, Layers, ArrowRight, Monitor } from 'lucide-react';
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -28,6 +28,7 @@ const SECTIONS = [
   { id: 'how-it-works', label: 'How it Works',        icon: Layers },
   { id: 'local-docker', label: 'Local Dev + Docker',  icon: Box },
   { id: 'cli',          label: 'CLI Reference',        icon: Terminal },
+  { id: 'serve',        label: 'Web UI (serve)',        icon: Monitor },
   { id: 'sandboxes',    label: 'Sandbox Providers',    icon: Box },
   { id: 'config',       label: 'Configuration',        icon: Settings },
   { id: 'examples',     label: 'Examples',             icon: Code2 },
@@ -345,17 +346,14 @@ GOOGLE_API_KEY=your_key_here
 # ── Target repo for agents to work on ─────────────────────────────
 DEMO_REPO_URL=https://github.com/expressjs/express`}</Code>
 
-          <Callout type="warn">
-            Do <strong>not</strong> set <code className="bg-white/5 px-1 py-0.5 rounded">AI_GATEWAY_BASE_URL</code> when using Google directly · it will try to route through Vercel AI Gateway and fail with an authentication error.
-          </Callout>
-
           <H3>3. Start the dev server</H3>
           <Code>{`npm run dev`}</Code>
 
-          <H3>4. Open the simulation page</H3>
+          <H3>4. Open the demo page</H3>
           <P>
-            Navigate to <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">http://localhost:3000/demo</code>, select a model, and submit a goal.
-            Use <strong>Gemini 2.5 Flash</strong> for faster planning · 2.5 Pro has extended thinking which can take 30-60s.
+            Navigate to <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">http://localhost:3000/demo</code>. The page defaults to Real mode. Use the Real/Simulation toggle in the header to switch modes.
+            Select a model and submit a goal. Use <strong>Gemini 2.5 Flash</strong> for faster planning — 2.5 Pro has extended thinking which can take 30-60s.
+            GOOGLE_API_KEY is read from the environment (set in <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">.env.local</code> or exported in your shell).
           </P>
 
           <H3>5. Watch containers spin up</H3>
@@ -410,6 +408,61 @@ agentnetes run "add OpenTelemetry tracing throughout the app"`}</Code>
           <P>List all available snapshots in your Vercel account.</P>
           <Code>{`VERCEL_TOKEN=your_token agentnetes snapshot list`}</Code>
 
+          <H3>agentnetes serve</H3>
+          <P>Start the Agentnetes web UI on your local machine. No source code needed.</P>
+          <Code>{`# Start on default port 3000
+npx agentnetes serve
+
+# Custom port
+npx agentnetes serve --port 8080`}</Code>
+          <P>Then open http://localhost:3000 in your browser. Set GOOGLE_API_KEY in your environment before starting:</P>
+          <Code>{`export GOOGLE_API_KEY=your_key
+npx agentnetes serve`}</Code>
+          <Callout type="tip">
+            The web UI has a Real/Simulation toggle. Real mode runs live agents. Simulation mode shows pre-scripted scenarios with no API key needed.
+          </Callout>
+
+          {/* ── Web UI (serve) ──────────────────────────────────── */}
+          <H2 id="serve">Web UI (serve)</H2>
+          <P>
+            <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">agentnetes serve</code> starts the bundled Next.js web UI directly from the npm package. No cloning the repo or running <code className="text-white/80 bg-white/5 px-1.5 py-0.5 rounded text-sm">npm run dev</code> required.
+          </P>
+
+          <H3>Setting GOOGLE_API_KEY</H3>
+          <P>The API key is read from environment variables only. Set it before starting the server:</P>
+          <Code>{`# Option 1: export in your shell session
+export GOOGLE_API_KEY=your_key
+npx agentnetes serve`}</Code>
+          <Code>{`# Option 2: add to .env.local in the directory where you run serve
+GOOGLE_API_KEY=your_key`}</Code>
+
+          <H3>Settings modal</H3>
+          <P>The Settings modal (gear icon in the header) lets you configure:</P>
+          <div className="rounded-xl border border-white/10 overflow-hidden my-4" style={{ background: 'var(--bg-subtle)' }}>
+            {[
+              ['Repo URL', 'The git repository agents will clone and work on'],
+              ['Sandbox provider', 'docker | local | vercel | e2b | daytona'],
+              ['Planner model', 'Model used by the root Tech Lead agent'],
+              ['Worker model', 'Model used by specialist agents'],
+              ['GOOGLE_API_KEY status', 'Green check if set, yellow warning with instructions if not'],
+            ].map(([name, desc]) => (
+              <div key={name} className="flex items-start gap-4 px-5 py-3 border-b border-white/[0.05] last:border-0">
+                <span className="text-white font-medium text-sm w-44 shrink-0">{name}</span>
+                <span className="text-white/50 text-sm">{desc}</span>
+              </div>
+            ))}
+          </div>
+
+          <Callout type="warn">
+            GOOGLE_API_KEY cannot be entered in the web UI. It must be set as an environment variable or in <code className="bg-white/5 px-1 py-0.5 rounded">.env.local</code> before starting the server.
+          </Callout>
+
+          <H3>Real vs Simulation toggle</H3>
+          <P>
+            The header has a Real/Simulation toggle. Real is the default and runs live agents against your repo using the Gemini API.
+            Simulation mode plays back pre-scripted scenarios and requires no API key, useful for demos and UI development.
+          </P>
+
           {/* ── Sandbox Providers ───────────────────────────────── */}
           <H2 id="sandboxes">Sandbox Providers</H2>
           <P>
@@ -455,10 +508,8 @@ SANDBOX_PROVIDER=vercel VERCEL_TOKEN=xxx GOOGLE_API_KEY=xxx agentnetes run "goal
           <P>All configuration is done via environment variables. No config file needed.</P>
 
           <H3>Full reference</H3>
-          <Code>{`# ── LLM Provider (one of these) ──────────────────────────────────
-GOOGLE_API_KEY=                  # Direct Gemini · get free at aistudio.google.com
-AI_GATEWAY_BASE_URL=             # Vercel AI Gateway endpoint
-AI_GATEWAY_API_KEY=              # Vercel AI Gateway API key
+          <Code>{`# ── LLM Provider ─────────────────────────────────────────────────
+GOOGLE_API_KEY=                  # Required · get free at aistudio.google.com
 
 # ── Sandbox ───────────────────────────────────────────────────────
 SANDBOX_PROVIDER=docker          # docker | local | vercel | e2b | daytona
@@ -468,21 +519,9 @@ VERCEL_TOKEN=                    # Required for vercel sandbox
 PLANNER_MODEL=google/gemini-2.5-pro    # Root Tech Lead model
 WORKER_MODEL=google/gemini-2.5-flash   # Specialist agent model
 
-# ── Demo web app only ─────────────────────────────────────────────
-SIMULATION_MODE=false            # true = skip real runtime, use simulation
-DEMO_REPO_URL=https://github.com/vercel/ai`}</Code>
-
-          <H3>Using Vercel AI Gateway</H3>
-          <P>
-            Instead of calling Google directly, you can route all model calls through{' '}
-            <a href="https://vercel.com/docs/ai-gateway" target="_blank" rel="noreferrer" className="text-purple-400 hover:text-purple-300 underline underline-offset-2">
-              Vercel AI Gateway
-            </a>{' '}
-            for unified logging, caching, and fallbacks:
-          </P>
-          <Code>{`AI_GATEWAY_BASE_URL=https://ai-gateway.vercel.sh/v1/xxx
-AI_GATEWAY_API_KEY=your_gateway_key
-agentnetes run "your goal"`}</Code>
+# ── Web app / serve only ───────────────────────────────────────────
+SIMULATION_MODE=false            # true = always use simulation
+DEMO_REPO_URL=https://github.com/expressjs/express`}</Code>
 
           {/* ── Examples ────────────────────────────────────────── */}
           <H2 id="examples">Examples</H2>
@@ -603,6 +642,16 @@ await runtime.run('add comprehensive test coverage');`}</Code>
               error: 'Gemini 2.5 Pro hangs for 60+ seconds before planning',
               cause: 'Gemini 2.5 Pro uses extended thinking mode which can take over a minute for complex goals.',
               fix: 'Switch to Gemini 2.5 Flash in the model selector dropdown · it plans in 3-5 seconds.',
+            },
+            {
+              error: 'Error: web UI not found',
+              cause: 'The standalone web UI was not bundled in this version of the npm package.',
+              fix: 'Use npx agentnetes@latest serve to get the latest version with the web UI bundled.',
+            },
+            {
+              error: 'GOOGLE_API_KEY not set — real agents will not run',
+              cause: 'The API key is read from environment variables only. It cannot be entered in the web UI.',
+              fix: 'Run: export GOOGLE_API_KEY=your_key then restart agentnetes serve. Or add it to .env.local.',
             },
           ].map(({ error, cause, fix }) => (
             <div key={error} className="rounded-xl border border-white/10 px-5 py-4 mb-4" style={{ background: 'var(--bg-subtle)' }}>
