@@ -6,7 +6,7 @@ import { ChatPanel } from '@/components/ChatPanel';
 import { AgentPanel } from '@/components/AgentPanel';
 import { ModelSelector } from '@/components/ModelSelector';
 import { AgentTask, VrlmEvent } from '@/lib/vrlm/types';
-import { PanelRightOpen, PanelRightClose, ArrowLeft, Settings, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+import { PanelRightOpen, PanelRightClose, ArrowLeft, Settings, CheckCircle, AlertTriangle, ExternalLink } from 'lucide-react';
 import { SimulatedVrlmRuntime } from '@/lib/vrlm/simulated-runtime';
 
 const STORAGE_KEY = 'agentnetes-settings';
@@ -14,7 +14,6 @@ const STORAGE_KEY = 'agentnetes-settings';
 type Mode = 'real' | 'simulation';
 
 interface DemoSettings {
-  googleApiKey: string;
   sandboxProvider: 'docker' | 'local';
   repoUrl: string;
   plannerModel: string;
@@ -22,7 +21,6 @@ interface DemoSettings {
 }
 
 const DEFAULT_SETTINGS: DemoSettings = {
-  googleApiKey: '',
   sandboxProvider: 'docker',
   repoUrl: 'https://github.com/expressjs/express',
   plannerModel: 'google/gemini-2.5-flash',
@@ -41,9 +39,16 @@ function saveSettings(s: DemoSettings) {
 }
 
 // ── Settings modal ────────────────────────────────────────────────────────────
-function SettingsModal({ current, onClose }: { current: DemoSettings; onClose: (s: DemoSettings) => void }) {
+function SettingsModal({
+  current,
+  apiKeySet,
+  onClose,
+}: {
+  current: DemoSettings;
+  apiKeySet: boolean;
+  onClose: (s: DemoSettings) => void;
+}) {
   const [s, setS] = useState<DemoSettings>(current);
-  const [showKey, setShowKey] = useState(false);
   const set = (patch: Partial<DemoSettings>) => setS(prev => ({ ...prev, ...patch }));
 
   function save() {
@@ -63,36 +68,43 @@ function SettingsModal({ current, onClose }: { current: DemoSettings; onClose: (
         <div className="px-6 pt-5 pb-4 border-b border-white/[0.07] flex items-center justify-between">
           <div>
             <h2 className="text-white font-bold text-base">Runtime Settings</h2>
-            <p className="text-[11px] text-white/35 font-mono mt-0.5">Saved in your browser · never sent to our servers</p>
+            <p className="text-[11px] text-white/35 font-mono mt-0.5">Saved in your browser</p>
           </div>
           <button onClick={() => onClose(current)} className="text-white/30 hover:text-white/60 transition-colors text-xl leading-none">✕</button>
         </div>
 
         <div className="px-6 py-5 space-y-5">
 
-          {/* API Key */}
-          <div>
-            <label className="text-[10px] font-mono text-white/35 uppercase tracking-widest block mb-1.5">
-              Google API Key <span className="text-red-400/80">*</span>
-            </label>
-            <div className="flex items-center gap-2">
-              <input
-                type={showKey ? 'text' : 'password'}
-                value={s.googleApiKey}
-                onChange={e => set({ googleApiKey: e.target.value })}
-                placeholder="AIzaSy..."
-                autoFocus
-                className="flex-1 rounded-lg border border-white/15 px-3 py-2 text-sm font-mono outline-none focus:border-purple-500/50 transition-colors"
-                style={{ background: 'var(--bg-subtle)', color: 'rgb(var(--fg))' }}
-              />
-              <button onClick={() => setShowKey(v => !v)} className="text-white/30 hover:text-white/60 transition-colors p-1">
-                {showKey ? <EyeOff size={15} /> : <Eye size={15} />}
-              </button>
+          {/* API Key status */}
+          <div className={`flex items-start gap-3 rounded-xl px-4 py-3 border ${apiKeySet ? 'border-green-500/20 bg-green-500/5' : 'border-yellow-500/20 bg-yellow-500/5'}`}>
+            {apiKeySet
+              ? <CheckCircle size={15} className="text-green-400 mt-0.5 shrink-0" />
+              : <AlertTriangle size={15} className="text-yellow-400 mt-0.5 shrink-0" />}
+            <div>
+              <p className="text-[12px] font-mono font-medium" style={{ color: apiKeySet ? 'rgb(134 239 172)' : 'rgb(253 224 71)' }}>
+                GOOGLE_API_KEY {apiKeySet ? 'is set' : 'not set'}
+              </p>
+              {!apiKeySet && (
+                <div className="mt-1.5 space-y-1.5">
+                  <p className="text-[11px] text-white/40">
+                    Option 1 — export in your shell, then restart:
+                  </p>
+                  <div className="rounded-lg px-3 py-2 font-mono text-[11px] text-green-300/80 border border-white/10" style={{ background: 'var(--bg-subtle)' }}>
+                    export GOOGLE_API_KEY=your_key_here
+                  </div>
+                  <p className="text-[11px] text-white/40">
+                    Option 2 — add to <span className="font-mono text-white/60">.env.local</span> and restart:
+                  </p>
+                  <div className="rounded-lg px-3 py-2 font-mono text-[11px] text-green-300/80 border border-white/10" style={{ background: 'var(--bg-subtle)' }}>
+                    GOOGLE_API_KEY=your_key_here
+                  </div>
+                  <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer"
+                    className="inline-flex items-center gap-0.5 text-purple-400/70 hover:text-purple-400 transition-colors text-[11px]">
+                    Get a free key at aistudio.google.com <ExternalLink size={10} />
+                  </a>
+                </div>
+              )}
             </div>
-            <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer"
-              className="text-[11px] text-purple-400/60 hover:text-purple-400 mt-1.5 inline-block transition-colors">
-              Get a free key at aistudio.google.com →
-            </a>
           </div>
 
           {/* Repo URL */}
@@ -105,6 +117,7 @@ function SettingsModal({ current, onClose }: { current: DemoSettings; onClose: (
               value={s.repoUrl}
               onChange={e => set({ repoUrl: e.target.value })}
               placeholder="https://github.com/owner/repo"
+              autoFocus
               className="w-full rounded-lg border border-white/15 px-3 py-2 text-sm font-mono outline-none focus:border-purple-500/50 transition-colors"
               style={{ background: 'var(--bg-subtle)', color: 'rgb(var(--fg))' }}
             />
@@ -158,7 +171,7 @@ function SettingsModal({ current, onClose }: { current: DemoSettings; onClose: (
           </button>
           <button
             onClick={save}
-            disabled={s.googleApiKey.trim().length < 10 || !s.repoUrl.trim().startsWith('http')}
+            disabled={!s.repoUrl.trim().startsWith('http')}
             className="px-5 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: '#fff' }}>
             Save
@@ -182,12 +195,17 @@ export default function DemoPage() {
   const [showSettings, setShowSettings] = useState(false);
   const [mode, setMode] = useState<Mode>('real');
   const [settings, setSettings] = useState<DemoSettings>(DEFAULT_SETTINGS);
+  const [apiKeySet, setApiKeySet] = useState(false);
   const mounted = useRef(false);
 
   useEffect(() => {
     if (mounted.current) return;
     mounted.current = true;
     setSettings(loadSettings());
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(d => setApiKeySet(!!d.googleApiKeySet))
+      .catch(() => {/* ignore */});
   }, []);
 
   const processEvent = useCallback((event: VrlmEvent, finalRef: { content: string }) => {
@@ -244,7 +262,6 @@ export default function DemoPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message,
-            googleApiKey: settings.googleApiKey,
             sandboxProvider: settings.sandboxProvider,
             repoUrl: settings.repoUrl,
             plannerModel: settings.plannerModel,
@@ -274,14 +291,12 @@ export default function DemoPage() {
     }
   }, [mode, settings, processEvent]);
 
-  const keySet = settings.googleApiKey.trim().length > 10;
-
   return (
     <div className="h-screen overflow-hidden flex flex-col" style={{ background: 'var(--bg-base)', color: 'rgb(var(--fg))' }}>
 
       {/* Settings modal */}
       {showSettings && (
-        <SettingsModal current={settings} onClose={s => { setSettings(s); setShowSettings(false); }} />
+        <SettingsModal current={settings} apiKeySet={apiKeySet} onClose={s => { setSettings(s); setShowSettings(false); }} />
       )}
 
       {/* Header */}
@@ -310,17 +325,20 @@ export default function DemoPage() {
             </button>
           </div>
 
-          {/* Settings button (Real mode only) — shows key status */}
+          {/* Settings button (Real mode only) */}
           {mode === 'real' && (
             <button
               onClick={() => setShowSettings(true)}
               className="flex items-center gap-1.5 text-[11px] font-mono border rounded-lg px-2.5 py-1 transition-all"
-              style={{ background: 'var(--bg-subtle)', color: keySet ? 'rgb(var(--fg))' : undefined }}
+              style={{ background: 'var(--bg-subtle)' }}
               title="Runtime settings">
-              <Settings size={11} className={keySet ? 'text-white/50' : 'text-purple-400/70'} />
-              <span className={keySet ? 'text-white/45' : 'text-purple-400/70'}>
-                {keySet ? `${settings.sandboxProvider} · ${settings.repoUrl.replace('https://github.com/', '')}` : 'Configure'}
+              <Settings size={11} className="text-white/50" />
+              <span className="text-white/45">
+                {settings.sandboxProvider} · {settings.repoUrl.replace('https://github.com/', '')}
               </span>
+              {!apiKeySet && (
+                <span className="text-yellow-400/70 text-[10px] font-mono">· no key</span>
+              )}
             </button>
           )}
 

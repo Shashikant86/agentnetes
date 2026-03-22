@@ -10,13 +10,11 @@ export async function POST(req: Request) {
     message,
     plannerModel,
     workerModel,
-    // UI-provided settings (override env vars)
-    googleApiKey,
     sandboxProvider,
     repoUrl,
   } = await req.json();
 
-  const resolvedApiKey = googleApiKey || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+  const resolvedApiKey = process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
   const useReal = !!resolvedApiKey && process.env.SIMULATION_MODE !== 'true';
 
   const config: VrlmConfig = {
