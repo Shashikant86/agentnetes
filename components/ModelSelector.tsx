@@ -17,7 +17,8 @@ export function ModelSelector({ value, onChange }: Props) {
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="bg-[#111] border border-[#333] text-sm text-white rounded-lg px-3 py-1.5 outline-none focus:border-[#555] cursor-pointer"
+      className="border border-white/15 text-sm rounded-lg px-3 py-1.5 outline-none focus:border-white/30 cursor-pointer"
+      style={{ background: 'var(--bg-hover)', color: 'rgb(var(--fg))' }}
     >
       {MODELS.map(m => (
         <option key={m.id} value={m.id}>

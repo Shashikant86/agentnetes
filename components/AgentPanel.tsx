@@ -29,7 +29,7 @@ function useTypewriter(text: string, speed = 18) {
 // ── Status dot ───────────────────────────────────────────────
 function StatusDot({ status }: { status: AgentTask['status'] }) {
   const cls: Record<AgentTask['status'], string> = {
-    pending: 'bg-[#333]',
+    pending: 'bg-white/20',
     running: 'bg-yellow-400 animate-pulse shadow-[0_0_6px_rgba(250,204,21,0.6)]',
     completed: 'bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.5)]',
     failed: 'bg-red-400',
@@ -195,14 +195,14 @@ function TerminalLog({ lines }: { lines: string[] }) {
 
   if (lines.length === 0) return null;
   return (
-    <div className="mt-2 bg-[#0d0d0d] border border-[#1e1e1e] rounded-lg overflow-hidden">
-      <div className="flex items-center gap-1.5 px-3 py-1.5 border-b border-[#1e1e1e]">
-        <Terminal size={10} className="text-[#555]" />
-        <span className="text-[9px] text-[#555] font-mono uppercase tracking-wider">sandbox</span>
+    <div className="mt-2 border border-white/[0.06] rounded-lg overflow-hidden" style={{ background: 'var(--bg-panel)' }}>
+      <div className="flex items-center gap-1.5 px-3 py-1.5 border-b border-white/[0.06]">
+        <Terminal size={10} className="text-white/30" />
+        <span className="text-[9px] text-white/30 font-mono uppercase tracking-wider">sandbox</span>
       </div>
       <div ref={ref} className="max-h-28 overflow-y-auto p-3 space-y-0.5">
         {lines.map((line, i) => (
-          <div key={i} className={`text-[10px] font-mono leading-4 whitespace-pre-wrap ${line.startsWith('$') ? 'text-[#7dd3fc]' : line.includes('error') || line.includes('FAIL') ? 'text-red-400' : line.includes('✓') || line.includes('passed') ? 'text-green-400' : 'text-[#888]'}`}>
+          <div key={i} className={`text-[10px] font-mono leading-4 whitespace-pre-wrap ${line.startsWith('$') ? 'text-[#7dd3fc]' : line.includes('error') || line.includes('FAIL') ? 'text-red-400' : line.includes('✓') || line.includes('passed') ? 'text-green-400' : 'text-white/50'}`}>
             {line}
           </div>
         ))}
@@ -234,17 +234,17 @@ function TaskCard({
     task.status === 'running' ? 'border-yellow-500/40 shadow-[0_0_8px_rgba(234,179,8,0.1)]' :
     task.status === 'completed' ? 'border-green-500/25' :
     task.status === 'failed' ? 'border-red-500/25' :
-    'border-[#1e1e1e]';
+    'border-white/[0.06]';
 
   const bgClass =
-    task.status === 'running' ? 'bg-[#0f0f0a]' :
-    task.status === 'completed' ? 'bg-[#0a0f0a]' :
-    task.status === 'failed' ? 'bg-[#0f0a0a]' :
-    'bg-[#0a0a0a]';
+    task.status === 'running' ? 'bg-yellow-500/[0.04]' :
+    task.status === 'completed' ? 'bg-green-500/[0.04]' :
+    task.status === 'failed' ? 'bg-red-500/[0.04]' :
+    '';
 
   return (
     <>
-      <div className={`rounded-xl border transition-all duration-500 ${borderClass} ${bgClass} overflow-hidden`}>
+      <div className={`rounded-xl border transition-all duration-500 ${borderClass} ${bgClass} overflow-hidden`} style={{ background: bgClass ? undefined : 'var(--bg-card)' }}>
         {/* Header row */}
         <div
           className="flex items-center gap-2 px-4 py-3 cursor-pointer select-none"
@@ -259,11 +259,11 @@ function TaskCard({
                 <span className="text-[10px] text-green-400 font-mono">✓ done</span>
               )}
             </div>
-            <p className="text-[11px] text-[#666] font-mono mt-0.5 truncate">{statusText}</p>
+            <p className="text-[11px] text-white/40 font-mono mt-0.5 truncate">{statusText}</p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {task.artifacts.length > 0 && (
-              <span className="text-[10px] text-[#555] font-mono">{task.artifacts.length} file{task.artifacts.length > 1 ? 's' : ''}</span>
+              <span className="text-[10px] text-white/30 font-mono">{task.artifacts.length} file{task.artifacts.length > 1 ? 's' : ''}</span>
             )}
             <button
               onClick={e => { e.stopPropagation(); setShowA2A(true); }}
@@ -272,15 +272,15 @@ function TaskCard({
             >
               A2A
             </button>
-            {expanded ? <ChevronDown size={12} className="text-[#555]" /> : <ChevronRight size={12} className="text-[#555]" />}
+            {expanded ? <ChevronDown size={12} className="text-white/30" /> : <ChevronRight size={12} className="text-white/30" />}
           </div>
         </div>
 
         {/* Expanded body */}
         {expanded && (
-          <div className="px-4 pb-3 border-t border-[#1a1a1a] pt-3 space-y-3">
+          <div className="px-4 pb-3 border-t border-white/[0.07] pt-3 space-y-3">
             {/* Goal */}
-            <p className="text-[11px] text-[#666] italic">{task.goal}</p>
+            <p className="text-[11px] text-white/40 italic">{task.goal}</p>
 
             {/* Terminal */}
             <TerminalLog lines={terminalLines} />
@@ -288,9 +288,9 @@ function TaskCard({
             {/* Findings */}
             {task.findings.length > 0 && (
               <div className="space-y-1">
-                <p className="text-[10px] text-[#555] uppercase tracking-wider font-mono">Findings</p>
+                <p className="text-[10px] text-white/30 uppercase tracking-wider font-mono">Findings</p>
                 {task.findings.map((f, i) => (
-                  <div key={i} className="flex gap-2 text-[11px] text-[#aaa]">
+                  <div key={i} className="flex gap-2 text-[11px] text-white/65">
                     <span className="text-green-400 shrink-0">✓</span>
                     <span>{f}</span>
                   </div>
@@ -301,7 +301,7 @@ function TaskCard({
             {/* Artifacts */}
             {task.artifacts.length > 0 && (
               <div>
-                <p className="text-[10px] text-[#555] uppercase tracking-wider font-mono mb-2">Files</p>
+                <p className="text-[10px] text-white/30 uppercase tracking-wider font-mono mb-2">Files</p>
                 <div className="flex flex-wrap gap-1.5">
                   {task.artifacts.map((a, i) => (
                     <ArtifactChip key={i} artifact={a} onClick={() => setSelectedArtifact(a)} />
@@ -349,12 +349,12 @@ function ProgressBar({ tasks, rootId }: { tasks: Record<string, AgentTask>; root
   const pct = Math.round((done / workers.length) * 100);
 
   return (
-    <div className="px-4 py-2 border-b border-[#1a1a1a]">
-      <div className="flex items-center justify-between text-[10px] text-[#555] font-mono mb-1.5">
+    <div className="px-4 py-2 border-b border-white/[0.07]">
+      <div className="flex items-center justify-between text-[10px] text-white/30 font-mono mb-1.5">
         <span>{done}/{workers.length} agents complete</span>
         <span>{pct}%</span>
       </div>
-      <div className="h-1 bg-[#1a1a1a] rounded-full overflow-hidden">
+      <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
         <div
           className="h-full bg-gradient-to-r from-yellow-500 to-green-400 rounded-full transition-all duration-700 ease-out"
           style={{ width: `${pct}%` }}
@@ -404,7 +404,7 @@ export function AgentPanel({ tasks, rootId, events }: Props) {
       <div className="h-full flex items-center justify-center text-center p-8">
         <div>
           <div className="text-5xl mb-3 opacity-20">⬡</div>
-          <p className="text-[#444] text-sm">Agent activity appears here</p>
+          <p className="text-white/25 text-sm">Agent activity appears here</p>
         </div>
       </div>
     );
@@ -418,7 +418,7 @@ export function AgentPanel({ tasks, rootId, events }: Props) {
         {/* Root orchestrator */}
         {rootTask && visibleIds.has(rootTask.id) && (
           <div className="transition-all duration-300 animate-slide-in">
-            <div className="text-[10px] text-[#444] uppercase tracking-widest font-mono mb-2">Orchestrator</div>
+            <div className="text-[10px] text-white/25 uppercase tracking-widest font-mono mb-2">Orchestrator</div>
             <TaskCard
               task={rootTask}
               terminalLines={terminalByTask[rootTask.id] ?? []}
@@ -431,8 +431,8 @@ export function AgentPanel({ tasks, rootId, events }: Props) {
         {/* Worker agents */}
         {workerTasks.length > 0 && (
           <div>
-            <div className="text-[10px] text-[#444] uppercase tracking-widest font-mono mb-2">
-              Agent Team — {workerTasks.length} specialists
+            <div className="text-[10px] text-white/25 uppercase tracking-widest font-mono mb-2">
+              Agent Team · {workerTasks.length} specialists
             </div>
             <div className="space-y-2">
               {workerTasks.map(task => (
@@ -454,7 +454,7 @@ export function AgentPanel({ tasks, rootId, events }: Props) {
         {/* Collaboration events */}
         {collabEvents.length > 0 && (
           <div>
-            <div className="text-[10px] text-[#444] uppercase tracking-widest font-mono mb-2">Collaborations</div>
+            <div className="text-[10px] text-white/25 uppercase tracking-widest font-mono mb-2">Collaborations</div>
             <div className="space-y-2">
               {collabEvents.map((e, i) => (
                 <CollabToast key={i} event={e} tasks={tasks} />

@@ -113,9 +113,9 @@ export default function Home() {
   }, [plannerModel, processEvent]);
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col bg-[#0a0a0a] text-white">
+    <div className="h-screen overflow-hidden flex flex-col" style={{ background: 'var(--bg-base)', color: 'rgb(var(--fg))' }}>
       {/* Header */}
-      <header className="flex items-center justify-between px-5 py-3 border-b border-[#1a1a1a] shrink-0">
+      <header className="flex items-center justify-between px-5 py-3 border-b border-white/[0.07] shrink-0" style={{ background: 'var(--bg-base)' }}>
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm">
             <ArrowLeft size={13} /> Home
@@ -141,7 +141,7 @@ export default function Home() {
       {/* Body */}
       <div className="flex-1 flex overflow-hidden">
         {/* Chat */}
-        <div className={`flex flex-col border-r border-[#1a1a1a] overflow-hidden transition-all duration-300 ${showAgents ? 'w-1/2' : 'w-full'}`}>
+        <div className={`flex flex-col border-r border-white/[0.07] overflow-hidden transition-all duration-300 ${showAgents ? 'w-1/2' : 'w-full'}`}>
           <ChatPanel
             messages={messages}
             onSubmit={handleSubmit}
@@ -152,7 +152,7 @@ export default function Home() {
         {/* Agents */}
         {showAgents && (
           <div className="w-1/2 flex flex-col overflow-hidden">
-            <div className="px-4 py-2.5 border-b border-[#1a1a1a] flex items-center justify-between shrink-0">
+            <div className="px-4 py-2.5 border-b border-white/[0.07] flex items-center justify-between shrink-0">
               <span className="text-xs text-white/65 font-mono uppercase tracking-wider">Agent Activity</span>
               {Object.keys(tasks).length > 0 && (
                 <span className="text-xs text-white/55 font-mono">

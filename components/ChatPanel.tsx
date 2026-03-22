@@ -30,14 +30,14 @@ function MarkdownContent({ content }: { content: string }) {
         if (line.startsWith('### ')) return <h3 key={i} className="text-sm font-semibold text-white mt-2">{line.slice(4)}</h3>;
         if (line.startsWith('- ')) {
           const text = line.slice(2).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code>$1</code>');
-          return <li key={i} className="ml-4 text-[#ccc]" dangerouslySetInnerHTML={{ __html: text }} />;
+          return <li key={i} className="ml-4 text-white/80" dangerouslySetInnerHTML={{ __html: text }} />;
         }
         if (line.startsWith('**Goal:**')) {
-          return <p key={i} className="text-[#aaa]"><strong className="text-white">Goal:</strong>{line.slice(9)}</p>;
+          return <p key={i} className="text-white/65"><strong className="text-white">Goal:</strong>{line.slice(9)}</p>;
         }
         if (line.trim() === '') return <div key={i} className="h-1" />;
         const text = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`(.*?)`/g, '<code>$1</code>');
-        return <p key={i} className="text-[#ccc]" dangerouslySetInnerHTML={{ __html: text }} />;
+        return <p key={i} className="text-white/80" dangerouslySetInnerHTML={{ __html: text }} />;
       })}
     </div>
   );
@@ -67,7 +67,7 @@ export function ChatPanel({ onSubmit, messages, isRunning }: Props) {
             <div className="text-5xl mb-4">⚡</div>
             <h2 className="text-white text-xl font-semibold mb-2">Agentnetes</h2>
             <p className="text-white/70 text-sm mb-1 max-w-sm">Zero to a Self-Organizing AI Agency. On Demand.</p>
-            <p className="text-white/45 text-xs mb-8 max-w-sm">Zero to Agent? We are taking it further — basically Kubernetes for AI agents.</p>
+            <p className="text-white/45 text-xs mb-8 max-w-sm">Zero to Agent? We are taking it further · Kubernetes for AI On Demand Agents.</p>
             <div className="space-y-2 w-full max-w-sm">
               {EXAMPLES.map((ex, i) => (
                 <button
@@ -85,11 +85,11 @@ export function ChatPanel({ onSubmit, messages, isRunning }: Props) {
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {msg.role === 'user' ? (
-              <div className="max-w-[80%] bg-[#1a1a1a] border border-[#333] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm text-white">
+              <div className="max-w-[80%] border border-white/15 rounded-2xl rounded-br-sm px-4 py-2.5 text-sm" style={{ background: 'var(--bg-hover)' }}>
                 {msg.content}
               </div>
             ) : (
-              <div className="max-w-[90%] bg-[#0d0d0d] border border-[#222] rounded-2xl rounded-bl-sm px-4 py-3">
+              <div className="max-w-[90%] border border-white/[0.06] rounded-2xl rounded-bl-sm px-4 py-3" style={{ background: 'var(--bg-panel)' }}>
                 <MarkdownContent content={msg.content} />
               </div>
             )}
@@ -98,7 +98,7 @@ export function ChatPanel({ onSubmit, messages, isRunning }: Props) {
 
         {isRunning && (
           <div className="flex justify-start">
-            <div className="bg-[#0d0d0d] border border-[#222] rounded-2xl rounded-bl-sm px-4 py-3">
+            <div className="border border-white/[0.06] rounded-2xl rounded-bl-sm px-4 py-3" style={{ background: 'var(--bg-panel)' }}>
               <div className="flex items-center gap-2 text-white/55 text-xs font-mono">
                 <span className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse" />
                 Agents working...
@@ -111,7 +111,7 @@ export function ChatPanel({ onSubmit, messages, isRunning }: Props) {
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-[#1a1a1a]">
+      <div className="p-4 border-t border-white/[0.07]">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
             value={input}
