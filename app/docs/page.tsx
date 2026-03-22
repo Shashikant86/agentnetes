@@ -302,17 +302,18 @@ GOOGLE_API_KEY=your_key agentnetes run "refactor auth module to use JWT"`}</Code
           {/* ── How it Works ────────────────────────────────────── */}
           <H2 id="how-it-works">How it Works</H2>
           <P>
-            Agentnetes implements the <a href="https://arxiv.org/abs/2512.24601" target="_blank" rel="noreferrer" className="text-purple-400 hover:text-purple-300 underline underline-offset-2">RLM pattern (MIT CSAIL)</a> · context lives in sandboxes, not prompts.
+            Agentnetes implements the <a href="https://arxiv.org/abs/2512.24601" target="_blank" rel="noreferrer" className="text-purple-400 hover:text-purple-300 underline underline-offset-2">RLM pattern (MIT CSAIL)</a> · context lives in sandboxes, not prompts. One goal in, verified results out.
           </P>
 
           {[
-            ['1. You type a goal', 'A natural-language description of what you want done. No special syntax required.'],
-            ['2. Root agent plans', 'A Tech Lead agent explores your repo structure and invents a specialist team tailored to the goal. Roles are fully emergent · nothing is hardcoded.'],
-            ['3. Specialists run in parallel', 'Each specialist gets its own isolated sandbox with the repo cloned inside. They use two tools: search() and execute(). No file contents stuffed into prompts.'],
-            ['4. AutoResearch loop', 'Agents write code, run tests, observe failures, patch, and repeat · following the write → test → fix loop until the task is done or the step budget is reached.'],
-            ['5. Synthesis', 'The root agent collects all findings and delivers a final markdown summary of everything built.'],
+            ['1. You type a goal', 'A natural-language description of what you want done. No special syntax, no config files, no agent definitions.'],
+            ['2. Root agent decomposes', 'The root agent auto-researches your codebase and breaks the goal into focused sub-tasks. It invents the right specialist team on the fly · roles are never hardcoded.'],
+            ['3. Agents get isolated sandboxes', 'Each specialist spins up in its own sandbox (Firecracker microVM, Docker container, or local) with a full coding agent harness and the repo pre-cloned. No shared state, no stuffed context windows.'],
+            ['4. Auto-research loops', 'Inside each sandbox, agents run a tight RLM loop: search the codebase, read what they find, reason about the approach, execute code, and verify the result. They repeat until the sub-task is solved or the step budget is reached.'],
+            ['5. Cross-sandbox collaboration', 'When one agent discovers something another needs · a failing test, a missing type, a better pattern · they collaborate to fix it. Agents coordinate through shared findings without sharing filesystems.'],
+            ['6. Verified results delivered', 'The root agent merges all work, validates the combined output, and delivers a complete summary with all artifacts back to you.'],
           ].map(([title, desc]) => (
-            <div key={title} className="flex gap-4 mb-5" style={{}}>
+            <div key={title} className="flex gap-4 mb-5">
               <div className="w-1.5 shrink-0 rounded-full mt-1" style={{ background: 'linear-gradient(180deg, #a855f7 0%, #f97316 100%)', minHeight: '2rem' }} />
               <div>
                 <div className="text-white font-semibold text-sm mb-1">{title}</div>
@@ -322,7 +323,7 @@ GOOGLE_API_KEY=your_key agentnetes run "refactor auth module to use JWT"`}</Code
           ))}
 
           <H3>The two-tool strategy</H3>
-          <P>Every agent has exactly two tools · keeping the token footprint under ~1,000 tokens regardless of codebase size:</P>
+          <P>Every agent has exactly two MCP tools · keeping the token footprint under ~1,000 tokens regardless of codebase size. Agents compose all other operations from these primitives:</P>
           <Code lang="typescript">{`search(pattern, path?, fileGlob?)  // grep -r across the repo
 execute(command)                   // run any shell command in the sandbox`}</Code>
 

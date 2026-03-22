@@ -10,6 +10,7 @@ interface Message {
 }
 
 const EXAMPLES_REAL = [
+  "What's missing in the README?",
   'Audit all dependencies for known CVEs and outdated versions',
   'Add rate limiting middleware with configurable limits per route',
   'Find all TODO and FIXME comments and summarise what needs to be done',

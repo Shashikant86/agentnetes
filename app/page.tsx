@@ -7,8 +7,7 @@ import {
   ArrowRight, Github, Zap, Shield, GitBranch, Layers,
   Terminal, ExternalLink, CheckCircle2, ChevronRight,
   Box, Network, Code2, RefreshCw, Sun, Moon,
-  Target, Split, Users, MessageSquare, CheckCheck,
-  ChevronDown,
+  Split, CheckCheck,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
@@ -89,8 +88,8 @@ function CyclingWord() {
 
   return (
     <span
-      className="inline-block transition-all duration-300 gradient-text"
-      style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(-8px)' }}>
+      className="inline-block transition-all duration-300 gradient-text pb-1"
+      style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(-8px)', lineHeight: 1.2 }}>
       {CYCLING_WORDS[index]}
     </span>
   );
@@ -205,533 +204,243 @@ function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
   return <>{val}{suffix}</>;
 }
 
-// How It Works, interactive pipeline
-const HOW_STEPS = [
-  {
-    id: 'goal',
-    shortLabel: 'Define Goal',
-    icon: Target,
-    color: 'text-blue-400',
-    bg: 'bg-blue-400/10',
-    border: 'border-blue-400/30',
-    glow: 'shadow-blue-400/20',
-    title: 'User defines the goal',
-    desc: 'A single goal starts the run. The system treats it as the source of truth for the team that will be created.',
-    detail: (
-      <div className="space-y-3">
-        <div className="rounded-xl border border-white/10 overflow-hidden" style={{ background: 'var(--bg-panel)' }}>
-          <div className="flex items-center gap-2 px-4 py-2 border-b border-white/[0.06]">
-            <span className="w-2 h-2 rounded-full bg-blue-400/60" />
-            <span className="text-xs font-mono text-white/40">goal input</span>
-          </div>
-          <div className="px-4 py-3 font-mono text-sm">
-            <span className="text-white/40">$ </span>
-            <span className="text-emerald-400">agentnetes run</span>
-            <span className="text-violet-300"> &quot;Ship a production ready billing portal&quot;</span>
-          </div>
+// ── How It Works — single-view pipeline infographic ──────────────
+function HowItWorks() {
+  const [lit, setLit] = useState(-1);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Sweep highlight continuously once visible
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    let started = false;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) {
+        started = true;
+        let i = 0;
+        const run = () => { setLit(i); i = (i + 1) % 6; setTimeout(run, 2000); };
+        run();
+      }
+    }, { threshold: 0.2 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const glow = (i: number) => lit === i ? 'ring-1 ring-violet-400/30 shadow-[0_0_24px_rgba(168,85,247,0.08)]' : '';
+  const dotColor = (i: number) => lit === i ? 'bg-violet-400 scale-125' : lit > i ? 'bg-violet-400/40' : 'bg-white/20';
+  const lineColor = (i: number) => lit > i ? 'bg-violet-400/30' : 'bg-white/[0.08]';
+  const flowDot = (i: number) => lit === i;
+
+  return (
+    <section ref={sectionRef} className="py-28 px-6 relative overflow-hidden">
+      <div className="max-w-5xl mx-auto mb-0"><hr className="gradient-divider" /></div>
+      <div className="max-w-5xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="text-center mb-14">
+          <div className="text-sm font-mono text-white/50 uppercase tracking-[0.2em] mb-3">How It Works</div>
+          <h2 className="text-4xl font-bold mb-5 text-white">From one goal to a working team.</h2>
+          <p className="text-white/50 text-lg max-w-xl mx-auto leading-relaxed">
+            Type a goal. The system researches, decomposes, builds, and delivers — autonomously.
+          </p>
         </div>
-        <div className="grid grid-cols-3 gap-2">
-          {[
-            { label: 'Goal', value: 'defined' },
-            { label: 'Priority', value: 'high' },
-            { label: 'Scope', value: 'multi-agent' },
-          ].map((item) => (
-            <div key={item.label} className="rounded-xl border border-white/[0.06] px-3 py-3" style={{ background: 'var(--bg-subtle)' }}>
-              <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-white/30">{item.label}</div>
-              <div className="mt-1 text-sm font-semibold text-white/80">{item.value}</div>
+
+        {/* ── Row 1: Goal → Decompose → Agents ── */}
+        <div className="grid md:grid-cols-[1fr_auto_1fr_auto_1fr] items-start gap-y-4 mb-4">
+          {/* 1 · Goal */}
+          <div className={`rounded-2xl border border-white/[0.06] p-5 transition-all duration-700 ${glow(0)}`} style={{ background: 'var(--bg-panel)' }}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${dotColor(0)}`} />
+              <div className="text-xs font-mono text-white/40 uppercase tracking-wider">01 · Goal</div>
             </div>
-          ))}
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: 'root',
-    shortLabel: 'Decompose Tasks',
-    icon: Split,
-    color: 'text-violet-400',
-    bg: 'bg-violet-400/10',
-    border: 'border-violet-400/30',
-    glow: 'shadow-violet-400/20',
-    title: 'Root agent decomposes the task',
-    desc: 'The root agent reads the goal, frames the work, and breaks it into clear task units with ownership.',
-    detail: (
-      <div className="space-y-3">
-        <div className="rounded-xl border border-white/[0.08] px-4 py-4" style={{ background: 'var(--bg-panel)' }}>
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Split size={14} className="text-white/70" />
-              <span className="text-sm font-mono font-semibold text-white/80">root agent planner</span>
-            </div>
-            <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-white/30">analysis pass</span>
-          </div>
-          <div className="grid grid-cols-4 gap-2 text-center text-xs font-mono">
-            {[
-              'read goal',
-              'analyze constraints',
-              'decompose work',
-              'assign ownership',
-            ].map((label) => (
-              <div key={label} className="rounded-lg border border-white/[0.06] bg-white/[0.03] px-2 py-3 text-white/65">
-                {label}
+            <div className="rounded-xl border border-white/[0.06] overflow-hidden mb-3" style={{ background: 'var(--bg-subtle)' }}>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 border-b border-white/[0.04]">
+                <span className="w-2 h-2 rounded-full bg-[#ff5f57]/50" />
+                <span className="w-2 h-2 rounded-full bg-[#ffbd2e]/50" />
+                <span className="w-2 h-2 rounded-full bg-[#28c840]/50" />
               </div>
-            ))}
-          </div>
-        </div>
-        <div className="space-y-1.5">
-          {[
-            'Map surfaces: UI, backend, tests, rollout',
-            'Identify blockers, dependencies, and validation',
-            'Create work packets for specialists',
-          ].map((item) => (
-            <div key={item} className="flex items-center gap-3 rounded-lg border border-white/[0.06] px-4 py-2.5" style={{ background: 'var(--bg-panel)' }}>
-              <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
-              <span className="text-sm text-white/65">{item}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: 'team',
-    shortLabel: 'Spawn Agent Teams',
-    icon: Users,
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-400/10',
-    border: 'border-emerald-400/30',
-    glow: 'shadow-emerald-400/20',
-    title: 'Root agent spawns agent teams on demand',
-    desc: 'Agent teams are created only when needed. The root agent spawns the exact specialists required for the goal.',
-    detail: (
-      <div className="space-y-3">
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { name: 'Planner', status: 'active', note: 'holds the goal and plan' },
-            { name: 'Frontend', status: 'spawned', note: 'owns product UI work' },
-            { name: 'Runtime', status: 'spawned', note: 'owns APIs and state' },
-            { name: 'Verifier', status: 'spawned', note: 'owns tests and checks' },
-          ].map(({ name, status, note }) => (
-            <div key={name} className="rounded-xl border border-white/[0.06] p-3" style={{ background: 'var(--bg-panel)' }}>
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-semibold text-white/80">{name}</span>
-                <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] font-mono uppercase tracking-[0.14em] text-white/35">{status}</span>
-              </div>
-              <div className="mt-2 text-xs text-white/45">{note}</div>
-            </div>
-          ))}
-        </div>
-        <div className="rounded-xl border border-white/[0.06] px-4 py-3" style={{ background: 'var(--bg-subtle)' }}>
-          <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-white/30">team behavior</div>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {['self organizing', 'elastic team size', 'spawned on demand'].map((item) => (
-              <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white/55">
-                {item}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: 'sandbox',
-    shortLabel: 'Sandbox + RLM',
-    icon: Box,
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-400/10',
-    border: 'border-emerald-400/30',
-    glow: 'shadow-emerald-400/20',
-    title: 'Each agent gets sandbox and enters the RLM loop',
-    desc: 'Every agent gets its own sandbox, coding agent, context, and a live RLM loop for execution and verification.',
-    detail: (
-      <div className="space-y-3">
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { name: 'Frontend', context: 'design tokens, routes, UI constraints' },
-            { name: 'Runtime', context: 'schemas, APIs, repo state' },
-            { name: 'Verifier', context: 'test plan, acceptance checks' },
-            { name: 'Researcher', context: 'docs, patterns, prior findings' },
-          ].map(({ name, context }) => (
-            <div key={name} className="rounded-xl border border-white/[0.06] overflow-hidden" style={{ background: 'var(--bg-panel)' }}>
-              <div className="flex items-center gap-2 border-b border-white/[0.04] px-3 py-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
-                <span className="text-xs font-mono font-semibold text-white/65">{name}</span>
-              </div>
-              <div className="space-y-1.5 px-3 py-3 text-[11px] font-mono text-white/45">
-                <div>firecracker sandbox</div>
-                <div>coding agent attached</div>
-                <div>external vars mounted</div>
-                <div className="text-white/35">{context}</div>
+              <div className="px-3 py-2.5 font-mono text-sm">
+                <span className="text-white/25">$ </span>
+                <span className="text-emerald-400">agentnetes run</span>
+                <span className="text-violet-400"> &quot;Add billing with Stripe&quot;</span>
               </div>
             </div>
-          ))}
-        </div>
-        <div className="flex items-center gap-2 rounded-lg border border-white/[0.08] px-4 py-2.5" style={{ background: 'var(--bg-subtle)' }}>
-          <Shield size={14} className="text-white/60 shrink-0" />
-          <span className="text-xs text-white/55">
-            Isolated sandboxes keep work clean. The team shares findings, not a shared filesystem or a stuffed context window.
-          </span>
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: 'research',
-    shortLabel: 'Auto Research',
-    icon: RefreshCw,
-    color: 'text-blue-400',
-    bg: 'bg-blue-400/10',
-    border: 'border-blue-400/30',
-    glow: 'shadow-blue-400/20',
-    title: 'Auto research technique kicks in',
-    desc: 'Agents search, read, execute, and verify repeatedly so each task can improve as new information arrives.',
-    detail: (
-      <div className="space-y-3">
-        <div className="rounded-xl border border-white/[0.06] overflow-hidden" style={{ background: 'var(--bg-panel)' }}>
-          <div className="flex items-center gap-2 px-4 py-2 border-b border-white/[0.04]">
-            <span className="w-1.5 h-1.5 rounded-full bg-white/50 animate-pulse" />
-            <span className="text-xs font-mono font-semibold text-white/70">runtime specialist</span>
-            <span className="text-[10px] font-mono text-white/25 ml-auto">rlm iteration 3 of 5</span>
+            <p className="text-xs text-white/40 leading-relaxed">One prompt. No config, no YAML, no agent definitions.</p>
           </div>
-          <div className="px-4 py-3 space-y-2 font-mono text-sm">
-            {[
-              ['search', 'scan handlers, routes, and existing billing code'],
-              ['read', 'load the relevant files and prior findings'],
-              ['think', 'pick the safest pattern for this repo'],
-              ['execute', 'write code, run checks, capture output'],
-              ['verify', 'confirm the result before reporting back'],
-            ].map(([label, value]) => (
-              <div key={label} className="flex items-center gap-3">
-                <span className="w-14 shrink-0 text-xs uppercase tracking-[0.14em] text-white/40">{label}</span>
-                <span className="text-white/55">{value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="rounded-lg border border-white/[0.06] px-3 py-3 text-center" style={{ background: 'var(--bg-subtle)' }}>
-            <div className="text-sm font-mono font-semibold text-white/75">Auto research</div>
-            <div className="mt-1 text-[11px] text-white/40">repo search, docs, prior outputs</div>
-          </div>
-          <div className="rounded-lg border border-white/[0.06] px-3 py-3 text-center" style={{ background: 'var(--bg-subtle)' }}>
-            <div className="text-sm font-mono font-semibold text-white/75">Closed loop</div>
-            <div className="mt-1 text-[11px] text-white/40">plan, act, verify, refine</div>
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: 'collaborate',
-    shortLabel: 'Collaborate + A2A',
-    icon: MessageSquare,
-    color: 'text-orange-400',
-    bg: 'bg-orange-400/10',
-    border: 'border-orange-400/30',
-    glow: 'shadow-orange-400/20',
-    title: 'Agents collaborate, learn, and expose A2A',
-    desc: 'Agents share findings, learn from each other, and coordinate through collaboration patterns with A2A shown as work in progress.',
-    detail: (
-      <div className="space-y-3">
-        <div className="grid gap-3 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-xl border border-white/[0.06] overflow-hidden" style={{ background: 'var(--bg-panel)' }}>
-            <div className="flex items-center gap-2 px-4 py-2 border-b border-white/[0.04]">
-              <MessageSquare size={12} className="text-white/65" />
-              <span className="text-xs font-mono text-white/65 font-semibold">team collaboration stream</span>
+
+          {/* Arrow */}
+          <div className="hidden md:flex flex-col items-center justify-center self-center px-2">
+            <div className={`relative w-8 h-px overflow-hidden ${lineColor(0)}`}>
+              {flowDot(0) && <span className="process-flow-dot absolute top-[-1px]" />}
             </div>
-            <div className="px-4 py-3 space-y-2 text-sm font-mono">
+          </div>
+
+          {/* 2 · Decompose */}
+          <div className={`rounded-2xl border border-white/[0.06] p-5 transition-all duration-700 ${glow(1)}`} style={{ background: 'var(--bg-panel)' }}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${dotColor(1)}`} />
+              <div className="text-xs font-mono text-white/40 uppercase tracking-wider">02 · Decompose</div>
+            </div>
+            <div className="rounded-xl border border-violet-400/15 px-3 py-2.5 mb-3 flex items-center gap-2" style={{ background: 'var(--bg-subtle)' }}>
+              <Split size={14} className="text-violet-400 shrink-0" />
+              <div>
+                <div className="text-xs font-mono text-white/70">Root Agent · <span className="text-blue-400">RLM</span></div>
+                <div className="text-[11px] font-mono text-white/30">search → analyze → plan → split</div>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
               {[
-                'Researcher found an existing auth pattern and shared it with Runtime',
-                'Verifier reported a failing edge case and Frontend patched the flow',
-                'Root agent updated the plan after the new findings landed',
-              ].map((item) => (
-                <div key={item} className="rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-2 text-white/60">
-                  {item}
+                { n: 'UI Eng', c: 'text-violet-400' },
+                { n: 'API Eng', c: 'text-blue-400' },
+                { n: 'DB Eng', c: 'text-emerald-400' },
+                { n: 'Tester', c: 'text-orange-400' },
+              ].map(({ n, c }) => (
+                <div key={n} className="rounded-lg border border-white/[0.04] px-2.5 py-1.5 text-center" style={{ background: 'var(--bg-subtle)' }}>
+                  <span className={`text-[11px] font-mono font-semibold ${c}`}>{n}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-white/40 leading-relaxed mt-3">Root agent auto-researches the codebase and invents the right team.</p>
+          </div>
+
+          {/* Arrow */}
+          <div className="hidden md:flex flex-col items-center justify-center self-center px-2">
+            <div className={`relative w-8 h-px overflow-hidden ${lineColor(1)}`}>
+              {flowDot(1) && <span className="process-flow-dot absolute top-[-1px]" />}
+            </div>
+          </div>
+
+          {/* 3 · Sandboxes */}
+          <div className={`rounded-2xl border border-white/[0.06] p-5 transition-all duration-700 ${glow(2)}`} style={{ background: 'var(--bg-panel)' }}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${dotColor(2)}`} />
+              <div className="text-xs font-mono text-white/40 uppercase tracking-wider">03 · Sandboxes</div>
+            </div>
+            <div className="space-y-1.5 mb-3">
+              {[
+                { name: 'UI Eng', dot: 'bg-violet-400', color: 'text-violet-400' },
+                { name: 'API Eng', dot: 'bg-blue-400', color: 'text-blue-400' },
+                { name: 'DB Eng', dot: 'bg-emerald-400', color: 'text-emerald-400' },
+                { name: 'Tester', dot: 'bg-orange-400', color: 'text-orange-400' },
+              ].map(({ name, dot, color }) => (
+                <div key={name} className="flex items-center gap-2 rounded-lg border border-white/[0.04] px-3 py-1.5" style={{ background: 'var(--bg-subtle)' }}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${dot} animate-pulse`} />
+                  <span className={`text-[11px] font-mono font-semibold ${color}`}>{name}</span>
+                  <span className="text-[10px] font-mono text-white/20 ml-auto">microVM</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2 text-[10px] font-mono text-white/30">
+              <span className="flex items-center gap-1"><Box size={9} className="text-emerald-400/50" /> Firecracker</span>
+              <span className="flex items-center gap-1"><Code2 size={9} className="text-blue-400/50" /> Coding harness</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Row 2: Research → A2A → Deliver ── */}
+        <div className="grid md:grid-cols-[1fr_auto_1fr_auto_1fr] items-start gap-y-4">
+          {/* 4 · Auto-Research */}
+          <div className={`rounded-2xl border border-white/[0.06] p-5 transition-all duration-700 ${glow(3)}`} style={{ background: 'var(--bg-panel)' }}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${dotColor(3)}`} />
+              <div className="text-xs font-mono text-white/40 uppercase tracking-wider">04 · Auto-Research</div>
+            </div>
+            <div className="rounded-xl border border-white/[0.06] overflow-hidden mb-3" style={{ background: 'var(--bg-subtle)' }}>
+              <div className="px-3 py-2 border-b border-white/[0.04] flex items-center justify-between">
+                <span className="text-[11px] font-mono text-blue-400 font-semibold">API Engineer</span>
+                <span className="text-[10px] font-mono text-white/20">RLM loop <span className="text-blue-400/50">3</span>/5</span>
+              </div>
+              <div className="px-3 py-2 space-y-1 font-mono text-[11px]">
+                {[
+                  { p: 'search', c: 'text-emerald-400' },
+                  { p: 'read', c: 'text-blue-400' },
+                  { p: 'think', c: 'text-violet-400' },
+                  { p: 'execute', c: 'text-orange-400' },
+                  { p: 'verify', c: 'text-emerald-400' },
+                ].map(({ p, c }) => (
+                  <div key={p} className="flex items-center gap-2">
+                    <span className={`w-12 ${c}`}>{p}</span>
+                    <span className="text-white/25">···</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="text-xs text-white/40 leading-relaxed">Each agent runs a tight <span className="text-blue-400/70">RLM</span> loop — search, read, think, execute, verify — repeating until solved.</p>
+          </div>
+
+          {/* Arrow */}
+          <div className="hidden md:flex flex-col items-center justify-center self-center px-2">
+            <div className={`relative w-8 h-px overflow-hidden ${lineColor(3)}`}>
+              {flowDot(3) && <span className="process-flow-dot absolute top-[-1px]" />}
+            </div>
+          </div>
+
+          {/* 5 · A2A Collaboration */}
+          <div className={`rounded-2xl border border-white/[0.06] p-5 transition-all duration-700 ${glow(4)}`} style={{ background: 'var(--bg-panel)' }}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${dotColor(4)}`} />
+              <div className="text-xs font-mono text-white/40 uppercase tracking-wider">05 · A2A Collaborate</div>
+            </div>
+            <div className="space-y-2 mb-3">
+              {[
+                { from: 'Tester', color: 'text-orange-400', border: 'border-orange-400/10', msg: 'Webhook sig check fails' },
+                { from: 'API Eng', color: 'text-blue-400', border: 'border-blue-400/10', msg: 'Patched env config — re-run' },
+                { from: 'Tester', color: 'text-emerald-400', border: 'border-emerald-400/10', msg: '12/12 tests passing ✓' },
+              ].map(({ from, color, border, msg }, i) => (
+                <div key={i} className={`rounded-lg border ${border} bg-white/[0.02] px-3 py-2`}>
+                  <span className={`text-[10px] font-mono ${color}`}>{from}</span>
+                  <div className="text-[11px] text-white/50 mt-0.5">{msg}</div>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-white/40 leading-relaxed">Agents coordinate via <span className="text-orange-400/70">A2A protocol</span> — no shared memory or context window.</p>
+          </div>
+
+          {/* Arrow */}
+          <div className="hidden md:flex flex-col items-center justify-center self-center px-2">
+            <div className={`relative w-8 h-px overflow-hidden ${lineColor(4)}`}>
+              {flowDot(4) && <span className="process-flow-dot absolute top-[-1px]" />}
+            </div>
+          </div>
+
+          {/* 6 · Deliver */}
+          <div className={`rounded-2xl border border-white/[0.06] p-5 transition-all duration-700 ${glow(5)}`} style={{ background: 'var(--bg-panel)' }}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${dotColor(5)}`} />
+              <div className="text-xs font-mono text-white/40 uppercase tracking-wider">06 · Deliver</div>
+            </div>
+            <div className="rounded-xl border border-emerald-400/15 overflow-hidden mb-3" style={{ background: 'var(--bg-subtle)' }}>
+              <div className="px-3 py-2 border-b border-white/[0.04] bg-emerald-400/[0.03] flex items-center gap-2">
+                <CheckCheck size={12} className="text-emerald-400" />
+                <span className="text-[11px] font-mono font-semibold text-emerald-400">Complete</span>
+                <span className="text-[10px] font-mono text-white/25 ml-auto">52s</span>
+              </div>
+              <div className="px-3 py-2 space-y-1 text-[11px] font-mono">
+                {['9 files modified', 'Stripe webhooks + billing UI', '12/12 tests passing'].map(item => (
+                  <div key={item} className="flex items-center gap-2">
+                    <span className="text-emerald-400">✓</span>
+                    <span className="text-white/50">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-between text-center">
+              {[
+                { n: '4', l: 'agents', c: 'text-violet-400' },
+                { n: '4', l: 'sandboxes', c: 'text-emerald-400' },
+                { n: '5', l: 'RLM', c: 'text-blue-400' },
+                { n: '52s', l: 'time', c: 'text-orange-400' },
+              ].map(({ n, l, c }) => (
+                <div key={l}>
+                  <div className={`text-sm font-bold font-mono ${c}`}>{n}</div>
+                  <div className="text-[9px] font-mono text-white/25 uppercase">{l}</div>
                 </div>
               ))}
             </div>
           </div>
-          <div className="rounded-xl border border-white/[0.06] p-4" style={{ background: 'var(--bg-subtle)' }}>
-            <div className="flex items-center gap-2">
-              <Network size={14} className="text-white/60" />
-              <span className="text-sm font-mono font-semibold text-white/75">A2A card</span>
-            </div>
-            <div className="mt-3 rounded-xl border border-dashed border-white/12 px-3 py-4 text-center">
-              <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/30">status</div>
-              <div className="mt-2 text-sm font-semibold text-white/70">work in progress</div>
-              <div className="mt-2 text-xs text-white/45">Agent to agent coordination is visible in the system design and still evolving.</div>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {['self healing', 'shared learning', 'resilient coordination'].map((item) => (
-            <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white/55">
-              {item}
-            </span>
-          ))}
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: 'deliver',
-    shortLabel: 'Deliver',
-    icon: CheckCheck,
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-400/10',
-    border: 'border-emerald-400/30',
-    glow: 'shadow-emerald-400/20',
-    title: 'One goal achieved, results come back to the user',
-    desc: 'The root agent gathers the outputs, validates the work, and returns a complete result back to the user.',
-    detail: (
-      <div className="space-y-3">
-        <div className="rounded-xl border border-white/[0.08] overflow-hidden" style={{ background: 'var(--bg-panel)' }}>
-          <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06] bg-white/[0.03]">
-            <CheckCheck size={14} className="text-white/75" />
-            <span className="text-sm font-semibold text-white/80 font-mono">result package</span>
-            <span className="text-xs text-white/35 ml-auto font-mono">47s, 4 agents, verified</span>
-          </div>
-          <div className="px-4 py-3 space-y-2 text-sm">
-            {[
-              'Working code and updated files',
-              'Checks, tests, and validation summary',
-              'Open issues or follow ups if any remain',
-              'A clean result returned to the user',
-            ].map((item) => (
-              <div key={item} className="flex items-start gap-2">
-                <span className="text-white/60 mt-0.5">✓</span>
-                <span className="text-white/65">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          {[
-            'self organizing',
-            'self healing',
-            'self resilient',
-          ].map((item) => (
-            <div key={item} className="rounded-xl border border-white/[0.06] px-3 py-3 text-center" style={{ background: 'var(--bg-subtle)' }}>
-              <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-white/30">team</div>
-              <div className="mt-1 text-sm font-semibold text-white/75">{item}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    ),
-  },
-];
-
-const HOW_STEP_TAGS: Record<string, string[]> = {
-  goal: ['one goal', 'clear intent', 'user input'],
-  root: ['analyze', 'decompose', 'plan'],
-  team: ['on demand', 'specialists', 'elastic'],
-  sandbox: ['isolated', 'coder attached', 'external context'],
-  research: ['auto research', 'RLM loop', 'verify'],
-  collaborate: ['shared findings', 'A2A WIP', 'learn together'],
-  deliver: ['verified output', 'results back', 'complete'],
-};
-
-function HowItWorks() {
-  const [activeStep, setActiveStep] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
-  const [hasBeenVisible, setHasBeenVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const progress = ((activeStep + 1) / HOW_STEPS.length) * 100;
-
-  // Start autoplay when section comes into view
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasBeenVisible) {
-          setHasBeenVisible(true);
-          setIsAutoPlaying(true);
-        }
-      },
-      { threshold: 0.3 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [hasBeenVisible]);
-
-  // Autoplay timer
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    const t = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % HOW_STEPS.length);
-    }, 2200);
-    return () => clearInterval(t);
-  }, [isAutoPlaying]);
-
-  function handleStepClick(i: number) {
-    setActiveStep(i);
-    setIsAutoPlaying(true);
-  }
-
-  function getStageClass(index: number) {
-    if (index === activeStep) {
-      return 'text-white shadow-[0_20px_60px_rgba(0,0,0,0.22)] scale-[1.02]';
-    }
-    if (index < activeStep) {
-      return 'border-white/10 bg-white/[0.04] text-white/75';
-    }
-    return 'border-white/[0.06] bg-white/[0.02] text-white/40';
-  }
-
-  return (
-    <section ref={sectionRef} className="py-24 px-6 relative overflow-hidden">
-      <div className="absolute inset-0 dot-grid opacity-30 pointer-events-none" />
-      <div className="absolute inset-x-0 top-0 h-40 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(var(--fg), 0.035), transparent)' }} />
-      <div className="max-w-5xl mx-auto mb-0"><hr className="gradient-divider" /></div>
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <div className="text-sm font-mono text-white/65 uppercase tracking-[0.24em] mb-3">How It Works</div>
-          <h2 className="text-4xl font-bold mb-4 text-white">From one goal to a working team.</h2>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed mb-4">
-            An animated infographic that keeps moving. Click any stage to jump in.
-          </p>
-          <div className="inline-flex flex-wrap items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[11px] font-mono uppercase tracking-[0.18em] text-white/45">
-            {['Goal', 'Decompose', 'Teams', 'Sandbox + RLM', 'Auto Research', 'Collaborate + A2A', 'Deliver'].map((label, index) => (
-              <span key={label} className="inline-flex items-center gap-2">
-                <span>{label}</span>
-                {index < 6 && <span className="text-white/20">/</span>}
-              </span>
-            ))}
-          </div>
         </div>
 
-        <div className="rounded-[32px] border border-white/[0.08] p-5 md:p-7" style={{ background: 'linear-gradient(180deg, rgba(var(--fg), 0.04), rgba(var(--fg), 0.02))' }}>
-          <div className="mb-6 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <div className="text-2xl font-semibold text-white">{HOW_STEPS[activeStep].title}</div>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/50">{HOW_STEPS[activeStep].desc}</p>
-            </div>
-            <div className="min-w-[220px]">
-              <div className="mb-2 flex items-center justify-end text-[10px] font-mono uppercase tracking-[0.18em] text-white/35">
-                <span>{String(activeStep + 1).padStart(2, '0')} / {String(HOW_STEPS.length).padStart(2, '0')}</span>
-              </div>
-              <div className="h-1.5 rounded-full bg-white/[0.08] overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-700"
-                  style={{
-                    width: `${progress}%`,
-                    background: activeStep <= 1
-                      ? 'linear-gradient(90deg, rgba(96,165,250,0.9), rgba(168,85,247,0.75))'
-                      : activeStep <= 3
-                        ? 'linear-gradient(90deg, rgba(16,185,129,0.9), rgba(96,165,250,0.7))'
-                        : 'linear-gradient(90deg, rgba(168,85,247,0.75), rgba(251,146,60,0.7))',
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="hidden xl:flex xl:items-center xl:gap-3">
-            {HOW_STEPS.map((step, index) => {
-              const Icon = step.icon;
-              const isActive = index === activeStep;
-              const isDone = index < activeStep;
-              return (
-                <div key={step.id} className="flex min-w-0 flex-1 items-center gap-3">
-                  <button
-                    onClick={() => handleStepClick(index)}
-                    className={`min-w-[126px] flex-1 rounded-2xl border p-4 text-left transition-all duration-500 ${getStageClass(index)} ${
-                      isActive ? `${step.border} ${step.bg}` : ''
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-2xl border transition-all duration-500 ${
-                        isActive ? `${step.border} ${step.bg}` : 'border-white/10 bg-white/[0.03]'
-                      }`}>
-                        <Icon size={16} className={isActive ? step.color : 'text-white/55'} />
-                      </div>
-                      <div className={`h-2.5 w-2.5 rounded-full ${isActive ? 'bg-white animate-pulse' : isDone ? 'bg-white/55' : 'bg-white/15'}`} />
-                    </div>
-                    <div className="mt-4 text-sm font-semibold">{step.shortLabel}</div>
-                  </button>
-                  {index < HOW_STEPS.length - 1 && (
-                    <div className={`process-flow ${index < activeStep ? 'is-active' : ''}`} aria-hidden="true">
-                      <span className="process-flow-dot" style={{ animationDelay: `${index * 0.12}s` }} />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="grid gap-3 xl:hidden">
-            {HOW_STEPS.map((step, index) => {
-              const Icon = step.icon;
-              const isActive = index === activeStep;
-              const isDone = index < activeStep;
-              return (
-                <div key={step.id}>
-                  <button
-                    onClick={() => handleStepClick(index)}
-                    className={`w-full rounded-2xl border p-4 text-left transition-all duration-500 ${getStageClass(index)} ${
-                      isActive ? `${step.border} ${step.bg}` : ''
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className={`flex h-10 w-10 items-center justify-center rounded-2xl border ${
-                          isActive ? `${step.border} ${step.bg}` : 'border-white/10 bg-white/[0.03]'
-                        }`}>
-                          <Icon size={16} className={isActive ? step.color : 'text-white/55'} />
-                        </div>
-                        <div className="text-sm font-semibold text-white/80">{step.title}</div>
-                      </div>
-                      <div className={`h-2.5 w-2.5 rounded-full ${isActive ? 'bg-white animate-pulse' : isDone ? 'bg-white/55' : 'bg-white/15'}`} />
-                    </div>
-                  </button>
-                  {index < HOW_STEPS.length - 1 && (
-                    <div className={`process-flow-vertical ${index < activeStep ? 'is-active' : ''}`} aria-hidden="true">
-                      <span className="process-flow-dot-vertical" style={{ animationDelay: `${index * 0.12}s` }} />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_220px]">
-            <div className="rounded-[28px] border border-white/[0.08] p-5" style={{ background: 'var(--bg-panel)' }}>
-              <div className="flex items-center gap-3">
-                <div className={`flex h-11 w-11 items-center justify-center rounded-2xl border ${HOW_STEPS[activeStep].border} ${HOW_STEPS[activeStep].bg}`}>
-                  {(() => {
-                    const Icon = HOW_STEPS[activeStep].icon;
-                    return <Icon size={18} className={HOW_STEPS[activeStep].color} />;
-                  })()}
-                </div>
-                <div>
-                  <div className="text-lg font-semibold text-white">{HOW_STEPS[activeStep].title}</div>
-                </div>
-              </div>
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/55">
-                {HOW_STEPS[activeStep].desc}
-              </p>
-            </div>
-
-            <div className="rounded-[28px] border border-white/[0.08] p-5" style={{ background: 'var(--bg-panel)' }}>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {HOW_STEP_TAGS[HOW_STEPS[activeStep].id].map((item) => (
-                  <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white/55">
-                    {item}
-                  </span>
-                ))}
-              </div>
-              <div className="mt-4 rounded-2xl border border-white/[0.06] px-3 py-3 text-xs text-white/45" style={{ background: 'var(--bg-subtle)' }}>
-                self organizing
-                <br />
-                self healing
-                <br />
-                self resilient
-              </div>
-            </div>
-          </div>
+        {/* Connecting row 1 → row 2 */}
+        <div className="hidden md:flex justify-start pl-[16.7%] -mt-0 -mb-0">
         </div>
       </div>
     </section>
@@ -897,8 +606,8 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Logo size={36} />
-            <span className="font-bold tracking-tight text-white">Agentnetes</span>
-            <span className="text-sm font-mono text-white/80 border border-white/15 rounded px-2 py-0.5 uppercase tracking-wider hidden sm:inline">
+            <span className="text-lg font-bold tracking-tight text-white">Agentnetes</span>
+            <span className="text-xs font-mono text-white/60 border border-white/15 rounded px-2 py-0.5 uppercase tracking-wider hidden sm:inline">
               Kubernetes-inspired Agent Orchestration
             </span>
           </div>
@@ -920,36 +629,33 @@ export default function Landing() {
       </nav>
 
       {/* ── Hero ────────────────────────────────────────────── */}
-      <section className="pt-28 pb-20 px-6 relative overflow-hidden ambient-orb orb-purple noise-overlay" style={{ backgroundColor: '#000000' }}>
+      <section className="pt-32 pb-28 px-6 relative overflow-hidden ambient-orb orb-purple noise-overlay" style={{ backgroundColor: '#000000' }}>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
 
           {/* Kicker */}
-          <div className="flex flex-col items-center gap-2 mb-6">
+          <div className="flex flex-col items-center gap-2 mb-8">
             <div className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-mono border border-white/10"
               style={{ background: 'var(--bg-subtle)' }}>
               <span className="text-white/90 font-semibold">Self-Organizing AI Agent Swarms. On Demand.</span>
             </div>
             <div className="text-sm font-mono text-white/60">
-              <span className="text-emerald-400 font-semibold">k8s</span> orchestrates containers.{' '}
-              <span className="text-violet-400 font-semibold">a8s</span> orchestrates AI agents.
+              <span className="text-blue-400 font-semibold">k8s</span> orchestrates containers.{' '}
+              <span className="text-violet-400 font-semibold">a8s</span> orchestrates AI agents.{' '}
+              <span className="text-white/40">Inspired by <span className="text-blue-400">Kubernetes</span>.</span>
             </div>
           </div>
 
           {/* Headline */}
-          <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight mb-5 leading-[1.05] text-glow">
-            <span className="text-white">Zero to a</span>
-            <br />
-            <span className="text-white"><CyclingWord /></span>
-            <br />
-            <span className="text-white">AI Agency.</span>
+          <h1 className="text-6xl sm:text-8xl font-extrabold tracking-tight mb-8 leading-[1] text-glow">
+            <span className="text-white">Agentnetes</span>
           </h1>
+          <div className="text-3xl sm:text-5xl font-bold tracking-tight mb-8 text-white/75">
+            Zero to a <span className="gradient-text"><CyclingWord /></span> AI Agency.
+          </div>
 
-          <p className="text-white/75 text-lg mb-4 max-w-2xl mx-auto leading-relaxed font-medium">
-            Type a goal. Agentnetes forms a dynamic team of specialist agents, roles invented on the fly, each running in its own isolated sandbox with the repo pre-cloned.
-          </p>
-          <p className="text-white/80 text-base mb-4 max-w-xl mx-auto leading-relaxed">
-            No static agent configs. No stuffed context windows. The team assembles itself, works in parallel, and delivers together.
+          <p className="text-white/75 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+            One goal. A swarm of agents spins up, each in its own sandbox and coding agent. They research, build, collaborate, and deliver together.
           </p>
 
           {/* Motivation pills */}

@@ -157,9 +157,10 @@ export class VrlmRuntime {
   // ── Worker ──────────────────────────────────────────────────────────────────
 
   private async runWorker(task: AgentTask, repoUrl: string, snapshotId?: string): Promise<string> {
-    let sandbox: AnySandbox = await createWorkerSandbox(repoUrl, snapshotId, this.config.sandboxProvider);
+    const sandbox: AnySandbox = await createWorkerSandbox(repoUrl, snapshotId, this.config.sandboxProvider);
     task.sandboxId = (sandbox as any).id ?? 'local';
 
+    try {
     this.emitTaskUpdate(task.id, 'running', 'Sandbox ready');
 
     // Emit the A2A card
@@ -243,8 +244,11 @@ export class VrlmRuntime {
 
     // Collect artifacts: scan the sandbox output directory
     const artifacts: Artifact[] = [];
+    const workDir = 'dir' in sandbox ? (sandbox as any).dir
+      : 'containerId' in sandbox ? '/workspace'
+      : '/vercel/sandbox';
     try {
-      const newFiles = await collectNewFiles(sandbox, '/vercel/sandbox', ['ts', 'tsx', 'js', 'json', 'md']);
+      const newFiles = await collectNewFiles(sandbox, workDir, ['ts', 'tsx', 'js', 'json', 'md']);
       for (const file of newFiles) {
         const filename = file.path.split('/').pop() ?? file.path;
         const artifact: Artifact = {
@@ -264,9 +268,11 @@ export class VrlmRuntime {
     }
 
     this.emitTaskCompleted(task.id, findings, artifacts);
-    await stopSandbox(sandbox);
 
     return finalText || findings.join('\n') || 'No output';
+    } finally {
+      await stopSandbox(sandbox);
+    }
   }
 
   // ── Synthesis ────────────────────────────────────────────────────────────────

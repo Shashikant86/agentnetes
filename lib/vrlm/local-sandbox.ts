@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execSync, execFileSync } from 'child_process';
 import { readFileSync, mkdtempSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
@@ -19,14 +19,23 @@ export class LocalSandbox {
     stdout: () => Promise<string>;
     exitCode: number;
   }> {
-    const cmd = args.join(' ');
     try {
-      const output = execSync(cmd, {
-        cwd: this.dir,
-        encoding: 'utf-8',
-        timeout: 60_000,
-        stdio: ['ignore', 'pipe', 'pipe'],
-      });
+      // When a shell is specified (e.g. 'bash', ['-c', 'echo hello']),
+      // use execFileSync to pass args as a proper argv array.
+      // Without a shell, join args into a single string for execSync.
+      const output = shell
+        ? execFileSync(shell, args, {
+            cwd: this.dir,
+            encoding: 'utf-8',
+            timeout: 60_000,
+            stdio: ['ignore', 'pipe', 'pipe'],
+          })
+        : execSync(args.join(' '), {
+            cwd: this.dir,
+            encoding: 'utf-8',
+            timeout: 60_000,
+            stdio: ['ignore', 'pipe', 'pipe'],
+          });
       return { stdout: async () => output ?? '', exitCode: 0 };
     } catch (err: any) {
       const out = ((err.stdout ?? '') + (err.stderr ?? '')) || (err.message ?? '');
@@ -34,9 +43,10 @@ export class LocalSandbox {
     }
   }
 
-  async readFile({ path }: { path: string }): Promise<AsyncIterable<Buffer> | null> {
+  async readFile({ path: filePath }: { path: string }): Promise<AsyncIterable<Buffer> | null> {
     try {
-      const content = readFileSync(path);
+      const resolved = filePath.startsWith('/') ? filePath : join(this.dir, filePath);
+      const content = readFileSync(resolved);
       async function* gen() { yield content; }
       return gen();
     } catch {

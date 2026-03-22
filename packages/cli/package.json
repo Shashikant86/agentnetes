@@ -1,6 +1,6 @@
 {
   "name": "agentnetes",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Zero to a self-organizing AI agency. On demand.",
   "keywords": [
     "ai",
@@ -27,7 +27,7 @@
     "build": "tsup",
     "build:serve": "cd ../.. && bash scripts/build-serve.sh && cd packages/cli && tsup",
     "dev": "tsx src/index.ts",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build:serve"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.52",
