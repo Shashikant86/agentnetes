@@ -10,6 +10,7 @@ import { PanelRightOpen, PanelRightClose, ArrowLeft, Settings, CheckCircle, Aler
 import { SimulatedVrlmRuntime } from '@/lib/vrlm/simulated-runtime';
 
 const STORAGE_KEY = 'agentnetes-settings';
+const IS_STATIC = process.env.NEXT_PUBLIC_STATIC_MODE === 'true';
 
 type Mode = 'real' | 'simulation';
 
@@ -193,7 +194,7 @@ export default function DemoPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [showAgents, setShowAgents] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
-  const [mode, setMode] = useState<Mode>('real');
+  const [mode, setMode] = useState<Mode>(IS_STATIC ? 'simulation' : 'real');
   const [settings, setSettings] = useState<DemoSettings>(DEFAULT_SETTINGS);
   const [apiKeySet, setApiKeySet] = useState(false);
   const mounted = useRef(false);
@@ -312,12 +313,20 @@ export default function DemoPage() {
         <div className="flex items-center gap-3">
           {/* Mode toggle */}
           <div className="flex items-center gap-0.5 rounded-lg p-0.5 border border-white/[0.08]" style={{ background: 'var(--bg-subtle)' }}>
-            <button
-              onClick={() => setMode('real')}
-              className={`px-3 py-1 rounded-md text-xs font-mono transition-all ${mode === 'real' ? 'text-white font-semibold' : 'text-white/35 hover:text-white/55'}`}
-              style={mode === 'real' ? { background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: '#fff' } : {}}>
-              Real
-            </button>
+            {IS_STATIC ? (
+              <span
+                className="px-3 py-1 rounded-md text-xs font-mono text-white/20 cursor-not-allowed"
+                title="Real mode requires agentnetes serve or self-hosting">
+                Real
+              </span>
+            ) : (
+              <button
+                onClick={() => setMode('real')}
+                className={`px-3 py-1 rounded-md text-xs font-mono transition-all ${mode === 'real' ? 'text-white font-semibold' : 'text-white/35 hover:text-white/55'}`}
+                style={mode === 'real' ? { background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: '#fff' } : {}}>
+                Real
+              </button>
+            )}
             <button
               onClick={() => setMode('simulation')}
               className={`px-3 py-1 rounded-md text-xs font-mono transition-all ${mode === 'simulation' ? 'bg-white/10 text-white' : 'text-white/35 hover:text-white/55'}`}>
@@ -325,8 +334,8 @@ export default function DemoPage() {
             </button>
           </div>
 
-          {/* Settings button (Real mode only) */}
-          {mode === 'real' && (
+          {/* Settings button (Real mode only, non-static) */}
+          {!IS_STATIC && mode === 'real' && (
             <button
               onClick={() => setShowSettings(true)}
               className="flex items-center gap-1.5 text-[11px] font-mono border rounded-lg px-2.5 py-1 transition-all"
@@ -352,8 +361,21 @@ export default function DemoPage() {
         </div>
       </header>
 
-      {/* Simulation notice strip */}
-      {mode === 'simulation' && (
+      {/* Notice strip */}
+      {IS_STATIC ? (
+        <div className="px-4 py-2 border-b border-white/[0.07] flex items-center justify-between shrink-0" style={{ background: 'var(--bg-subtle)' }}>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-mono text-green-400/80 border border-green-500/20 bg-green-500/5 rounded px-2 py-0.5">simulation only</span>
+            <span className="text-xs text-white/35">This is a preview. Real agents require a server.</span>
+          </div>
+          <div className="flex items-center gap-3 text-[11px] font-mono">
+            <span className="text-white/30">Run real agents:</span>
+            <code className="text-purple-400/80 bg-purple-500/10 border border-purple-500/20 rounded px-2 py-0.5">npx agentnetes serve</code>
+            <a href="https://github.com/Shashikant86/agentnetes#running-locally" target="_blank" rel="noreferrer"
+              className="text-white/30 hover:text-white/60 transition-colors">self-host</a>
+          </div>
+        </div>
+      ) : mode === 'simulation' && (
         <div className="px-4 py-1.5 border-b border-white/[0.07] flex items-center gap-2 shrink-0" style={{ background: 'var(--bg-subtle)' }}>
           <span className="text-[10px] font-mono text-green-400/80 border border-green-500/20 bg-green-500/5 rounded px-2 py-0.5">simulation</span>
           <span className="text-xs text-white/35">Pre-scripted scenarios · no API key or Docker required · switch to Real for live execution</span>
