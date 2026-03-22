@@ -1,0 +1,11 @@
+# Never publish env files under any circumstances
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Source and dev files
+src/
+tsconfig.json
+tsup.config.ts
+node_modules/

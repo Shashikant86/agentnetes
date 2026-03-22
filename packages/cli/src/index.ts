@@ -11,6 +11,7 @@
 import { execSync } from 'child_process';
 import { run } from './commands/run.js';
 import { snapshotCreate, snapshotList } from './commands/snapshot.js';
+import { serve } from './commands/serve.js';
 
 // Parse args
 const args = process.argv.slice(2);
@@ -44,18 +45,23 @@ async function main() {
     await snapshotCreate();
   } else if (command === 'snapshot' && args[1] === 'list') {
     await snapshotList();
+  } else if (command === 'serve') {
+    const portArg = args.indexOf('--port');
+    const port = portArg !== -1 ? parseInt(args[portArg + 1], 10) : 3000;
+    await serve(port);
   } else {
     console.log('agentnetes - zero to a self-organizing AI agency. On demand.');
     console.log('');
     console.log('Usage:');
     console.log('  agentnetes run "goal"       Run agents on the current git repo');
+    console.log('  agentnetes serve            Start the web UI on localhost:3000');
+    console.log('  agentnetes serve --port 8080');
     console.log('  agentnetes snapshot create  Pre-warm a sandbox snapshot for faster runs');
     console.log('  agentnetes snapshot list    List available snapshots');
     console.log('');
     console.log('Environment variables:');
-    console.log('  GOOGLE_API_KEY       Google Gemini API key (aistudio.google.com)');
-    console.log('  SANDBOX_PROVIDER     docker | local | vercel | e2b (default: docker)');
-    console.log('  AI_GATEWAY_BASE_URL  Vercel AI Gateway endpoint (optional)');
+    console.log('  GOOGLE_API_KEY    Google Gemini API key (aistudio.google.com)');
+    console.log('  SANDBOX_PROVIDER  docker | local | vercel | e2b (default: docker)');
   }
 }
 
