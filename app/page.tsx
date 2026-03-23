@@ -64,6 +64,7 @@ const TERMINAL_LINES: TerminalLine[] = [
 ];
 
 const CYCLING_WORDS = [
+  'Self-Discovering',
   'Self-Organizing',
   'On Demand',
   'Self-Replicating',
