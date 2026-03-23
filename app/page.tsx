@@ -1355,6 +1355,26 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── Demo Video ──────────────────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/[0.05] fade-in-section">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="text-sm font-mono text-white/40 uppercase tracking-widest mb-3">Demo</div>
+          <h2 className="text-3xl font-bold mb-4 text-white">See it in action</h2>
+          <p className="text-white/50 text-base mb-10 max-w-lg mx-auto">
+            One goal in, a swarm of self-discovering agents out. Watch the full pipeline from goal to delivered code.
+          </p>
+          <div className="relative rounded-2xl overflow-hidden border border-white/10 aspect-video">
+            <iframe
+              src="https://www.youtube.com/embed/8nPDgC30U38"
+              title="Agentnetes Demo"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ──────────────────────────────────────────────── */}
       <section className="py-24 px-6 border-t border-white/[0.05] relative overflow-hidden ambient-orb orb-pink fade-in-section">
         <div className="max-w-2xl mx-auto relative z-10">

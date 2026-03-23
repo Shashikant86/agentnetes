@@ -17,6 +17,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-white?style=for-the-badge)](LICENSE)
 [![Docs](https://img.shields.io/badge/Docs-Read%20now-0ea5e9?style=for-the-badge)](https://shashikant86.github.io/agentnetes/docs)
 
+<br/>
+
+[![Demo Video](https://img.youtube.com/vi/8nPDgC30U38/maxresdefault.jpg)](https://www.youtube.com/watch?v=8nPDgC30U38)
+
+**Watch the demo** (2 min)
+
 </div>
 
 ---
