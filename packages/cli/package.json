@@ -13,9 +13,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Shashikant86/agentnetes"
+    "url": "https://github.com/SuperagenticAI/agentnetes"
   },
-  "homepage": "https://shashikant86.github.io/agentnetes",
+  "homepage": "https://superagenticai.github.io/agentnetes",
   "bin": {
     "agentnetes": "./dist/index.js"
   },

@@ -127,7 +127,7 @@ export default function Docs() {
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <a href="https://github.com/Shashikant86/agentnetes" target="_blank" rel="noreferrer"
+            <a href="https://github.com/SuperagenticAI/agentnetes" target="_blank" rel="noreferrer"
               className="text-white/50 hover:text-white/80 transition-colors hidden sm:block">
               <Github size={16} />
             </a>
@@ -166,7 +166,7 @@ export default function Docs() {
               className="flex items-center gap-2 text-xs text-white/50 hover:text-white/80 transition-colors py-1.5">
               <span className="w-3 h-3 rounded-sm bg-red-500/70 inline-block" /> npm package
             </a>
-            <a href="https://github.com/Shashikant86/agentnetes" target="_blank" rel="noreferrer"
+            <a href="https://github.com/SuperagenticAI/agentnetes" target="_blank" rel="noreferrer"
               className="flex items-center gap-2 text-xs text-white/50 hover:text-white/80 transition-colors py-1.5">
               <Github size={12} /> GitHub repo
             </a>
@@ -667,8 +667,8 @@ await runtime.run('add comprehensive test coverage');`}</Code>
 
           <Callout type="tip">
             Still stuck? Open an issue at{' '}
-            <a href="https://github.com/Shashikant86/agentnetes/issues" target="_blank" rel="noreferrer" className="text-purple-400 hover:text-purple-300 underline underline-offset-2">
-              github.com/Shashikant86/agentnetes/issues
+            <a href="https://github.com/SuperagenticAI/agentnetes/issues" target="_blank" rel="noreferrer" className="text-purple-400 hover:text-purple-300 underline underline-offset-2">
+              github.com/SuperagenticAI/agentnetes/issues
             </a>{' '}
             with the error output and your sandbox provider.
           </Callout>
@@ -682,7 +682,7 @@ await runtime.run('add comprehensive test coverage');`}</Code>
             <div className="flex items-center gap-4 text-sm">
               <Link href="/" className="text-white/40 hover:text-white/70 transition-colors">Home</Link>
               <Link href="/demo" className="text-white/40 hover:text-white/70 transition-colors">Demo</Link>
-              <a href="https://github.com/Shashikant86/agentnetes" target="_blank" rel="noreferrer" className="text-white/40 hover:text-white/70 transition-colors">GitHub</a>
+              <a href="https://github.com/SuperagenticAI/agentnetes" target="_blank" rel="noreferrer" className="text-white/40 hover:text-white/70 transition-colors">GitHub</a>
               <a href="https://www.npmjs.com/package/agentnetes" target="_blank" rel="noreferrer" className="text-white/40 hover:text-white/70 transition-colors">npm</a>
             </div>
           </div>

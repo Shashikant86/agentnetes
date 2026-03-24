@@ -6,7 +6,7 @@ Thanks for your interest in contributing! Here's how to get started.
 
 ```bash
 # Clone the repo
-git clone https://github.com/Shashikant86/agentnetes.git
+git clone https://github.com/SuperagenticAI/agentnetes.git
 cd agentnetes
 
 # Install dependencies
@@ -60,7 +60,7 @@ npm run format
 
 ## Reporting Issues
 
-Open an issue at https://github.com/Shashikant86/agentnetes/issues with:
+Open an issue at https://github.com/SuperagenticAI/agentnetes/issues with:
 
 - What you expected to happen
 - What actually happened

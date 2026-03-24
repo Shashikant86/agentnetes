@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://shashikant86.github.io/agentnetes/logo.png" alt="Agentnetes" width="80" height="80" />
+<img src="https://superagenticai.github.io/agentnetes/logo.png" alt="Agentnetes" width="80" height="80" />
 
 # agentnetes
 
@@ -10,9 +10,9 @@
 
 [![npm version](https://img.shields.io/npm/v/agentnetes?style=for-the-badge&logo=npm&color=fb923c)](https://www.npmjs.com/package/agentnetes)
 [![npm downloads](https://img.shields.io/npm/dm/agentnetes?style=for-the-badge&color=22c55e)](https://www.npmjs.com/package/agentnetes)
-[![License: MIT](https://img.shields.io/badge/License-MIT-white?style=for-the-badge)](https://github.com/Shashikant86/agentnetes/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-white?style=for-the-badge)](https://github.com/SuperagenticAI/agentnetes/blob/main/LICENSE)
 
-[Live Demo](https://shashikant86.github.io/agentnetes/) · [Full Docs](https://shashikant86.github.io/agentnetes/docs) · [GitHub](https://github.com/Shashikant86/agentnetes)
+[Live Demo](https://superagenticai.github.io/agentnetes/) · [Full Docs](https://superagenticai.github.io/agentnetes/docs) · [GitHub](https://github.com/SuperagenticAI/agentnetes)
 
 </div>
 
@@ -146,4 +146,4 @@ SANDBOX_PROVIDER=local GOOGLE_API_KEY=your_key agentnetes run "your goal"
 
 ## License
 
-MIT · [github.com/Shashikant86/agentnetes](https://github.com/Shashikant86/agentnetes)
+MIT · [github.com/SuperagenticAI/agentnetes](https://github.com/SuperagenticAI/agentnetes)

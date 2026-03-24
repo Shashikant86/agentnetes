@@ -617,7 +617,7 @@ export default function Landing() {
             <Link href="/docs" className="text-white/80 hover:text-white transition-colors text-sm hidden sm:block">
               Docs
             </Link>
-            <a href="https://github.com/Shashikant86/agentnetes" target="_blank" rel="noreferrer"
+            <a href="https://github.com/SuperagenticAI/agentnetes" target="_blank" rel="noreferrer"
               className="text-white/80 hover:text-white transition-colors p-1">
               <Github size={16} />
             </a>
@@ -1423,7 +1423,7 @@ export default function Landing() {
               className="flex items-center gap-1 text-white/80 hover:text-white transition-colors text-sm">
               Hackathon <ExternalLink size={10} />
             </a>
-            <a href="https://github.com/Shashikant86/agentnetes" target="_blank" rel="noreferrer"
+            <a href="https://github.com/SuperagenticAI/agentnetes" target="_blank" rel="noreferrer"
               className="text-white/80 hover:text-white transition-colors">
               <Github size={14} />
             </a>

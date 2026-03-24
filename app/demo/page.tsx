@@ -374,7 +374,7 @@ export default function DemoPage() {
           <div className="flex items-center gap-3 text-sm font-mono">
             <span className="text-white/40">Run real agents:</span>
             <code className="text-purple-400/80 bg-purple-500/10 border border-purple-500/20 rounded px-2 py-0.5">npx agentnetes serve</code>
-            <a href="https://github.com/Shashikant86/agentnetes#running-locally" target="_blank" rel="noreferrer"
+            <a href="https://github.com/SuperagenticAI/agentnetes#running-locally" target="_blank" rel="noreferrer"
               className="text-white/30 hover:text-white/60 transition-colors">self-host</a>
           </div>
         </div>
